@@ -537,7 +537,7 @@ table.prog td.na{color:#ccb8b2}
 <script>
 // Version of this page (the number goes up with every update) and of the audio files (so a page never uses an
 // older clip list). tools/stamp.py writes both.
-var APP_VERSION = {n:2, date:'2026-10-02'};
+var APP_VERSION = {n:3, date:'2026-10-02'};
 var AUDIO_VERSION = {manifest:'3d290d7f13', music:'ac199bb93b'};
 document.write('<script src="audio/manifest.js?v=' + AUDIO_VERSION.manifest + '"><\/script>');
 </script>
@@ -2925,7 +2925,11 @@ function actDraw(ctx){
       if (!moved) setLabel(null);
     },
   }, wrap);
-  const saveBtn = h('button', {class:'tool', 'aria-label':'保存图片', title:'保存图片', onclick:() => { Sfx.tap(); savePicture(); }}, '💾');
+  // an empty picture is not saved: like 画好了, it asks for a drawing first (a word label is not needed to save)
+  const saveBtn = h('button', {class:'tool', 'aria-label':'保存图片', title:'保存图片', onclick:() => {
+    if (!hasInk){ Sfx.bad(); wiggle(wrap); say(SHOW.drawFirst, T.drawFirst); return; }
+    Sfx.tap(); savePicture();
+  }}, '💾');
   const doneBtn = h('button', {class:'btn green big', onclick:() => {
     if (!hasInk){ Sfx.bad(); wiggle(wrap); say(SHOW.drawFirst, T.drawFirst); return; }
     if (!label){ Sfx.bad(); replayAnim(bank, 'nudge'); say(SHOW.tapWordPic, T.tapWordPic); return; }
