@@ -537,8 +537,8 @@ table.prog td.na{color:#ccb8b2}
 <script>
 // Version of this page (the number goes up with every update) and of the audio files (so a page never uses an
 // older clip list). tools/stamp.py writes both.
-var APP_VERSION = {n:1, date:'2026-10-02'};
-var AUDIO_VERSION = {manifest:'05a5950572', music:'ac199bb93b'};
+var APP_VERSION = {n:2, date:'2026-10-02'};
+var AUDIO_VERSION = {manifest:'3d290d7f13', music:'ac199bb93b'};
 document.write('<script src="audio/manifest.js?v=' + AUDIO_VERSION.manifest + '"><\/script>');
 </script>
 <script>
@@ -1907,7 +1907,9 @@ function soundCards(ctx){
     const opts = soundChoices(target, l, r);
     const q = isInitial(target) ? 'startsWith' : 'whichFinal';
     const ask = type === 'pic' ? [S.ph, T[q]] : [T.find, S.say];
-    const top = type === 'pic' ? h('div', {class:'quiz-pic show', 'aria-label':S.w}, S.pic, ' ', h('span', {class:'han', style:{fontSize:'.62em'}}, S.w)) : null;
+    // the picture with the character that has the sound (广播的播: 播), without its pinyin, which would give the answer away
+    const key = [...S.ph].filter(isHan).pop();
+    const top = type === 'pic' ? h('div', {class:'quiz-pic show', 'aria-label':key}, S.pic, ' ', h('span', {class:'han', style:{fontSize:'.8em'}}, key)) : null;
     quizHook(type, target);
     balloonRound(ctx, {opts, answer:target, r, total,
       top, prompt: () => type === 'pic' ? say(SHOW[q], ask) : say(SHOW.popBalloon, ask),

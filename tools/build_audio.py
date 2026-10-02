@@ -8,7 +8,7 @@ model gives every syllable the same rise and fall, so the textbook tone shape (�
 is put on it with Praat's PSOLA (parselmouth): the four tones always sound clearly different.
 
 Usage:
-  pip install onnxruntime numpy "misaki[zh]" lameenc praat-parselmouth
+  pip install onnxruntime numpy scipy "misaki[zh]" lameenc praat-parselmouth
   # model files from https://huggingface.co/onnx-community/Kokoro-82M-v1.1-zh-ONNX :
   #   onnx/model.onnx, tokenizer.json and voices/<VOICE>.bin, all in one folder (voices/ inside it)
   NODE_PATH=$(npm root -g) node tools/export_phrases.js
@@ -175,7 +175,7 @@ class Kokoro:
         toks = np.array([[0, *ids, 0]], dtype=np.int64)
         audio, dur = self.sess.run(None, {self.names[0]: toks, self.names[1]: self.voice[len(ids)].astype(np.float32),
                                           self.names[2]: np.array([speed], dtype=np.float32)})
-        return audio.reshape(-1).astype(np.float32), dur.reshape(-1)
+        return highpass(audio.reshape(-1)), dur.reshape(-1)
 
 
 # ---------------------------------------------------------------- one syllable with an exact tone
@@ -189,6 +189,13 @@ CONTOUR = {
 }
 DURATION = {1: 1.15, 2: 1.2, 3: 1.4, 4: 1.0, 5: 0.8}   # syllables are said at normal speed, then slowed down
 LOW, HIGH = 160.0, 300.0   # pitch range of the voice for tone level 1 and 5 (set from the voice in main())
+
+
+def highpass(x, hz=60):
+    """Remove the slow offset that the model adds while it speaks (and that Praat turns into a constant one, which
+    clicks at the start and the end of a clip); speech is far above 60 Hz."""
+    from scipy.signal import butter, sosfiltfilt
+    return sosfiltfilt(butter(2, hz, 'highpass', fs=RATE, output='sos'), np.asarray(x, np.float64)).astype(np.float32)
 
 
 def trim(x, thr=0.01, pad=0.03):
@@ -222,8 +229,7 @@ def impose_tone(x, tone):
             call(dt, 'Add point', t1, ds)
             call(dt, 'Add point', min(snd.duration, t1 + 0.001), 1.0)
             call([manip, dt], 'Replace duration tier')
-    out = call(manip, 'Get resynthesis (overlap-add)')
-    return out.values[0].astype(np.float32)
+    return highpass(call(manip, 'Get resynthesis (overlap-add)').values[0])
 
 
 # Finals on their own, as the pinyin games write them (uī, iū, ǖn …), sound like these syllables.
@@ -356,8 +362,9 @@ def syllable_spans(ph):
 
 
 def fix_final_tones(x, ph, dur):
-    """The model lets a first or second tone that ends a phrase fall (鸽子的鸽 sounds like 各子的各): give every such
-    syllable its level (1) or rising (2) shape back, starting from where its pitch begins (Praat PSOLA)."""
+    """The model often lets a first tone fall, most of all at the end of a phrase (鸽子的鸽 sounds like 各子的各), lets
+    a second tone that ends a phrase come out flat, and says some third tones inside a phrase high (小猫 sounds like
+    笑猫): give such syllables their level (1), rising (2) or low (3) shape back (Praat PSOLA)."""
     import parselmouth
     from parselmouth.praat import call
     cum = np.concatenate([[0], np.cumsum(dur)]) * HOP
@@ -365,8 +372,11 @@ def fix_final_tones(x, ph, dur):
     snd = parselmouth.Sound(x.astype(np.float64), RATE)
     pitch = snd.to_pitch(time_step=0.005, pitch_floor=90, pitch_ceiling=600)
     f, t = pitch.selected_array['frequency'], pitch.xs()
+    allv = f[f > 0]
+    lo, hi = (np.percentile(allv, 10), np.percentile(allv, 90)) if len(allv) > 10 else (0, 0)
+    at = lambda share: lo * (hi / lo) ** share   # a pitch between the phrase's low (0) and high (1)
     for a, b, tone, final in syllable_spans(ph):
-        if not final or tone not in (1, 2):
+        if tone not in (1, 2, 3) or (tone == 2 and not final) or (tone == 3 and (final or not lo)):
             continue
         s0, s1 = cum[a + 1] / RATE, cum[b + 2] / RATE   # +1: the model's leading pad token
         sel = (t >= s0) & (t < s1) & (f > 0)
@@ -377,11 +387,14 @@ def fix_final_tones(x, ph, dur):
         onset = float(np.median(v[:max(2, n // 4)]))
         end = float(np.median(v[-max(2, n // 4):]))
         change = 12 * np.log2(end / onset)
-        if tone == 1 and change < -1.2:
+        if tone == 1 and change < (-1.2 if final else -1.5):
             points = [(tv[0], onset), (tv[-1], onset * 2 ** (-0.5 / 12))]
         elif tone == 2 and change < 2.5:
             low = min(onset, float(np.min(v[:max(2, n // 2)])))
             points = [(tv[0], low), (tv[0] + 0.3 * (tv[-1] - tv[0]), low * 2 ** (-0.3 / 12)), (tv[-1], low * 2 ** (5 / 12))]
+        elif tone == 3 and np.median(v) > at(0.4):
+            # a third tone inside a phrase is a low one (半上); said high, 小猫 sounds like 笑猫
+            points = [(tv[0], at(0.3)), (tv[-1], at(0.02))]
         else:
             continue
         todo.append((tv[0], tv[-1], points))
@@ -394,7 +407,7 @@ def fix_final_tones(x, ph, dur):
         for tt, hz in points:
             call(pt, 'Add point', float(tt), float(hz))
     call([pt, manip], 'Replace pitch tier')
-    return call(manip, 'Get resynthesis (overlap-add)').values[0].astype(np.float32)
+    return highpass(call(manip, 'Get resynthesis (overlap-add)').values[0])
 
 
 def phrase_audio(kokoro, phrase, pinyin_of):

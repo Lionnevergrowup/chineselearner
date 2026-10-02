@@ -81,7 +81,7 @@ spoken by 乐乐 the lion.*
 乐乐说的每一句话由 `allPhrases()` 列出（固定的话在 `T` 里，和课程有关的话在 `P` 里）。修改后请重新录音：
 
 ```sh
-pip install onnxruntime numpy "misaki[zh]" lameenc praat-parselmouth
+pip install onnxruntime numpy scipy "misaki[zh]" lameenc praat-parselmouth
 NODE_PATH=$(npm root -g) node tools/export_phrases.js      # 写出 tools/phrases.json（需要 playwright）
 python3 tools/build_audio.py 模型文件夹                       # 只录新的句子，并更新 audio/manifest.js
 ```
@@ -90,6 +90,8 @@ python3 tools/build_audio.py 模型文件夹                       # 只录新�
 `--redo "句子"` 可以重录某几句，`--all` 全部重录，`--show` 只显示每一句会怎么读（不录音）。没有录音的句子会用浏览器自带的中文语音朗读。
 
 单个拼音音节（bā、ǚ、zhī）是这样录的：模型单独说一个音时，四个声调听起来几乎一样，所以先让模型说出这个音，再用 Praat（parselmouth）把它的音高改成标准的声调曲线（一声平、二声扬、三声拐弯、四声降），这样四个声调一定听得清清楚楚。
+句子和词语录好以后，也会逐个音节检查音高：模型有时会把一声读成降调（“鸽子的鸽”听起来像“各”）、把句尾的二声读平、把句中的三声读高，这些音节会被改回正确的声调形状。模型在开口前和说完后会发出一点杂音，也会被剪掉。
+声音用的是 `zf_078`：58 个中文女声里，语音识别（SenseVoice）听得最准的一个。
 
 改了 `LESSONS` 里的字以后，还要运行：
 
@@ -100,7 +102,10 @@ python3 tools/build_fonts.py 路径/gkai00mp.ttf         # 楷体字体只保留
 
 `gkai00mp.ttf`（AR PL KaitiM GB）在 Debian / Ubuntu 的 `fonts-arphic-gkai00mp` 软件包里。
 
-检查：`python3 -m http.server 8765 &` 之后运行 `NODE_PATH=$(npm root -g) node tools/smoke_test.js`，它会打开每一课的每一个游戏，报告页面错误。
+检查：先运行 `python3 -m http.server 8765 &`，然后
+
+- `NODE_PATH=$(npm root -g) node tools/smoke_test.js`：在手机和平板尺寸下打开每一课的每一个游戏、贴纸页和家长页面（包括所有设置和“清除学习记录”），报告页面错误；
+- `NODE_PATH=$(npm root -g) node tools/play_test.js`：把 32 课的每个游戏都从头玩到尾（写汉字时按笔顺数据一笔一笔地写，真正经过笔顺检查），并列出乐乐说了但没有录音的句子；加上 `WRONG=1` 会在答对之前先点错一两次。
 
 ## 图标和背景音乐
 

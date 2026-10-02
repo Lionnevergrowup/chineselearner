@@ -23,9 +23,6 @@ const OUT = process.argv[3] || null;
       await page.waitForTimeout(150);
       const acts = await page.evaluate(() => [...document.querySelectorAll('.act-card')].map(b => b.getAttribute('aria-label')));
       if (OUT && vp.name === 'phone' && (l === 1 || l === 7 || l === 19)) await page.screenshot({path: `${OUT}/${vp.name}-lesson${l}.png`, fullPage: true});
-      const keys = await page.evaluate(() => {
-        const m = location.hash; return null;
-      });
       for (let k = 0; k < acts.length; k++){
         await page.evaluate(([l, k]) => { document.querySelectorAll('.act-card')[k].click(); }, [l, k]);
         await page.waitForTimeout(250);
@@ -40,6 +37,28 @@ const OUT = process.argv[3] || null;
       await page.waitForTimeout(200);
       if (OUT) await page.screenshot({path: `${OUT}/${vp.name}-${h.slice(2)}.png`, fullPage: true});
     }
+    // parents page: every setting, a few ticks, then clearing the progress (answering the grown-up sum)
+    const segs = await page.evaluate(() => document.querySelectorAll('.seg button').length);
+    for (let k = 0; k < segs; k++){
+      await page.evaluate(k => document.querySelectorAll('.seg button')[k].click(), k);
+      await page.waitForTimeout(60);
+    }
+    for (let k = 0; k < 3; k++){ await page.evaluate(() => document.querySelector('.check-btn').click()); await page.waitForTimeout(60); }
+    await page.evaluate(() => [...document.querySelectorAll('.btn.red')].pop().click());
+    await page.waitForTimeout(150);
+    const sum = await page.evaluate(() => document.querySelector('.gate label').textContent.match(/(\d+) \+ (\d+)/).slice(1).map(Number).reduce((a, b) => a + b));
+    await page.fill('.gate input', '1');
+    await page.evaluate(() => document.querySelector('.overlay .btn.red').click());
+    await page.waitForTimeout(100);
+    await page.fill('.gate input', String(sum));
+    await page.evaluate(() => document.querySelector('.overlay .btn.red').click());
+    await page.waitForTimeout(200);
+    const cleared = await page.evaluate(() => document.querySelector('.overlay h1') && document.querySelector('.overlay h1').textContent);
+    if (cleared !== '记录已清除') errors.push(`[${vp.name}] reset did not finish: ${cleared}`);
+    // with pinyin hidden and the short game length, a lesson still opens and plays its first screen
+    await page.evaluate(() => { location.hash = '#/lesson/27/sentence'; });
+    await page.waitForTimeout(300);
+    if (OUT) await page.screenshot({path: `${OUT}/${vp.name}-nopinyin-sentence.png`});
     await page.close();
   }
   await browser.close();

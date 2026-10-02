@@ -8,6 +8,15 @@ const { chromium } = require('playwright');
 const BASE = process.argv[2] || 'http://localhost:8765/';
 const [from, to] = (process.argv[3] || '1-32').split('-').map(Number);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+// WRONG=1: before each right answer, tap one or two wrong ones (checks the "try again" paths and the hints)
+const WRONG = !!process.env.WRONG;
+async function tapWrong(page, right, n = 1){
+  const wrong = await page.evaluate(right => [...document.querySelectorAll('.stage [data-v]:not(.used)')].map(b => b.dataset.v).filter(v => !right.includes(v)), right);
+  for (const v of [...new Set(wrong)].slice(0, n)){
+    await page.click(`.stage [data-v="${v.replace(/"/g, '\\"')}"]:not(.used)`, {timeout: 3000, force: true}).catch(() => {});
+    await sleep(450);
+  }
+}
 
 async function writeChar(page){
   // draw each stroke along its median (Hanzi Writer's own coordinates → screen)
@@ -68,12 +77,14 @@ async function playActivity(page, l, key){
         if (finished) wroteReal++; else { wroteHook++; await page.evaluate(() => window.__pass && window.__pass()); }
       }
       else if (q.taps){
+        if (WRONG) await tapWrong(page, [q.taps[0]]);
         for (const t of q.taps){
           const sel = `.stage [data-v="${t.replace(/"/g, '\\"')}"]:not(.used)`;
           await page.click(sel, {timeout: 3000, force: true});
           await sleep(60);
         }
       } else {
+        if (WRONG) await tapWrong(page, [String(q.answer)], 2);
         try {
           await page.click(`.stage [data-v="${String(q.answer).replace(/"/g, '\\"')}"]`, {timeout: 3000, force: true});
         } catch (e) {
