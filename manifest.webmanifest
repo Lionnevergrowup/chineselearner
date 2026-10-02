@@ -1,0 +1,17 @@
+{
+  "name": "中文乐园",
+  "short_name": "中文乐园",
+  "description": "一年级语文学习游戏：拼音、识字、写字、词语和句子，32 课。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff0e2",
+  "theme_color": "#ffd9c2",
+  "icons": [
+    {"src": "icons/icon-192.png?v=1", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png?v=1", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon.svg?v=1", "sizes": "any", "type": "image/svg+xml"},
+    {"src": "icons/icon-maskable-512.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

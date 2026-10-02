@@ -1,0 +1,3120 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffd9c2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>中文乐园</title>
+<meta name="description" content="一年级语文学习游戏：跟着统编版一年级上册的顺序，32 课拼音、识字、写字、词语和句子练习。">
+<!-- site icon: 乐乐 the lion (icons/icon.svg; tools/make_icons.js draws the other sizes) -->
+<link rel="icon" href="favicon.ico?v=1" sizes="32x32">
+<link rel="icon" href="icons/icon.svg?v=1" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=1">
+<link rel="manifest" href="manifest.webmanifest?v=1">
+<!-- link previews (when the address is shared in a chat app) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="中文乐园">
+<meta property="og:description" content="跟小狮子乐乐学拼音、认汉字：一年级上册 32 课。">
+<meta property="og:url" content="https://lionnevergrowup.github.io/chineselearner/">
+<meta property="og:image" content="https://lionnevergrowup.github.io/chineselearner/icons/icon-512.png?v=1">
+<meta name="twitter:card" content="summary">
+<meta name="apple-mobile-web-app-title" content="中文乐园">
+<link rel="preload" href="fonts/kai.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/andika-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Self-hosted fonts, see fonts/LICENSE-*.txt and fonts/OFL-*.txt.
+   ZhKai: AR PL KaitiM GB (Arphic Public License), cut down to the characters on this page by tools/build_fonts.py.
+   It is a textbook-style Kai script and the same design the stroke-order data (hanzi/) was made from.
+   Andika is designed for beginning readers: single-story a and g, as in pinyin books. */
+@font-face{font-family:'ZhKai';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/kai.woff2) format('woff2')}
+@font-face{font-family:'Andika';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/andika-400.woff2) format('woff2')}
+@font-face{font-family:'Andika';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/andika-700.woff2) format('woff2')}
+@font-face{font-family:'Fredoka';font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/fredoka-latin.woff2) format('woff2')}
+:root{
+  --ink:#3a2440; --ink-soft:#6d5a72; --line:#f0d6cf;
+  --bg1:#ffe2cf; --bg2:#fff8e6;
+  --purple:#7b4ff0; --purple-d:#5a33c9;
+  --pink:#ff5fa2;   --pink-d:#d63f80;
+  --orange:#ff9f1c; --orange-d:#d27a00;
+  --yellow:#ffd23f; --yellow-d:#dcae00;
+  --green:#22c07a;  --green-d:#15965c;
+  --blue:#1f6fe0;   --blue-d:#1552b0;
+  --teal:#18b8c9;   --teal-d:#0e8f9c;
+  --red:#e8453c;    --red-d:#b72a23;
+  --gold:#f5b700;   --gold-d:#c28f00;
+  --emoji:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji';
+  --font-ui:'Fredoka','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC','Source Han Sans SC','WenQuanYi Micro Hei',system-ui,sans-serif,var(--emoji);
+  --font-han:'ZhKai','Kaiti SC','STKaiti','KaiTi','KaiTi_GB2312','BiauKai','AR PL UKai CN',serif,var(--emoji);
+  --font-py:'Andika','Fredoka','Trebuchet MS',system-ui,sans-serif,var(--emoji);
+  --font-emoji:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:var(--font-ui);color:var(--ink);
+  background-color:#fff0e2;
+  background-image:
+    radial-gradient(ellipse 160px 60px at 12% 9%,rgba(255,255,255,.85) 60%,transparent 61%),
+    radial-gradient(ellipse 110px 44px at 18% 6%,rgba(255,255,255,.85) 60%,transparent 61%),
+    radial-gradient(ellipse 190px 64px at 86% 16%,rgba(255,255,255,.75) 60%,transparent 61%),
+    radial-gradient(ellipse 120px 46px at 80% 12%,rgba(255,255,255,.75) 60%,transparent 61%),
+    linear-gradient(180deg,var(--bg1) 0%,#ffeedd 50%,var(--bg2) 100%);
+  background-attachment:fixed;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;overflow-x:hidden;
+  -webkit-touch-callout:none;   /* no "Copy / Look Up" pop-up when a child long-presses */
+  overscroll-behavior-y:contain; /* a downward swipe must not reload the page (Android pull-to-refresh) */
+}
+html{overscroll-behavior-y:contain}
+button{font-family:inherit;color:inherit}
+[hidden]{display:none!important}
+.han{font-family:var(--font-han);font-weight:400}
+.pyf{font-family:var(--font-py);font-weight:700}
+.sound-card .pic,.word-card .wpic,.quiz-pic,.spell-pic,.sent-pic,.trace-top .tp,.big-star,.hero-lion,.char-card .pic,
+.mascot .lion,.act-card .ic,.brand .logo,.lesson-btn .sticker,.sticker-slot .st,.icon-btn,.listen,.spark,.tone-card .pic{font-family:var(--font-emoji)}
+#app{
+  min-height:100vh;display:flex;flex-direction:column;max-width:1100px;margin:0 auto;
+  padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(118px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  --c:var(--purple);--d:var(--purple-d);
+  font-weight:600;font-size:clamp(1.1rem,3.4vw,1.35rem);border:0;border-radius:20px;padding:.55em 1.1em;min-height:58px;
+  color:#fff;background:var(--c);box-shadow:0 6px 0 var(--d);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4em;
+  transition:transform .08s,box-shadow .08s;text-shadow:0 1px 0 rgba(0,0,0,.15)
+}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--d)}
+.btn.green{--c:var(--green);--d:var(--green-d)} .btn.blue{--c:var(--blue);--d:var(--blue-d)}
+.btn.orange{--c:var(--orange);--d:var(--orange-d)} .btn.pink{--c:var(--pink);--d:var(--pink-d)}
+.btn.teal{--c:var(--teal);--d:var(--teal-d)} .btn.red{--c:var(--red);--d:var(--red-d)}
+/* bright backgrounds get dark text so it stays readable (WCAG contrast) */
+.btn.green,.btn.orange,.btn.pink,.btn.teal{color:var(--ink);text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.btn.white{--c:#fff;--d:var(--line);color:var(--ink);text-shadow:none}
+.btn.big{font-size:clamp(1.3rem,4.2vw,1.7rem);min-height:68px;padding:.5em 1.4em}
+.icon-btn{
+  flex:none;width:56px;height:56px;border-radius:50%;border:0;background:#fff;box-shadow:0 5px 0 var(--line);
+  font-size:1.6rem;cursor:pointer;display:grid;place-items:center;transition:transform .08s,box-shadow .08s;padding:0
+}
+.icon-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.topbar h1{margin:0}
+.brand{flex:1;display:flex;align-items:center;gap:8px;font-size:clamp(1.5rem,5vw,2.3rem);font-weight:700;min-width:0}
+.brand .logo{font-size:1.25em;animation:bob 3s ease-in-out infinite}
+.brand-btn{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;overflow:hidden;border:0;background:none;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;border-radius:14px}
+.brand-btn:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+.brand .name{font-family:var(--font-han);background:linear-gradient(90deg,var(--red),var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;letter-spacing:.04em}
+.title{flex:1;font-size:clamp(1.3rem,4.5vw,2rem);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title .han{font-weight:400}
+.pill{flex:none;background:#fff;border-radius:999px;padding:.3em .8em;font-weight:700;font-size:1.25rem;box-shadow:0 4px 0 var(--line);white-space:nowrap}
+
+/* ---------- home ---------- */
+.section-title{font-size:clamp(1.05rem,3vw,1.3rem);font-weight:700;margin:20px 4px 10px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(106px,1fr));gap:16px 14px}
+.lesson-btn{
+  --c:var(--purple);--d:var(--purple-d);
+  position:relative;aspect-ratio:1/1;min-height:100px;border-radius:30px;border:0;background:var(--c);box-shadow:0 7px 0 var(--d);color:#fff;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;transition:transform .08s,box-shadow .08s
+}
+.lesson-btn:active{transform:translateY(4px);box-shadow:0 3px 0 var(--d)}
+.lesson-btn .num{font-size:clamp(2rem,6vw,2.6rem);font-weight:700;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.15)}
+.lesson-btn .letters{font-weight:700;font-size:1.15rem;background:rgba(0,0,0,.2);border-radius:999px;padding:0 .55em;margin-top:5px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;line-height:1.45}
+.lesson-btn .letters.han{font-weight:400;font-size:1.2rem}
+.lesson-btn .letters.pyf{font-size:1.05rem}
+.lesson-btn .letters.small{font-size:.92rem}
+.dots{display:flex;gap:3px;margin-top:7px}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35)}
+.dots i.on{background:#fff}
+.lesson-btn.ink{color:var(--ink)}
+.lesson-btn.ink .num{text-shadow:0 2px 0 rgba(255,255,255,.35)}
+.lesson-btn.ink .letters{background:rgba(255,255,255,.4)}
+.lesson-btn.ink .dots i{background:rgba(58,36,64,.22)}
+.lesson-btn.ink .dots i.on{background:var(--ink)}
+.lesson-btn .sticker{position:absolute;top:-12px;right:-8px;font-size:2.1rem;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25));animation:bob 2.6s ease-in-out infinite}
+.lesson-btn.next{animation:pulse 1.6s ease-in-out infinite}
+.lesson-btn.next::after{content:'▶';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:var(--yellow);color:var(--ink);font-size:.8rem;border-radius:999px;padding:2px 8px;box-shadow:0 3px 0 var(--yellow-d)}
+
+/* ---------- lesson ---------- */
+.lesson-hero{background:#fff;border-radius:30px;box-shadow:0 7px 0 var(--line);padding:16px;margin-bottom:22px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.hero-sounds{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.hero-chip{font-family:var(--font-py);font-weight:700;font-size:clamp(2rem,7vw,2.8rem);line-height:1.1;min-width:68px;padding:.2em .4em;border:0;border-radius:18px;background:var(--yellow);box-shadow:0 5px 0 var(--yellow-d);cursor:pointer}
+.hero-chip.han{font-family:var(--font-han);font-weight:400;padding:.12em .3em .18em}
+.hero-focus{font-size:1.15rem;color:var(--ink-soft);font-weight:600}
+.hero-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.act-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px 16px}
+.act-card{
+  --c:var(--purple);
+  position:relative;border:0;border-radius:28px;background:#fff;box-shadow:0 7px 0 var(--line);padding:18px 10px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .08s,box-shadow .08s
+}
+.act-card:active{transform:translateY(4px);box-shadow:0 3px 0 var(--line)}
+.act-card .ic{font-size:2.8rem;width:86px;height:86px;border-radius:50%;background:var(--c);display:grid;place-items:center;box-shadow:inset 0 -6px 0 rgba(0,0,0,.14)}
+.act-card .nm{font-size:1.3rem;font-weight:700}
+.act-card .step{position:absolute;top:10px;left:12px;width:30px;height:30px;border-radius:50%;background:#fbefe9;color:var(--ink-soft);font-weight:700;display:grid;place-items:center}
+.act-card .check{position:absolute;top:6px;right:10px;font-size:1.7rem}
+.act-card.done{background:#effff6;box-shadow:0 7px 0 #aee8cb}
+.act-card.next{animation:pulse 1.6s ease-in-out infinite}
+
+/* ---------- activity ---------- */
+.act-title{font-size:clamp(1.1rem,3.6vw,1.6rem);font-weight:700;white-space:nowrap}
+.progress{flex:1;min-width:60px;height:22px;background:#fff;border-radius:999px;box-shadow:inset 0 2px 5px rgba(0,0,0,.12);overflow:hidden}
+.progress>i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--yellow),var(--orange));transition:width .45s}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:10px 0 4px;min-height:58vh}
+.listen{width:88px;height:88px;border-radius:50%;border:0;background:var(--blue);box-shadow:0 7px 0 var(--blue-d);font-size:2.6rem;cursor:pointer;animation:pulse 2s ease-in-out infinite;flex:none}
+.listen:active{transform:translateY(4px);box-shadow:0 3px 0 var(--blue-d)}
+.cards{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+
+/* pinyin sound card: the letters, a picture, and the key word */
+.sound-card{
+  width:clamp(124px,24vw,180px);aspect-ratio:3/4;border-radius:28px;background:#fff;border:0;box-shadow:0 8px 0 var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer
+}
+.sound-card .glyph{font-family:var(--font-py);font-size:clamp(3rem,9.5vw,4.6rem);font-weight:700;line-height:1.05;color:var(--purple)}
+.sound-card .glyph.init{color:var(--blue)}
+.sound-card .pic{font-size:clamp(2.2rem,7vw,3.2rem);line-height:1.2}
+.sound-card .kw{font-size:1.15rem;color:var(--ink-soft);display:flex;align-items:flex-end;gap:2px}
+.sound-card .kw .rt{font-size:1.5rem}
+.sound-card .kw .rb .p{font-size:.42em}
+.cards.many{gap:12px}
+.cards.many .sound-card,.cards.many .char-card{width:clamp(96px,21vw,150px);aspect-ratio:4/5}
+.cards.many .sound-card .glyph{font-size:clamp(2.2rem,7.5vw,3.6rem)}
+.cards.many .sound-card .pic,.cards.many .char-card .pic{font-size:clamp(1.6rem,5.5vw,2.4rem)}
+.cards.many .char-card .zi{font-size:clamp(2.8rem,9vw,4.2rem)}
+.seen{background:#f1fff7!important;box-shadow:0 8px 0 #a3e6c4!important}
+
+/* character card: pinyin, the character, a picture and a word */
+.char-card{
+  width:clamp(124px,24vw,180px);aspect-ratio:3/4;border-radius:28px;background:#fff;border:0;box-shadow:0 8px 0 var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;padding:6px
+}
+.char-card .py{font-family:var(--font-py);font-weight:700;font-size:clamp(1.05rem,3.4vw,1.4rem);color:var(--red-d);line-height:1.2}
+.char-card .zi{font-family:var(--font-han);font-size:clamp(3.4rem,11vw,5rem);line-height:1.08}
+.char-card .pic{font-size:clamp(1.8rem,5.5vw,2.5rem);line-height:1.2;min-height:1.2em}
+.char-card .wd{font-family:var(--font-han);font-size:clamp(1.05rem,3.4vw,1.35rem);color:var(--ink-soft)}
+
+/* ruby-style text: pinyin over each character */
+.rt{display:inline-flex;flex-wrap:wrap;align-items:flex-end;justify-content:center}
+.rb{display:inline-flex;flex-direction:column;align-items:center;line-height:1}
+.rb .p{font-family:var(--font-py);font-weight:400;font-size:.36em;line-height:1.25;color:var(--ink-soft);white-space:nowrap;min-height:1.25em}
+.rb .c{font-family:var(--font-han);font-weight:400;line-height:1.12}
+.rb.pun .c{min-width:.55em}
+.nopy .rb .p{display:none}
+
+.balloons{display:flex;flex-wrap:wrap;gap:clamp(10px,3vw,30px);justify-content:center;padding:10px 0 40px}
+.balloon{
+  --c:var(--pink);position:relative;width:clamp(92px,19vw,138px);height:clamp(112px,23vw,168px);border:0;cursor:pointer;
+  border-radius:50% 50% 47% 47%/56% 56% 44% 44%;color:#fff;font-family:var(--font-py);font-weight:700;font-size:clamp(2.2rem,7.5vw,3.5rem);
+  background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.75) 0 7%,transparent 8%),var(--c);
+  box-shadow:inset -8px -12px 0 rgba(0,0,0,.13);text-shadow:0 3px 0 rgba(0,0,0,.18);animation:float 3.2s ease-in-out infinite
+}
+.balloon.han{font-family:var(--font-han);font-weight:400;font-size:clamp(2.8rem,9vw,4.2rem)}
+.balloon.long{font-size:clamp(1.7rem,5.6vw,2.6rem)}
+.balloon::before{content:'';position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);border:8px solid transparent;border-bottom:10px solid var(--c);border-top:0}
+.balloon::after{content:'';position:absolute;left:50%;top:100%;margin-top:1px;width:2px;height:40px;background:#a990a0}
+.balloon.pop{animation:pop .35s ease-out forwards}
+.balloon.ink{color:var(--ink);text-shadow:0 2px 0 rgba(255,255,255,.4)}
+
+.choices{display:flex;flex-wrap:wrap;gap:16px;justify-content:center}
+.choice{
+  font-family:var(--font-py);font-size:clamp(2rem,7.5vw,3.2rem);font-weight:700;min-width:clamp(118px,25vw,200px);padding:.2em .5em;
+  border:0;border-radius:24px;background:#fff;box-shadow:0 7px 0 var(--line);cursor:pointer
+}
+.choice.han{font-family:var(--font-han);font-weight:400;font-size:clamp(2.2rem,8vw,3.4rem)}
+.choice .rt{font-size:1em}
+.choice.right{background:#d9ffe9;box-shadow:0 7px 0 #7fdcaa}
+.quiz-pic{font-size:clamp(3.5rem,12vw,5.5rem);height:1.2em;line-height:1.2;opacity:0;transform:scale(.4);transition:.3s cubic-bezier(.2,1.6,.4,1)}
+.quiz-pic.show{opacity:1;transform:none}
+.quiz-han{font-family:var(--font-han);font-size:clamp(4rem,14vw,6.5rem);line-height:1.05;background:#fff;border-radius:26px;box-shadow:0 7px 0 var(--line);padding:.05em .3em .12em;min-width:1.4em;text-align:center}
+.quiz-py{font-family:var(--font-py);font-weight:700;font-size:clamp(2.6rem,9vw,4rem);line-height:1.15;background:#fff;border-radius:26px;box-shadow:0 7px 0 var(--line);padding:.1em .5em;color:var(--red-d)}
+
+/* syllables, built from a sound before and after: b + ā */
+.syl{font-family:var(--font-py);font-weight:700;font-size:clamp(2.4rem,9vw,4.2rem);line-height:1.1;display:inline-flex;letter-spacing:.02em}
+.syl .pt{display:inline-block;transition:transform .15s,color .15s;border-radius:10px;padding:0 .02em}
+.syl .pt.i{color:var(--blue)}
+.syl .pt.m{color:var(--teal-d)}
+.syl .pt.f{color:var(--red)}
+.syl .pt.lit{transform:translateY(-8px) scale(1.15);color:var(--pink)}
+.syl.whole .pt{color:var(--purple)}
+.word-card{
+  border:0;border-radius:28px;background:#fff;box-shadow:0 8px 0 var(--line);padding:12px 20px 10px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:2px;min-width:clamp(130px,26vw,190px)
+}
+.word-card .arrow{font-size:1.4rem;color:#b35c00;font-weight:700}
+.word-card .wpic{font-size:2.2rem;min-height:1.2em;line-height:1.2}
+.word-card .wz{font-family:var(--font-han);font-size:1.6rem;color:var(--ink-soft);line-height:1.2}
+.word-card .rt{font-size:clamp(2.4rem,8vw,3.4rem)}
+.word-card .rt .rb.lit .c{color:var(--pink);transform:translateY(-6px) scale(1.12)}
+.word-card .rt .rb .c{transition:transform .15s,color .15s}
+.word-card .rt.whole .c{color:var(--purple)}
+
+/* tones */
+.tone-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:min(100%,720px)}
+.tone-card{border:0;border-radius:24px;background:#fff;box-shadow:0 7px 0 var(--line);padding:10px 4px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tone-card .ts{font-family:var(--font-py);font-weight:700;font-size:clamp(2rem,7vw,3.2rem);line-height:1.15}
+.tone-card svg{width:70%;max-width:90px;height:auto}
+.tone-card .tn{font-size:clamp(.9rem,2.8vw,1.1rem);font-weight:700;color:var(--ink-soft)}
+.tone-card.t1{--tc:#e8453c}.tone-card.t2{--tc:#ff9f1c}.tone-card.t3{--tc:#22a06b}.tone-card.t4{--tc:#1f6fe0}
+.tone-card .ts{color:var(--tc)}
+.tone-card svg path{stroke:var(--tc)}
+.rhyme{font-family:var(--font-han);font-size:clamp(1.3rem,4.4vw,1.9rem);background:#fff;border-radius:20px;box-shadow:0 5px 0 var(--line);padding:.3em .9em;text-align:center;line-height:1.5}
+.rhyme span{display:inline-block;white-space:nowrap}
+
+/* blending board: b + ā = bā */
+.blend-box{display:flex;flex-direction:column;align-items:center;gap:16px;background:#fff;border-radius:30px;box-shadow:0 8px 0 var(--line);padding:18px 22px;min-width:min(100%,380px)}
+.blend-eq{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.blend-eq .op{font-size:clamp(1.8rem,6vw,2.6rem);font-weight:700;color:var(--ink-soft)}
+.bpart{font-family:var(--font-py);font-weight:700;font-size:clamp(2.4rem,9vw,4rem);line-height:1.1;min-width:1.3em;padding:.08em .3em;border:0;border-radius:18px;cursor:pointer;
+  background:#eaf2ff;box-shadow:0 6px 0 #c4d8ff;color:var(--blue)}
+.bpart.m{background:#e3fbf8;box-shadow:0 6px 0 #a8e9e1;color:var(--teal-d)}
+.bpart.f{background:#ffecea;box-shadow:0 6px 0 #ffc6c1;color:var(--red)}
+.bpart:active{transform:translateY(3px)}
+.bres{font-family:var(--font-py);font-weight:700;font-size:clamp(2.6rem,10vw,4.4rem);line-height:1.1;min-width:2.2em;padding:.06em .3em;border-radius:18px;border:4px dashed #e5c7bf;color:transparent;text-align:center}
+.bres.full{border-style:solid;border-color:var(--green);color:var(--purple);animation:pop-in .3s}
+.blend-pic{font-size:clamp(2.6rem,9vw,3.6rem);min-height:1.2em;line-height:1.2;display:flex;align-items:center;gap:.25em}
+.blend-pic .han{font-size:.9em}
+
+/* spelling and building */
+.spell-pic{font-size:clamp(3.5rem,12vw,5rem);line-height:1.1;min-height:1.1em}
+.slots{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}
+.slots .op{font-size:2rem;font-weight:700;color:var(--ink-soft)}
+.slot{
+  min-width:clamp(64px,15vw,96px);height:clamp(72px,17vw,104px);padding:0 .15em;border-radius:18px;border:4px dashed #e2bfb6;background:rgba(255,255,255,.65);
+  font-family:var(--font-py);font-size:clamp(2.2rem,8vw,3.4rem);font-weight:700;display:grid;place-items:center
+}
+.slot.han{font-family:var(--font-han);font-weight:400;font-size:clamp(2.6rem,9vw,3.8rem)}
+.slot.filled{border-style:solid;border-color:var(--green);background:#fff;animation:pop-in .25s}
+.tiles{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:680px}
+.tile{
+  min-width:clamp(64px,15vw,96px);height:clamp(64px,15.5vw,94px);padding:0 .2em;border-radius:18px;border:0;background:var(--yellow);box-shadow:0 7px 0 var(--yellow-d);
+  font-family:var(--font-py);font-size:clamp(2rem,7.5vw,3.2rem);font-weight:700;cursor:pointer
+}
+.tile.han{font-family:var(--font-han);font-weight:400;font-size:clamp(2.4rem,8.5vw,3.6rem)}
+.tile.init{background:#bcd6ff;box-shadow:0 7px 0 #8fb6f5}
+.tile.fin{background:#ffc9c3;box-shadow:0 7px 0 #f29a91}
+.tile:active{transform:translateY(4px);box-shadow:0 3px 0 var(--yellow-d)}
+.tile.used{visibility:hidden}
+.miss-word{background:#fff;border-radius:26px;box-shadow:0 7px 0 var(--line);padding:6px 26px}
+.gap-box{display:inline-block;min-width:1.05em;border:4px dashed #e2bfb6;border-radius:14px;color:transparent;text-align:center}
+.gap-box.found{border-style:solid;border-color:var(--green);color:var(--green-d);animation:pop-in .25s}
+.compose{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;font-family:var(--font-han);font-size:clamp(3rem,11vw,4.6rem);background:#fff;border-radius:26px;box-shadow:0 7px 0 var(--line);padding:.05em .4em .12em}
+.compose .op{font-family:var(--font-ui);font-size:.55em;color:var(--ink-soft);font-weight:700}
+
+/* sentence */
+.sent-pic{font-size:clamp(3.5rem,12vw,5rem);line-height:1.1}
+.sent-pic.small{font-size:clamp(2.6rem,9vw,3.6rem)}
+.sentence{display:flex;flex-wrap:wrap;gap:12px 10px;justify-content:center;align-items:flex-end;font-size:clamp(2rem,7vw,3.2rem);max-width:920px}
+.wchip{background:#fff;border:0;border-radius:16px;padding:.06em .22em .1em;box-shadow:0 5px 0 var(--line);font:inherit;cursor:pointer;transition:transform .12s,background .12s;color:var(--ink)}
+.wchip.hl{background:var(--yellow);box-shadow:0 5px 0 var(--yellow-d);transform:translateY(-5px)}
+.wchip.used{visibility:hidden}
+.wchip.on{background:#ece4ff;box-shadow:0 5px 0 var(--purple)}
+.wslot{display:inline-flex;align-items:flex-end;justify-content:center;min-height:1.6em;border:4px dashed #e2bfb6;border-radius:16px;background:rgba(255,255,255,.55);padding:0 .15em;text-align:center}
+.wslot.filled{border-style:solid;border-color:var(--green);background:#fff;animation:pop-in .25s}
+.wtext{display:inline-flex;align-items:flex-end;padding:.06em 0}
+.pun{font-family:var(--font-han);align-self:flex-end;line-height:1.12}
+
+/* tracing pinyin letters on four lines */
+.trace-top{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.3rem,4vw,1.8rem)}
+.trace-top .tp{font-size:clamp(2.2rem,7vw,3rem)}
+.trace-top .tl{font-family:var(--font-py)}
+.trace-top .count{margin-left:6px;font-family:var(--font-ui);font-size:1.05rem;background:#fff;border-radius:999px;padding:.15em .7em;box-shadow:0 3px 0 var(--line);color:var(--ink-soft)}
+.trace-wrap{position:relative;width:min(100%,760px);height:clamp(230px,50vh,520px);background:#fff;border-radius:30px;box-shadow:0 8px 0 var(--line);overflow:hidden;touch-action:none}
+.trace-wrap canvas{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;touch-action:none}
+.trace-wrap.win{box-shadow:0 8px 0 #7fdcaa,0 0 0 6px #b8f5d4}
+
+/* writing characters stroke by stroke in a 田 grid */
+.write-top{display:flex;align-items:center;gap:12px;font-size:clamp(1.2rem,4vw,1.7rem);font-weight:700}
+.write-top .rt{font-size:clamp(2.4rem,7vw,3rem)}
+.write-top .count{font-size:1.05rem;background:#fff;border-radius:999px;padding:.15em .7em;box-shadow:0 3px 0 var(--line);color:var(--ink-soft)}
+.grid-box{position:relative;width:min(86vw,52vh,380px);height:min(86vw,52vh,380px);background:#fff;border-radius:22px;box-shadow:0 8px 0 var(--line);touch-action:none;overflow:hidden}
+.grid-box svg.grid{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.grid-box .hw{position:absolute;top:0;left:0;width:100%;height:100%;touch-action:none}
+.grid-box.win{box-shadow:0 8px 0 #7fdcaa,0 0 0 6px #b8f5d4}
+.grid-box .loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.2rem;color:var(--ink-soft)}
+.stroke-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:380px}
+.stroke-dots i{width:14px;height:14px;border-radius:50%;background:#f3e3de}
+.stroke-dots i.on{background:var(--green)}
+
+/* drawing */
+.draw-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.swatch{width:46px;height:46px;border-radius:50%;border:4px solid #fff;box-shadow:0 3px 0 var(--line),inset 0 0 0 1px rgba(0,0,0,.18);cursor:pointer;padding:0;
+  display:grid;place-items:center;color:#fff;font-size:1.3rem;font-weight:700;transition:transform .12s}
+.swatch.light{color:var(--ink)}
+.swatch.on{outline:4px solid var(--ink);outline-offset:2px;transform:scale(1.12)}
+.swatch.on::after{content:'✓'}
+.tool{width:48px;height:48px;border-radius:14px;border:0;background:#fff;box-shadow:0 4px 0 var(--line);font-size:1.4rem;cursor:pointer;display:grid;place-items:center;padding:0}
+.tool.on{background:#ece4ff;outline:3px solid var(--purple)}
+.tool .dot{display:block;border-radius:50%;background:var(--ink)}
+.stage.compact{gap:14px;justify-content:flex-start}
+.draw-wrap{position:relative;width:min(100%,820px);height:clamp(210px,44vh,470px);background:#fff;border-radius:26px;box-shadow:0 8px 0 var(--line);overflow:hidden;touch-action:none}
+.draw-wrap canvas{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.draw-label{position:absolute;left:50%;top:85%;transform:translate(-50%,-50%);white-space:nowrap;border:0;margin:0;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  font-family:var(--font-han);font-size:clamp(1.7rem,5.2vw,2.4rem);line-height:1.35;color:var(--red-d);background:rgba(255,255,255,.85);border-radius:14px;padding:0 .4em}
+.draw-label[hidden]{display:none}
+.draw-label.dragging{cursor:grabbing;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.draw-label .x{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font:700 12px/22px var(--font-ui);text-align:center}
+.word-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.word-bank .wchip{font-family:var(--font-han);font-size:clamp(1.4rem,4.2vw,1.9rem)}
+.word-bank.nudge{animation:shake .5s 2}
+
+/* stickers */
+.sticker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:16px}
+.sticker-slot{border:0;border-radius:26px;background:rgba(255,255,255,.6);box-shadow:0 6px 0 var(--line);padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.sticker-slot .st{font-size:3.4rem;line-height:1.1;filter:grayscale(1) opacity(.35)}
+.sticker-slot.got{background:#fff}
+.sticker-slot.got .st{filter:none}
+.sticker-slot .lb{font-weight:600;color:var(--ink-soft)}
+
+/* parents */
+.panel-card{background:#fff;border-radius:24px;box-shadow:0 6px 0 var(--line);padding:18px 20px;margin-bottom:18px;-webkit-user-select:text;user-select:text}
+.panel-card h2{margin:0 0 10px;font-size:1.35rem}
+.panel-card p,.panel-card li{font-size:1.05rem;line-height:1.65;font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif}
+.panel-card .note{color:var(--ink-soft)}
+.version{font-size:.95rem;color:var(--ink-soft);text-align:center;margin:18px 0 6px}
+.update-slot{display:flex;justify-content:center;margin:4px 0 12px}
+.update-slot:empty{display:none}
+.panel-card ul{padding-left:1.2em;margin:6px 0}
+.seg{display:inline-flex;flex-wrap:wrap;gap:8px}
+.seg button{border:0;border-radius:14px;padding:.45em .9em;font-size:1.05rem;font-weight:600;background:#fbefe9;cursor:pointer;min-height:44px}
+.seg button.on{background:var(--purple);color:#fff}
+.setting{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:10px 0}
+.setting>label{font-weight:600;min-width:150px}
+.check-btn{border:0;background:none;font-size:1.5rem;line-height:1;padding:6px 10px;border-radius:10px;cursor:pointer;min-width:48px;min-height:44px}
+.check-btn:hover,.check-btn:focus-visible{background:#fbefe9}
+.check-btn.hand{box-shadow:inset 0 0 0 2px #e9cfff}
+input,textarea{-webkit-user-select:text;user-select:text}
+.gate{display:flex;flex-direction:column;align-items:center;gap:10px;margin:6px 0 14px}
+.gate label{font-weight:600;font-size:1.15rem}
+.gate input{font:inherit;font-size:1.8rem;font-weight:700;width:5em;text-align:center;padding:.2em;border:3px solid var(--line);border-radius:14px;color:var(--ink)}
+.gate input:focus{outline:none;border-color:var(--purple)}
+.gate .err{color:var(--red-d);font-weight:600;min-height:1.3em}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.prog{border-collapse:collapse;width:100%;min-width:560px;font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',system-ui,-apple-system,'Segoe UI',sans-serif}
+table.prog th,table.prog td{padding:7px 8px;border-bottom:1px solid #f6e6e0;text-align:center;font-size:.98rem}
+table.prog th{background:#fff6f2;position:sticky;top:0}
+table.prog td.l{text-align:left}
+table.prog td.l small{color:var(--ink-soft)}
+table.prog td.na{color:#ccb8b2}
+
+/* mascot */
+.mascot{transition-property:none!important;position:fixed;left:max(10px,env(safe-area-inset-left));bottom:max(8px,env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;z-index:30;pointer-events:none;max-width:calc(100% - 20px)}
+.mascot .lion{font-size:clamp(52px,12vw,70px);line-height:1;pointer-events:auto;cursor:pointer;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 4px 3px rgba(0,0,0,.18));background:none;border:0;padding:0}
+.mascot.talking .lion{animation:talk .28s ease-in-out infinite alternate}
+.mascot .bubble{
+  position:relative;background:#fff;border-radius:22px;padding:10px 16px;margin-bottom:24px;max-width:min(560px,calc(100vw - 110px));
+  font-size:clamp(1.05rem,3.3vw,1.35rem);font-weight:600;box-shadow:0 4px 0 var(--line);opacity:0;transform:translateY(8px) scale(.96);transition:.25s
+}
+.mascot .bubble .pyf{font-weight:700}
+.mascot .bubble.show{opacity:1;transform:none}
+.mascot .bubble::before{content:'';position:absolute;left:-10px;bottom:12px;border:10px solid transparent;border-right-color:#fff;border-left:0}
+.mascot .lion{touch-action:none;-webkit-user-drag:none}
+.mascot.dragging .lion{animation:none;transform:scale(1.18) rotate(-6deg);cursor:grabbing;filter:drop-shadow(0 10px 8px rgba(0,0,0,.25))}
+.mascot.flip{flex-direction:row-reverse}
+.mascot.flip .bubble::before{left:auto;right:-10px;border:10px solid transparent;border-left-color:#fff;border-right:0}
+.mascot.top{align-items:flex-start}
+.mascot.top .bubble{margin-bottom:0;margin-top:14px}
+.mascot.top .bubble::before{bottom:auto;top:12px}
+
+/* overlays */
+.overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(58,36,64,.45);display:grid;place-items:center;z-index:50;padding:16px;animation:fade .2s;overflow-y:auto}
+.overlay .panel{background:#fff;border-radius:34px;padding:26px 22px 24px;text-align:center;max-width:520px;width:100%;box-shadow:0 12px 0 rgba(0,0,0,.14);animation:pop-in .4s cubic-bezier(.2,1.6,.4,1)}
+.overlay h1{margin:6px 0 4px;font-size:clamp(1.9rem,6vw,2.6rem)}
+.overlay p{margin:0 0 18px;font-size:1.25rem;color:var(--ink-soft);font-weight:600}
+.overlay .row{flex-direction:column}
+.overlay .row .btn{width:100%}
+.big-star{font-size:clamp(5rem,20vw,7rem);line-height:1;display:inline-block;animation:spin-in .9s cubic-bezier(.2,1.4,.4,1)}
+.splash{background:linear-gradient(180deg,#ffe2cf,#fff8e6)}
+.splash .panel{background:transparent;box-shadow:none}
+.splash .hero-lion{font-size:clamp(7rem,30vw,11rem);line-height:1;display:inline-block;animation:bob 2.4s ease-in-out infinite}
+.splash h1{font-family:var(--font-han);font-weight:400;font-size:clamp(3rem,13vw,5rem);margin:6px 0;background:linear-gradient(90deg,var(--red),var(--pink),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.06em}
+
+/* effects */
+.confetti{position:fixed;top:-24px;width:12px;height:18px;border-radius:3px;z-index:60;pointer-events:none;animation:fall linear forwards}
+.spark{position:fixed;z-index:70;pointer-events:none;font-size:1.7rem;transform:translate(-50%,-50%);animation:spark .85s ease-out forwards}
+.shake{animation:shake .45s!important}
+.bounce{animation:bounce .45s}
+.hint{animation:glow .9s ease-in-out infinite!important}
+.fade{opacity:.2;pointer-events:none;transition:opacity .3s}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes talk{from{transform:rotate(-5deg) scale(1)}to{transform:rotate(5deg) scale(1.06)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+@keyframes pop{40%{transform:scale(1.3)}100%{transform:scale(0);opacity:0}}
+@keyframes pop-in{from{transform:scale(.5);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-12px) rotate(-3deg)}40%{transform:translateX(10px) rotate(3deg)}60%{transform:translateX(-7px)}80%{transform:translateX(5px)}}
+@keyframes bounce{0%,100%{transform:scale(1)}40%{transform:scale(1.12) translateY(-6px)}70%{transform:scale(.96)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,210,63,.95),0 7px 0 var(--yellow-d);transform:scale(1)}50%{box-shadow:0 0 0 12px rgba(255,210,63,0),0 7px 0 var(--yellow-d);transform:scale(1.08)}}
+@keyframes spin-in{from{transform:rotate(-200deg) scale(0)}to{transform:none}}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot))}}
+@keyframes spark{to{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(.4);opacity:0}}
+
+@media (max-width:560px){
+  .act-head .act-title .nm{display:none}
+  .act-grid{grid-template-columns:repeat(2,1fr);gap:16px 12px}
+  .lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 10px}
+  .lesson-btn{min-height:0}   /* three across fit even a 320px screen */
+  .icon-btn{width:46px;height:46px;font-size:1.3rem}
+  .topbar{gap:7px}
+  .brand .logo{display:none}
+  .brand{font-size:1.5rem}
+  .brand .name{overflow:hidden;text-overflow:ellipsis}
+  .panel-card{padding:14px 12px}
+  table.prog{min-width:0}
+  table.prog th,table.prog td{padding:5px 3px;font-size:.8rem}
+  table.prog th{font-size:.72rem}
+  table.prog td.l{font-size:.85rem;overflow-wrap:anywhere}
+  .check-btn{min-width:36px;padding:6px 3px;font-size:1.3rem}
+  .pill{font-size:1.05rem;padding:.3em .6em}
+  .tone-cards{gap:8px}
+}
+/* phones held sideways and other short screens */
+@media (max-height:520px){
+  #app{padding-top:max(6px,env(safe-area-inset-top));padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+  .topbar{margin-bottom:6px}
+  .icon-btn{width:44px;height:44px;font-size:1.25rem}
+  .progress{height:16px}
+  .stage{min-height:0;gap:10px;padding:2px 0}
+  .stage.compact{gap:8px}
+  .btn{min-height:46px;font-size:1.05rem;padding:.35em .9em}
+  .btn.big{min-height:50px;font-size:1.2rem}
+  .listen{width:58px;height:58px;font-size:1.7rem}
+  .mascot .lion{font-size:42px}
+  .mascot .bubble{font-size:.9rem;padding:6px 12px;margin-bottom:10px;max-width:min(440px,52vw)}
+  .trace-top,.write-top{display:none}
+  .trace-wrap{height:calc(100vh - 142px);height:calc(100dvh - 142px);min-height:160px}
+  .grid-box{width:min(60vw,calc(100dvh - 150px),300px);height:min(60vw,calc(100dvh - 150px),300px)}
+  .draw-tools{gap:5px}
+  .swatch{width:32px;height:32px;border-width:3px}
+  .tool{width:36px;height:36px;font-size:1.1rem}
+  .draw-wrap{height:calc(100vh - 176px);height:calc(100dvh - 176px);min-height:140px}
+  .word-bank .wchip{font-size:1.2rem}
+  .slot{min-width:52px;height:62px;font-size:2rem}
+  .tile{min-width:52px;height:56px;font-size:1.9rem}
+  .spell-pic,.sent-pic,.sent-pic.small{font-size:2.4rem}
+  .quiz-pic{font-size:2.6rem}
+  .quiz-han{font-size:3rem}
+  .sentence{font-size:1.7rem;gap:8px}
+  .balloons{padding:4px 0 34px}
+  .balloon{width:88px;height:106px;font-size:2.1rem}
+  .balloon.han{font-size:2.6rem}
+  .sound-card,.char-card{width:104px}
+  .sound-card .glyph{font-size:2.4rem}
+  .char-card .zi{font-size:2.8rem}
+  .word-card{padding:8px 16px 6px}
+  .word-card .rt{font-size:2rem}
+  .syl{font-size:2.2rem}
+  .blend-box{padding:12px 18px;gap:8px}
+  .bpart{font-size:2.2rem}
+  .bres{font-size:2.4rem}
+  .choice{font-size:2rem}
+  .tone-card .ts{font-size:1.8rem}
+  .lesson-hero{padding:10px;margin-bottom:12px;gap:6px}
+  .overlay .panel{padding:14px 18px}
+  .big-star{font-size:3.4rem}
+  .overlay h1{font-size:1.6rem;margin:2px 0}
+  .overlay p{margin-bottom:10px;font-size:1.05rem}
+  .overlay .row{flex-direction:row;flex-wrap:wrap}
+  .overlay .row .btn{width:auto}
+  .splash .hero-lion{font-size:4.5rem}
+  .splash h1{font-size:2.6rem;margin:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .hint,.shake{animation:none!important}
+  .hint{outline:5px solid var(--yellow);outline-offset:3px}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<noscript><p style="padding:24px;font-size:1.3rem">请打开 JavaScript 才能玩“中文乐园”。</p></noscript>
+<script>
+// Version of this page (the number goes up with every update) and of the audio files (so a page never uses an
+// older clip list). tools/stamp.py writes both.
+var APP_VERSION = {n:1, date:'2026-10-02'};
+var AUDIO_VERSION = {manifest:'05a5950572', music:'ac199bb93b'};
+document.write('<script src="audio/manifest.js?v=' + AUDIO_VERSION.manifest + '"><\/script>');
+</script>
+<script>
+(() => {
+'use strict';
+
+/* =====================================================================
+   CONTENT — follows the order of the 统编版 (2024) 一年级上册 语文 textbook:
+   识字 1–4, 汉语拼音 1–14, 阅读 1–4, 识字 5–8, 阅读 5–10 (32 lessons).
+   The words and short texts are written for this game; the old poems and
+   rhymes (咏鹅, 江南, 两件宝, 对韵, 日月明) are in the public domain.
+   Every Chinese text carries its pinyin (one syllable per character), which
+   is shown over the characters and is how 乐乐 reads it (tools/build_audio.py).
+   ===================================================================== */
+
+// Pinyin sounds. say: how the sound is read on its own; pic + w (wp): the key word on the card;
+// ph (php): what 乐乐 says after the sound (a rhyme for the vowels, “广播的播” for the others).
+const SOUND = {
+  a:{say:'ā', pic:'😮', w:'啊', wp:'ā', ph:'张大嘴巴，啊啊啊。', php:'zhāng dà zuǐ ba ā ā ā'},
+  o:{say:'ō', pic:'🐓', w:'公鸡', wp:'gōng jī', ph:'圆圆嘴巴，喔喔喔。', php:'yuán yuán zuǐ ba ō ō ō'},
+  e:{say:'ē', pic:'🦢', w:'白鹅', wp:'bái é', ph:'扁扁嘴巴，鹅鹅鹅。', php:'biǎn biǎn zuǐ ba é é é'},
+  i:{say:'ī', pic:'👕', w:'衣服', wp:'yī fu', ph:'牙齿对齐，衣衣衣。', php:'yá chǐ duì qí yī yī yī'},
+  u:{say:'ū', pic:'🏠', w:'小屋', wp:'xiǎo wū', ph:'嘴巴突出，屋屋屋。', php:'zuǐ ba tū chū wū wū wū'},
+  'ü':{say:'ǖ', pic:'🐟', w:'小鱼', wp:'xiǎo yú', ph:'嘴吹口哨，鱼鱼鱼。', php:'zuǐ chuī kǒu shào yú yú yú'},
+  b:{say:'bō', pic:'📻', w:'广播', wp:'guǎng bō', ph:'广播的播', php:'guǎng bō de bō'},
+  p:{say:'pō', pic:'🧗', w:'山坡', wp:'shān pō', ph:'山坡的坡', php:'shān pō de pō'},
+  m:{say:'mō', pic:'🐴', w:'小马', wp:'xiǎo mǎ', ph:'小马的马', php:'xiǎo mǎ de mǎ'},
+  f:{say:'fō', pic:'✈️', w:'飞机', wp:'fēi jī', ph:'飞机的飞', php:'fēi jī de fēi'},
+  d:{say:'dē', pic:'🥚', w:'鸡蛋', wp:'jī dàn', ph:'鸡蛋的蛋', php:'jī dàn de dàn'},
+  t:{say:'tē', pic:'🐰', w:'兔子', wp:'tù zi', ph:'兔子的兔', php:'tù zi de tù'},
+  n:{say:'nē', pic:'🐮', w:'小牛', wp:'xiǎo niú', ph:'小牛的牛', php:'xiǎo niú de niú'},
+  l:{say:'lē', pic:'🐯', w:'老虎', wp:'lǎo hǔ', ph:'老虎的老', php:'lǎo hǔ de lǎo'},
+  g:{say:'gē', pic:'🕊️', w:'鸽子', wp:'gē zi', ph:'鸽子的鸽', php:'gē zi de gē'},
+  k:{say:'kē', pic:'🦚', w:'孔雀', wp:'kǒng què', ph:'孔雀的孔', php:'kǒng què de kǒng'},
+  h:{say:'hē', pic:'🥤', w:'喝水', wp:'hē shuǐ', ph:'喝水的喝', php:'hē shuǐ de hē'},
+  j:{say:'jī', pic:'🐔', w:'小鸡', wp:'xiǎo jī', ph:'小鸡的鸡', php:'xiǎo jī de jī'},
+  q:{say:'qī', pic:'🎈', w:'气球', wp:'qì qiú', ph:'气球的气', php:'qì qiú de qì'},
+  x:{say:'xī', pic:'🍉', w:'西瓜', wp:'xī guā', ph:'西瓜的西', php:'xī guā de xī'},
+  z:{say:'zī', pic:'✍️', w:'写字', wp:'xiě zì', ph:'写字的字', php:'xiě zì de zì'},
+  c:{say:'cī', pic:'🦔', w:'刺猬', wp:'cì wei', ph:'刺猬的刺', php:'cì wei de cì'},
+  s:{say:'sī', pic:'🧵', w:'蚕丝', wp:'cán sī', ph:'蚕丝的丝', php:'cán sī de sī'},
+  zh:{say:'zhī', pic:'🧶', w:'织毛衣', wp:'zhī máo yī', ph:'织毛衣的织', php:'zhī máo yī de zhī'},
+  ch:{say:'chī', pic:'🍜', w:'吃面', wp:'chī miàn', ph:'吃面的吃', php:'chī miàn de chī'},
+  sh:{say:'shī', pic:'🦁', w:'狮子', wp:'shī zi', ph:'狮子的狮', php:'shī zi de shī'},
+  r:{say:'rì', pic:'☀️', w:'日出', wp:'rì chū', ph:'日出的日', php:'rì chū de rì'},
+  y:{say:'yī', pic:'🦆', w:'鸭子', wp:'yā zi', ph:'鸭子的鸭', php:'yā zi de yā'},
+  w:{say:'wū', pic:'🐸', w:'青蛙', wp:'qīng wā', ph:'青蛙的蛙', php:'qīng wā de wā'},
+  ai:{say:'āi', pic:'❤️', w:'爱心', wp:'ài xīn', ph:'爱心的爱', php:'ài xīn de ài'},
+  ei:{say:'ēi', pic:'🥛', w:'杯子', wp:'bēi zi', ph:'杯子的杯', php:'bēi zi de bēi'},
+  ui:{say:'uī', pic:'💧', w:'水滴', wp:'shuǐ dī', ph:'水滴的水', php:'shuǐ dī de shuǐ'},
+  ao:{say:'āo', pic:'🐱', w:'小猫', wp:'xiǎo māo', ph:'小猫的猫', php:'xiǎo māo de māo'},
+  ou:{say:'ōu', pic:'🐶', w:'小狗', wp:'xiǎo gǒu', ph:'小狗的狗', php:'xiǎo gǒu de gǒu'},
+  iu:{say:'iū', pic:'6️⃣', w:'六', wp:'liù', ph:'数字六', php:'shù zì liù'},
+  ie:{say:'iē', pic:'🥥', w:'椰子', wp:'yē zi', ph:'椰子的椰', php:'yē zi de yē'},
+  'üe':{say:'üē', pic:'🌙', w:'月亮', wp:'yuè liang', ph:'月亮的月', php:'yuè liang de yuè'},
+  er:{say:'ēr', pic:'👂', w:'耳朵', wp:'ěr duo', ph:'耳朵的耳', php:'ěr duo de ěr'},
+  an:{say:'ān', pic:'⛰️', w:'大山', wp:'dà shān', ph:'大山的山', php:'dà shān de shān'},
+  en:{say:'ēn', pic:'🚪', w:'大门', wp:'dà mén', ph:'大门的门', php:'dà mén de mén'},
+  in:{say:'īn', pic:'✉️', w:'写信', wp:'xiě xìn', ph:'写信的信', php:'xiě xìn de xìn'},
+  un:{say:'ūn', pic:'🏘️', w:'村子', wp:'cūn zi', ph:'村子的村', php:'cūn zi de cūn'},
+  'ün':{say:'ǖn', pic:'☁️', w:'白云', wp:'bái yún', ph:'白云的云', php:'bái yún de yún'},
+  ang:{say:'āng', pic:'🍬', w:'糖果', wp:'táng guǒ', ph:'糖果的糖', php:'táng guǒ de táng'},
+  eng:{say:'ēng', pic:'💡', w:'电灯', wp:'diàn dēng', ph:'电灯的灯', php:'diàn dēng de dēng'},
+  ing:{say:'īng', pic:'⭐', w:'星星', wp:'xīng xing', ph:'星星的星', php:'xīng xing de xīng'},
+  ong:{say:'ōng', pic:'🐉', w:'小龙', wp:'xiǎo lóng', ph:'小龙的龙', php:'xiǎo lóng de lóng'},
+};
+const INITIALS = ['b','p','m','f','d','t','n','l','g','k','h','j','q','x','zh','ch','sh','r','z','c','s','y','w'];
+const isInitial = s => INITIALS.includes(s);
+// Sounds a child easily mixes up; later rounds use them as wrong answers.
+const LOOK_PY = {
+  b:'d p q', d:'b p q', p:'q b d', q:'p d g', m:'n', n:'m h l', l:'n', f:'t', t:'f d', h:'n k', k:'h g', g:'k q',
+  j:'q x', x:'j q', zh:'z ch sh', ch:'c zh sh', sh:'s zh ch', r:'sh l', z:'zh c s', c:'ch z s', s:'sh z c', y:'w', w:'y',
+  a:'o e', o:'a e', e:'o a', i:'u ü', u:'ü i', 'ü':'u i',
+  ai:'ei ao', ei:'ai ie', ui:'iu ei', ao:'ou ai', ou:'ao iu', iu:'ui ou', ie:'üe ei', 'üe':'ie ui', er:'e ei',
+  an:'en ang', en:'an eng', in:'ing en', un:'ün en', 'ün':'un in', ang:'an eng', eng:'en ang', ing:'in eng', ong:'eng ang',
+};
+// Characters that look alike (wrong answers in later rounds).
+const LOOK_ZI = {
+  '人':'入八大', '入':'人八', '八':'人入', '大':'天太犬', '天':'夫大', '日':'目白田', '目':'日自且', '白':'日百', '田':'由日', '土':'士工上',
+  '工':'土干', '木':'本禾术', '本':'木体', '禾':'木', '口':'日中', '上':'下土', '下':'上卜', '手':'毛', '牛':'午', '力':'刀九', '刀':'力', '西':'四',
+  '四':'西', '了':'子', '子':'了', '山':'出', '出':'山', '鸟':'乌', '乌':'鸟', '片':'斤', '早':'草', '云':'去', '尺':'只', '中':'申', '火':'大',
+  '水':'木', '月':'用', '用':'月', '耳':'目', '我':'找', '找':'我', '他':'她', '你':'您', '三':'二', '二':'三', '一':'二', '五':'王', '石':'右',
+  '右':'石左', '左':'右', '几':'九', '方':'万', '半':'羊', '问':'间', '见':'贝', '头':'买', '两':'雨', '雨':'两', '书':'韦', '立':'六',
+};
+
+// The lessons. kind: zi 识字 · py 汉语拼音 · yd 阅读.
+// zi / yd: chars [字, pinyin, word, word pinyin, picture, what 乐乐 says (optional)], write: characters to write,
+//          words [词, pinyin, picture]
+// py:      sounds, syll [syllable, 字, picture] (read and blend)
+// all:     sentences [text with / between words, pinyin, picture]
+const LESSONS = [
+  // ---------------- 第一单元 识字 ----------------
+  {n:1, unit:1, kind:'zi', book:'识字 1', title:'天地人',
+   chars:[['天','tiān','天空','tiān kōng','🌤️'],['地','dì','大地','dà dì','🌏'],['人','rén','大人','dà rén','🧑'],
+          ['你','nǐ','你好','nǐ hǎo',''],['我','wǒ','我们','wǒ men',''],['他','tā','他们','tā men','']],
+   write:['人','天','地'],
+   words:[['天空','tiān kōng','🌤️'],['大地','dà dì','🌏'],['大人','dà rén','🧑'],['你好','nǐ hǎo','👋'],['我们','wǒ men','🙋'],['他们','tā men','👬']],
+   sentences:[['你好！/我/是/乐乐。','nǐ hǎo wǒ shì lè lè','🦁'],['天上/有/白云。','tiān shàng yǒu bái yún','☁️'],['我/和/你/是/好朋友。','wǒ hé nǐ shì hǎo péng you','🤝']]},
+  {n:2, unit:1, kind:'zi', book:'识字 2', title:'金木水火土',
+   chars:[['一','yī','一个','yí gè','1️⃣','一，数字一','yī shù zì yī'],['二','èr','二月','èr yuè','2️⃣','二，数字二','èr shù zì èr'],['三','sān','三个','sān gè','3️⃣','三，数字三','sān shù zì sān'],
+          ['四','sì','四个','sì gè','4️⃣','四，数字四','sì shù zì sì'],['五','wǔ','五个','wǔ gè','5️⃣','五，数字五','wǔ shù zì wǔ'],['上','shàng','上面','shàng miàn','⬆️'],['下','xià','下面','xià miàn','⬇️']],
+   write:['一','二','三','上','下'],
+   words:[['金鱼','jīn yú','🐠'],['木头','mù tou','🪵'],['水果','shuǐ guǒ','🍎'],['火车','huǒ chē','🚂'],['土豆','tǔ dòu','🥔'],['上下','shàng xià','↕️']],
+   sentences:[['一二三四五，/金木水火土。','yī èr sān sì wǔ jīn mù shuǐ huǒ tǔ','🖐️'],['我/有/五个/土豆。','wǒ yǒu wǔ gè tǔ dòu','🥔'],['小火车/上山/下山。','xiǎo huǒ chē shàng shān xià shān','🚂']]},
+  {n:3, unit:1, kind:'zi', book:'识字 3', title:'口耳目手足',
+   chars:[['口','kǒu','口水','kǒu shuǐ','👄'],['耳','ěr','耳朵','ěr duo','👂'],['目','mù','节目','jié mù','👁️'],['手','shǒu','小手','xiǎo shǒu','✋'],
+          ['足','zú','足球','zú qiú','🦶'],['站','zhàn','站好','zhàn hǎo','🧍'],['坐','zuò','坐下','zuò xià','🪑']],
+   write:['口','目','耳','手'],
+   words:[['耳朵','ěr duo','👂'],['手套','shǒu tào','🧤'],['足球','zú qiú','⚽'],['站好','zhàn hǎo','🧍'],['坐下','zuò xià','🪑'],['口水','kǒu shuǐ','🤤']],
+   sentences:[['我/用/耳朵/听。','wǒ yòng ěr duo tīng','👂'],['我/有/一双/小手。','wǒ yǒu yì shuāng xiǎo shǒu','👐'],['站/要/站好，/坐/要/坐好。','zhàn yào zhàn hǎo zuò yào zuò hǎo','🪑']]},
+  {n:4, unit:1, kind:'zi', book:'识字 4', title:'日月山川',
+   chars:[['日','rì','日出','rì chū','☀️'],['月','yuè','月亮','yuè liang','🌙'],['山','shān','大山','dà shān','⛰️'],['川','chuān','山川','shān chuān','🏞️'],
+          ['水','shuǐ','喝水','hē shuǐ','💧'],['火','huǒ','火车','huǒ chē','🔥'],['石','shí','石头','shí tou','🪨'],['禾','hé','禾苗','hé miáo','🌾']],
+   write:['日','月','山','火'],
+   words:[['日出','rì chū','🌅'],['月亮','yuè liang','🌙'],['火山','huǒ shān','🌋'],['石头','shí tou','🪨'],['禾苗','hé miáo','🌱'],['山川','shān chuān','🏞️']],
+   sentences:[['山上/有/石头。','shān shàng yǒu shí tou','⛰️'],['月亮/出来/了。','yuè liang chū lái le','🌙'],['太阳/从/东边/出来。','tài yáng cóng dōng bian chū lái','🌅']]},
+  // ---------------- 第二单元 汉语拼音 ----------------
+  {n:5, unit:2, kind:'py', book:'汉语拼音 1', title:'a o e', sounds:['a','o','e'],
+   syll:[['ā','啊','😮'],['ō','喔','🐓'],['é','鹅','🦢'],['è','饿','😋']],
+   sentences:[['鹅，/鹅，/鹅，/曲项/向/天/歌。','é é é qū xiàng xiàng tiān gē','🦢'],['大公鸡，/喔喔/叫。','dà gōng jī wō wō jiào','🐓']]},
+  {n:6, unit:2, kind:'py', book:'汉语拼音 2', title:'i u ü', sounds:['i','u','ü'],
+   syll:[['yī','衣','👕'],['wū','屋','🏠'],['yú','鱼','🐟'],['yǔ','雨','🌧️']],
+   sentences:[['小鱼/吐/泡泡。','xiǎo yú tǔ pào pao','🐟'],['我/穿/新衣服。','wǒ chuān xīn yī fu','👕'],['乌鸦/在/树上。','wū yā zài shù shàng','🐦']]},
+  {n:7, unit:2, kind:'py', book:'汉语拼音 3', title:'b p m f', sounds:['b','p','m','f'],
+   syll:[['bā','八','8️⃣'],['bà','爸','👨'],['pá','爬','🐛'],['mā','妈','👩'],['mǎ','马','🐴'],['bǐ','笔','✏️'],['bí','鼻','👃'],['mǐ','米','🍚']],
+   sentences:[['爸爸/妈妈/爱/我。','bà ba mā ma ài wǒ','👨‍👩‍👧'],['小马/爬/山坡。','xiǎo mǎ pá shān pō','🐴']]},
+  {n:8, unit:2, kind:'py', book:'汉语拼音 4', title:'d t n l', sounds:['d','t','n','l'],
+   syll:[['tù','兔','🐰'],['lù','鹿','🦌'],['lí','梨','🍐'],['là','辣','🌶️'],['nǚ','女','👧'],['dú','读','📖'],['dà','大','🐘'],['dì','弟','👦']],
+   sentences:[['小兔子/吃/绿草。','xiǎo tù zi chī lǜ cǎo','🐰'],['弟弟/爱/读书。','dì di ài dú shū','📖']]},
+  // ---------------- 第三单元 汉语拼音 ----------------
+  {n:9, unit:3, kind:'py', book:'汉语拼音 5', title:'g k h', sounds:['g','k','h'],
+   syll:[['gǔ','鼓','🥁'],['kū','哭','😭'],['hǔ','虎','🐯'],['huā','花','🌸'],['guā','瓜','🍈'],['huǒ','火','🔥'],['guō','锅','🍳'],['huà','画','🖼️']],
+   sentences:[['哥哥/打鼓。','gē ge dǎ gǔ','🥁'],['小花/开/了。','xiǎo huā kāi le','🌸'],['老虎/喝/河水。','lǎo hǔ hē hé shuǐ','🐯']]},
+  {n:10, unit:3, kind:'py', book:'汉语拼音 6', title:'j q x', sounds:['j','q','x'],
+   syll:[['jī','鸡','🐔'],['qī','七','7️⃣'],['xǐ','洗','🧼'],['qí','旗','🚩'],['jú','菊','🌼'],['xiā','虾','🦐'],['jiā','家','🏡'],['qù','去','🚶']],
+   sentences:[['小鸡/吃/米。','xiǎo jī chī mǐ','🐔'],['我/去/洗手。','wǒ qù xǐ shǒu','🧼']]},
+  {n:11, unit:3, kind:'py', book:'汉语拼音 7', title:'z c s', sounds:['z','c','s'],
+   syll:[['zì','字','✍️'],['sì','四','4️⃣'],['sī','丝','🧵'],['cì','刺','🦔'],['zuò','坐','🪑'],['suǒ','锁','🔒'],['cuò','错','❌'],['zú','足','🦶']],
+   sentences:[['我/会/写字。','wǒ huì xiě zì','✍️'],['四只/小鸟/坐在/树上。','sì zhī xiǎo niǎo zuò zài shù shàng','🐦']]},
+  {n:12, unit:3, kind:'py', book:'汉语拼音 8', title:'zh ch sh r', sounds:['zh','ch','sh','r'],
+   syll:[['zhū','猪','🐷'],['zhú','竹','🎋'],['chē','车','🚗'],['chá','茶','🍵'],['shū','书','📚'],['shí','十','🔟'],['rì','日','☀️'],['rè','热','🥵']],
+   sentences:[['熊猫/吃/竹子。','xióng māo chī zhú zi','🐼'],['我/爱/读书。','wǒ ài dú shū','📚'],['日出/了，/天/热/了。','rì chū le tiān rè le','☀️']]},
+  {n:13, unit:3, kind:'py', book:'汉语拼音 9', title:'y w', sounds:['y','w'],
+   syll:[['yā','鸭','🦆'],['yá','牙','🦷'],['yǔ','雨','🌧️'],['yú','鱼','🐟'],['yī','衣','👕'],['wǔ','五','5️⃣'],['wā','蛙','🐸'],['wà','袜','🧦']],
+   sentences:[['小鸭子/游/过来/了。','xiǎo yā zi yóu guò lái le','🦆'],['下雨/了。','xià yǔ le','🌧️'],['我/有/五双/袜子。','wǒ yǒu wǔ shuāng wà zi','🧦']]},
+  // ---------------- 第四单元 汉语拼音 ----------------
+  {n:14, unit:4, kind:'py', book:'汉语拼音 10', title:'ai ei ui', sounds:['ai','ei','ui'],
+   syll:[['cài','菜','🥬'],['nǎi','奶','🥛'],['bái','白','⚪'],['fēi','飞','✈️'],['bèi','贝','🐚'],['shuǐ','水','💧'],['zuǐ','嘴','👄'],['tuǐ','腿','🦵']],
+   sentences:[['小飞机，/飞呀/飞。','xiǎo fēi jī fēi ya fēi','✈️'],['妹妹/爱/喝/牛奶。','mèi mei ài hē niú nǎi','🥛']]},
+  {n:15, unit:4, kind:'py', book:'汉语拼音 11', title:'ao ou iu', sounds:['ao','ou','iu'],
+   syll:[['māo','猫','🐱'],['bāo','包','🎒'],['táo','桃','🍑'],['cǎo','草','🌿'],['gǒu','狗','🐶'],['hóu','猴','🐒'],['niú','牛','🐮'],['qiú','球','⚽']],
+   sentences:[['小猫/爱/吃鱼。','xiǎo māo ài chī yú','🐱'],['我/和/小狗/踢球。','wǒ hé xiǎo gǒu tī qiú','⚽'],['小猴/吃/桃子。','xiǎo hóu chī táo zi','🐒']]},
+  {n:16, unit:4, kind:'py', book:'汉语拼音 12', title:'ie üe er', sounds:['ie','üe','er'],
+   syll:[['yè','叶','🍃'],['xié','鞋','👟'],['dié','蝶','🦋'],['yuè','月','🌙'],['xuě','雪','❄️'],['xué','学','🏫'],['ěr','耳','👂'],['èr','二','2️⃣']],
+   sentences:[['下雪/了，/雪花/白白的。','xià xuě le xuě huā bái bái de','❄️'],['蝴蝶/飞到/花上。','hú dié fēi dào huā shàng','🦋']]},
+  {n:17, unit:4, kind:'py', book:'汉语拼音 13', title:'an en in un ün', label:'an en in…', sounds:['an','en','in','un','ün'],
+   syll:[['sǎn','伞','☂️'],['dàn','蛋','🥚'],['mén','门','🚪'],['xìn','信','✉️'],['lín','林','🌲'],['cūn','村','🏘️'],['qún','裙','👗'],['yún','云','☁️']],
+   sentences:[['下雨/了，/打开/小伞。','xià yǔ le dǎ kāi xiǎo sǎn','☂️'],['树林/里/有/小鸟。','shù lín lǐ yǒu xiǎo niǎo','🌲'],['白云/在/天上/飘。','bái yún zài tiān shàng piāo','☁️']]},
+  {n:18, unit:4, kind:'py', book:'汉语拼音 14', title:'ang eng ing ong', label:'ang eng…', sounds:['ang','eng','ing','ong'],
+   syll:[['táng','糖','🍬'],['yáng','羊','🐑'],['dēng','灯','💡'],['fēng','风','🌬️'],['xīng','星','⭐'],['bīng','冰','🧊'],['lóng','龙','🐉'],['zhōng','钟','⏰']],
+   sentences:[['天上/有/星星。','tiān shàng yǒu xīng xing','⭐'],['小羊/吃/青草。','xiǎo yáng chī qīng cǎo','🐑'],['风/来了，/灯/亮了。','fēng lái le dēng liàng le','💡']]},
+  // ---------------- 第五单元 阅读 ----------------
+  {n:19, unit:5, kind:'yd', book:'阅读 1', title:'秋天',
+   chars:[['秋','qiū','秋天','qiū tiān','🍂'],['气','qì','天气','tiān qì','🌤️'],['了','le','来了','lái le',''],['树','shù','大树','dà shù','🌳'],
+          ['叶','yè','树叶','shù yè','🍃'],['片','piàn','一片','yí piàn','🍁'],['大','dà','大小','dà xiǎo','🐘'],['飞','fēi','飞机','fēi jī','✈️']],
+   write:['大','了','片','叶'],
+   words:[['秋天','qiū tiān','🍂'],['天气','tiān qì','🌤️'],['大树','dà shù','🌳'],['树叶','shù yè','🍃'],['一片','yí piàn','🍁'],['飞机','fēi jī','✈️']],
+   sentences:[['秋天/到了，/大树的/叶子/黄了。','qiū tiān dào le dà shù de yè zi huáng le','🍂'],['一片/树叶/飞/下来。','yí piàn shù yè fēi xià lái','🍁'],['小鸟/飞到/树上。','xiǎo niǎo fēi dào shù shàng','🐦']]},
+  {n:20, unit:5, kind:'yd', book:'阅读 2', title:'江南',
+   chars:[['江','jiāng','长江','cháng jiāng','🏞️'],['南','nán','南方','nán fāng',''],['可','kě','可以','kě yǐ',''],['莲','lián','莲花','lián huā',''],
+          ['鱼','yú','小鱼','xiǎo yú','🐟'],['东','dōng','东方','dōng fāng',''],['西','xī','西瓜','xī guā','🍉'],['北','běi','北方','běi fāng','']],
+   write:['东','西','北','鱼'],
+   words:[['江南','jiāng nán',''],['莲花','lián huā',''],['小鱼','xiǎo yú','🐟'],['金鱼','jīn yú','🐠'],['西瓜','xī guā','🍉'],['可以','kě yǐ','👌']],
+   sentences:[['江南/可/采莲，/莲叶/何/田田。','jiāng nán kě cǎi lián lián yè hé tián tián','🍃'],['鱼/戏/莲叶/间。','yú xì lián yè jiān','🐟'],
+              ['鱼/戏/莲叶/东，/鱼/戏/莲叶/西。','yú xì lián yè dōng yú xì lián yè xī','🐠'],['鱼/戏/莲叶/南，/鱼/戏/莲叶/北。','yú xì lián yè nán yú xì lián yè běi','🐟']]},
+  {n:21, unit:5, kind:'yd', book:'阅读 3', title:'雪地里的小画家', label:'小画家',
+   chars:[['雪','xuě','下雪','xià xuě','❄️'],['群','qún','一群','yì qún','🐑'],['竹','zhú','竹子','zhú zi','🎋'],['牙','yá','牙齿','yá chǐ','🦷'],
+          ['用','yòng','用手','yòng shǒu',''],['几','jǐ','几个','jǐ gè',''],['步','bù','跑步','pǎo bù','🏃'],['画','huà','画画','huà huà','🎨']],
+   write:['竹','牙','用','几'],
+   words:[['下雪','xià xuě','❄️'],['竹叶','zhú yè','🎋'],['月牙','yuè yá','🌙'],['画家','huà jiā','🎨'],['几步','jǐ bù','👣'],['一群','yì qún','🐑']],
+   sentences:[['下雪/了，/地上/白白的。','xià xuě le dì shang bái bái de','❄️'],['小鸡/在/雪地里/走了/几步。','xiǎo jī zài xuě dì lǐ zǒu le jǐ bù','🐔'],
+              ['小鸡的/脚印/像/竹叶。','xiǎo jī de jiǎo yìn xiàng zhú yè','🎋'],['小马的/脚印/像/月牙。','xiǎo mǎ de jiǎo yìn xiàng yuè yá','🌙']]},
+  {n:22, unit:5, kind:'yd', book:'阅读 4', title:'四季',
+   chars:[['春','chūn','春天','chūn tiān','🌸'],['夏','xià','夏天','xià tiān','☀️'],['冬','dōng','冬天','dōng tiān','⛄'],['青','qīng','青草','qīng cǎo','🌿'],
+          ['蛙','wā','青蛙','qīng wā','🐸'],['弯','wān','弯弯','wān wān','🌙'],['尖','jiān','尖尖','jiān jiān','🔺'],['说','shuō','说话','shuō huà','🗣️']],
+   write:['冬','尖','青','说'],
+   words:[['春天','chūn tiān','🌸'],['夏天','xià tiān','☀️'],['冬天','dōng tiān','⛄'],['青蛙','qīng wā','🐸'],['四季','sì jì','🗓️'],['说话','shuō huà','🗣️']],
+   sentences:[['春天，/小草/青青的。','chūn tiān xiǎo cǎo qīng qīng de','🌱'],['夏天，/青蛙/呱呱/叫。','xià tiān qīng wā guā guā jiào','🐸'],['冬天，/雪人/笑了。','dōng tiān xuě rén xiào le','⛄']]},
+  // ---------------- 第六单元 识字 ----------------
+  {n:23, unit:6, kind:'zi', book:'识字 5', title:'对韵歌',
+   chars:[['对','duì','对了','duì le','✅'],['云','yún','白云','bái yún','☁️'],['雨','yǔ','下雨','xià yǔ','🌧️'],['风','fēng','大风','dà fēng','🌬️'],
+          ['花','huā','花朵','huā duǒ','🌸'],['鸟','niǎo','小鸟','xiǎo niǎo','🐦'],['虫','chóng','虫子','chóng zi','🐛'],['桃','táo','桃子','táo zi','🍑']],
+   write:['云','风','虫','雨'],
+   words:[['白云','bái yún','☁️'],['下雨','xià yǔ','🌧️'],['大风','dà fēng','🌬️'],['小鸟','xiǎo niǎo','🐦'],['虫子','chóng zi','🐛'],['桃子','táo zi','🍑']],
+   sentences:[['云/对/雨，/雪/对/风。','yún duì yǔ xuě duì fēng','☁️'],['花/对/树，/鸟/对/虫。','huā duì shù niǎo duì chóng','🌸'],['小鸟/在/花丛/里/唱歌。','xiǎo niǎo zài huā cóng lǐ chàng gē','🐦']]},
+  {n:24, unit:6, kind:'zi', book:'识字 6', title:'日月明',
+   chars:[['明','míng','明天','míng tiān','🌅'],['力','lì','力气','lì qi','💪'],['男','nán','男孩','nán hái','👦'],['从','cóng','从前','cóng qián',''],
+          ['众','zhòng','大众','dà zhòng','👥'],['双','shuāng','一双','yì shuāng','🧦'],['林','lín','树林','shù lín','🌳'],['森','sēn','森林','sēn lín','🌲']],
+   write:['力','从','明','林'],
+   words:[['明天','míng tiān','🌅'],['男孩','nán hái','👦'],['力气','lì qi','💪'],['一双','yì shuāng','🧦'],['树林','shù lín','🌳'],['森林','sēn lín','🌲']],
+   compose:[['日','月','明'],['田','力','男'],['人','人','从'],['人','人','人','众'],['木','木','林'],['木','木','木','森'],['小','大','尖']],
+   sentences:[['日月/明，/田力/男。','rì yuè míng tián lì nán','☀️'],['二人/从，/三人/众。','èr rén cóng sān rén zhòng','👥'],['双木/林，/三木/森。','shuāng mù lín sān mù sēn','🌲']]},
+  {n:25, unit:6, kind:'zi', book:'识字 7', title:'小书包',
+   chars:[['书','shū','看书','kàn shū','📚'],['包','bāo','书包','shū bāo','🎒'],['尺','chǐ','尺子','chǐ zi','📏'],['本','běn','本子','běn zi','📒'],
+          ['笔','bǐ','铅笔','qiān bǐ','✏️'],['刀','dāo','剪刀','jiǎn dāo','✂️'],['早','zǎo','早上','zǎo shang','🌅'],['校','xiào','学校','xué xiào','🏫']],
+   write:['刀','尺','本','书'],
+   words:[['书包','shū bāo','🎒'],['尺子','chǐ zi','📏'],['本子','běn zi','📒'],['铅笔','qiān bǐ','✏️'],['剪刀','jiǎn dāo','✂️'],['学校','xué xiào','🏫']],
+   sentences:[['我的/书包/里/有/书/和/本子。','wǒ de shū bāo lǐ yǒu shū hé běn zi','🎒'],['早上，/我/背着/书包/去/学校。','zǎo shang wǒ bēi zhe shū bāo qù xué xiào','🏫'],['铅笔/和/尺子/是/好朋友。','qiān bǐ hé chǐ zi shì hǎo péng you','✏️']]},
+  {n:26, unit:6, kind:'zi', book:'识字 8', title:'升国旗',
+   chars:[['升','shēng','上升','shàng shēng','⬆️'],['国','guó','中国','zhōng guó',''],['旗','qí','红旗','hóng qí','🚩'],['中','zhōng','中间','zhōng jiān',''],
+          ['红','hóng','红色','hóng sè','🔴'],['歌','gē','唱歌','chàng gē','🎤'],['美','měi','美丽','měi lì','🌺'],['立','lì','起立','qǐ lì','🧍']],
+   write:['中','立','升','红'],
+   words:[['国旗','guó qí','🚩'],['红色','hóng sè','🔴'],['唱歌','chàng gē','🎤'],['美丽','měi lì','🌺'],['中国','zhōng guó',''],['起立','qǐ lì','🧍']],
+   sentences:[['红旗/升/起来/了。','hóng qí shēng qǐ lái le','🚩'],['我们/站立，/一起/唱歌。','wǒ men zhàn lì yì qǐ chàng gē','🎤'],['红红的/国旗/真/美丽。','hóng hóng de guó qí zhēn měi lì','🚩']]},
+  // ---------------- 第七单元 阅读 ----------------
+  {n:27, unit:7, kind:'yd', book:'阅读 5', title:'小小的船', label:'小小的船',
+   chars:[['船','chuán','小船','xiǎo chuán','⛵'],['两','liǎng','两个','liǎng gè','✌️'],['头','tóu','头发','tóu fa',''],['里','lǐ','里面','lǐ miàn',''],
+          ['看','kàn','看书','kàn shū','👀'],['见','jiàn','看见','kàn jiàn',''],['闪','shǎn','闪闪','shǎn shǎn','✨'],['星','xīng','星星','xīng xing','⭐']],
+   write:['见','头','里','两'],
+   words:[['小船','xiǎo chuán','⛵'],['两个','liǎng gè','✌️'],['看见','kàn jiàn','👀'],['星星','xīng xing','⭐'],['闪闪','shǎn shǎn','✨'],['月亮','yuè liang','🌙']],
+   sentences:[['弯弯的/月亮/像/一只/小船。','wān wān de yuè liang xiàng yì zhī xiǎo chuán','🌙'],['我/看见/了/闪闪的/星星。','wǒ kàn jiàn le shǎn shǎn de xīng xing','⭐'],['小船/里/坐着/两个/小朋友。','xiǎo chuán lǐ zuò zhe liǎng gè xiǎo péng you','⛵']]},
+  {n:28, unit:7, kind:'yd', book:'阅读 6', title:'影子',
+   chars:[['影','yǐng','影子','yǐng zi','👤'],['前','qián','前面','qián miàn',''],['后','hòu','后面','hòu miàn',''],['左','zuǒ','左手','zuǒ shǒu','🤚'],
+          ['右','yòu','右手','yòu shǒu','✋'],['黑','hēi','黑色','hēi sè','⚫'],['狗','gǒu','小狗','xiǎo gǒu','🐶'],['好','hǎo','你好','nǐ hǎo','👍']],
+   write:['左','右','好','后'],
+   words:[['影子','yǐng zi','👤'],['前面','qián miàn',''],['后面','hòu miàn',''],['左手','zuǒ shǒu','🤚'],['右手','yòu shǒu','✋'],['好朋友','hǎo péng you','🤝']],
+   sentences:[['我/走，/影子/也/走。','wǒ zǒu yǐng zi yě zǒu','👤'],['小黑狗/是/我的/好朋友。','xiǎo hēi gǒu shì wǒ de hǎo péng you','🐶'],['我的/左边/是/小狗，/右边/是/小猫。','wǒ de zuǒ bian shì xiǎo gǒu yòu bian shì xiǎo māo','🐱']]},
+  {n:29, unit:7, kind:'yd', book:'阅读 7', title:'两件宝',
+   chars:[['件','jiàn','一件','yí jiàn','👕'],['宝','bǎo','宝贝','bǎo bèi','👶'],['脑','nǎo','大脑','dà nǎo','🧠'],['做','zuò','做事','zuò shì',''],
+          ['工','gōng','工人','gōng rén','👷'],['想','xiǎng','想一想','xiǎng yi xiǎng','🤔'],['又','yòu','又大又红','yòu dà yòu hóng',''],['能','néng','能干','néng gàn','💪']],
+   write:['工','又','手','宝'],
+   words:[['宝贝','bǎo bèi','👶'],['大脑','dà nǎo','🧠'],['双手','shuāng shǒu','🙌'],['做工','zuò gōng','🔨'],['工人','gōng rén','👷'],['想一想','xiǎng yi xiǎng','🤔']],
+   sentences:[['人/有/两件/宝，/双手/和/大脑。','rén yǒu liǎng jiàn bǎo shuāng shǒu hé dà nǎo','🙌'],['双手/会/做工，/大脑/会/思考。','shuāng shǒu huì zuò gōng dà nǎo huì sī kǎo','🧠'],
+              ['用手/又/用脑，/才能/有/创造。','yòng shǒu yòu yòng nǎo cái néng yǒu chuàng zào','💡']]},
+  // ---------------- 第八单元 阅读 ----------------
+  {n:30, unit:8, kind:'yd', book:'阅读 8', title:'比尾巴',
+   chars:[['比','bǐ','比一比','bǐ yi bǐ','⚖️'],['尾','wěi','尾巴','wěi ba','🐒'],['巴','bā','尾巴','wěi ba',''],['谁','shéi','是谁','shì shéi','❓'],
+          ['长','cháng','长短','cháng duǎn','📏'],['短','duǎn','长短','cháng duǎn',''],['伞','sǎn','雨伞','yǔ sǎn','☂️'],['兔','tù','兔子','tù zi','🐰']],
+   write:['比','长','巴','伞'],
+   words:[['尾巴','wěi ba','🐒'],['比一比','bǐ yi bǐ','⚖️'],['长短','cháng duǎn','📏'],['雨伞','yǔ sǎn','☂️'],['兔子','tù zi','🐰'],['松鼠','sōng shǔ','🐿️'],['公鸡','gōng jī','🐓']],
+   sentences:[['小猴子的/尾巴/长长的。','xiǎo hóu zi de wěi ba cháng cháng de','🐒'],['小兔子的/尾巴/短短的。','xiǎo tù zi de wěi ba duǎn duǎn de','🐰'],['松鼠的/尾巴/像/一把/伞。','sōng shǔ de wěi ba xiàng yì bǎ sǎn','🐿️']]},
+  {n:31, unit:8, kind:'yd', book:'阅读 9', title:'乌鸦喝水',
+   chars:[['乌','wū','乌云','wū yún','🌧️'],['鸦','yā','乌鸦','wū yā','🐦'],['喝','hē','喝水','hē shuǐ','🥤'],['找','zhǎo','找到','zhǎo dào','🔍'],
+          ['办','bàn','办法','bàn fǎ','💡'],['法','fǎ','办法','bàn fǎ',''],['放','fàng','放下','fàng xià',''],['高','gāo','高高','gāo gāo','🦒']],
+   write:['乌','办','找','高'],
+   words:[['乌鸦','wū yā','🐦'],['喝水','hē shuǐ','🥤'],['找到','zhǎo dào','🔍'],['办法','bàn fǎ','💡'],['石子','shí zǐ','🪨'],['放进','fàng jìn','']],
+   sentences:[['乌鸦/口渴/了，/想/喝水。','wū yā kǒu kě le xiǎng hē shuǐ','🐦'],['它/把/小石子/放进/瓶子/里。','tā bǎ xiǎo shí zǐ fàng jìn píng zi lǐ','🪨'],['水/高/了，/乌鸦/喝到/水/了。','shuǐ gāo le wū yā hē dào shuǐ le','💧']]},
+  {n:32, unit:8, kind:'yd', book:'阅读 10', title:'雨点儿',
+   chars:[['点','diǎn','雨点','yǔ diǎn','💧'],['半','bàn','一半','yí bàn','🌓'],['空','kōng','天空','tiān kōng','🌤️'],['问','wèn','问好','wèn hǎo','👋'],
+          ['到','dào','到了','dào le',''],['方','fāng','方向','fāng xiàng','🧭'],['绿','lǜ','绿色','lǜ sè','🟢'],['出','chū','出来','chū lái','']],
+   write:['方','半','出','问'],
+   words:[['雨点','yǔ diǎn','💧'],['一半','yí bàn','🌓'],['天空','tiān kōng','🌤️'],['绿色','lǜ sè','🟢'],['彩虹','cǎi hóng','🌈'],['出来','chū lái','']],
+   sentences:[['小雨点/从/天空/落/下来。','xiǎo yǔ diǎn cóng tiān kōng luò xià lái','🌧️'],['小草/喝了/雨水，/更/绿/了。','xiǎo cǎo hē le yǔ shuǐ gèng lǜ le','🌱'],['雨/停了，/天上/出现/了/彩虹。','yǔ tíng le tiān shàng chū xiàn le cǎi hóng','🌈']]},
+];
+const LESSON_BY_N = Object.fromEntries(LESSONS.map(l => [l.n, l]));
+const UNITS = [[1,'识字','🀄'],[2,'汉语拼音','🔤'],[3,'汉语拼音','🔤'],[4,'汉语拼音','🔤'],[5,'阅读','📖'],[6,'识字','🀄'],[7,'阅读','📖'],[8,'阅读','📖']];
+
+// Drawing colours: clearly different from each other; the name is read out when a colour is picked.
+const DRAW_COLORS = [
+  ['黑色', '#212121'], ['红色', '#e53935'], ['橙色', '#fb8c00'], ['黄色', '#fdd835', true], ['绿色', '#43a047'],
+  ['蓝色', '#1e88e5'], ['紫色', '#8e24aa'], ['粉色', '#f48fb1', true], ['棕色', '#795548'],
+];
+
+// One sticker per lesson: the twelve animals of the Chinese zodiac first.
+const STICKERS = [
+  ['🐭','小老鼠'],['🐮','小牛'],['🐯','小老虎'],['🐰','小兔子'],['🐲','小龙'],['🐍','小蛇'],['🐴','小马'],['🐑','小羊'],
+  ['🐵','小猴子'],['🐔','小鸡'],['🐶','小狗'],['🐷','小猪'],['🐼','大熊猫'],['🦁','小狮子'],['🐨','考拉'],['🦊','小狐狸'],
+  ['🐸','小青蛙'],['🐧','小企鹅'],['🦉','猫头鹰'],['🐢','小乌龟'],['🐙','小章鱼'],['🦄','独角兽'],['🐝','小蜜蜂'],['🐞','七星瓢虫'],
+  ['🦋','花蝴蝶'],['🐬','小海豚'],['🦒','长颈鹿'],['🦖','小恐龙'],['🐳','小鲸鱼'],['🦜','小鹦鹉'],['🦩','火烈鸟'],['🐿️','小松鼠'],
+];
+
+const PRAISE = ['真棒！','太好了！','你答对了！','好厉害！','真聪明！','非常好！','了不起！','做得好！','你真行！'];
+const TRY = ['再试一次！','哎呀，再试试！','差一点点，再来一次！'];
+
+// Everything 乐乐 says. Fixed lines live in T; lines built from lesson data come from P.
+// tools/build_audio.py records one clip for every phrase that allPhrases() returns.
+const T = {
+  greet:'你好！我是小狮子乐乐。我们一起学中文吧！', greetShow:'你好！我是小狮子乐乐。我们一起学中文吧！📚',
+  pickLesson:'选一课吧！', playAgain:'再玩一次吗？', hooray:'太棒了！', greatJob:'真棒！', earnedStar:'你得到了一颗星星！',
+  finishALesson:'学完一课，就能得到一张贴纸！', hiGrownUps:'家长朋友们好！', readingVoice:'小朋友好！我是乐乐，这是我读书的声音。',
+  tapEachCard:'点一点每张卡片，跟我一起读！', tapTheCard:'点一点卡片，跟我一起读！', sayWithMe:'跟我读！',
+  popBalloon:'听一听，戳破对的气球！', find:'找一找', thatIs:'这是',
+  startsWith:'它是哪个声母开头的？', whichFinal:'它的韵母是哪一个？',
+  picChar:'哪个字和图片一样？', pyChar:'这个拼音是哪个字？',
+  tonesRhyme:'一声平，二声扬，三声拐弯，四声降。', tonesTap:'点一点，听一听四个声调。', whichTone:'听一听，是第几声？',
+  tone1:'第一声', tone2:'第二声', tone3:'第三声', tone4:'第四声',
+  traceLetter:'用手指描一描！', traceThis:'描一描：', useFinger:'用手指描一描灰色的字母。', stayOn:'要描在灰色的字母上哦！',
+  noScribble:'不要乱画，像写字一样描。', keepGoing:'继续描，把灰色的字母都描满。',
+  watchStrokes:'先看一看笔顺。', writeNow:'该你写了！一笔一笔写。', writeThis:'写一写：', strokeTry:'笔顺不对，再试一次。', writeGood:'写得真好！',
+  blendRhyme:'前音轻短后音重，两音相连猛一碰。', blendTap:'点一点，拼一拼！', blendBuild:'听一听，拼出这个音：', wholeRead:'这是整体认读音节。',
+  soundOut:'点一点卡片，拼一拼，读一读！', picSyl:'哪个拼音和图片一样？', missingPart:'缺了哪一部分？',
+  wordsIntro:'点一点词语，跟我一起读！', picWord:'哪个词和图片一样？', missingChar:'缺了哪个字？', buildWord:'听一听，按顺序点字：', compose:'合起来是什么字？',
+  readSentence:'跟我一起读句子！', order:'把词语按顺序排好。', missingWord:'读一读，缺了哪个词？',
+  drawFirst:'先画一幅画吧！', tapWordPic:'再给你的画选一个词！', drawIntro:'画一幅画，再选一个词！', yourPicture:'你画的是：', greatDrawing:'画得真好！',
+  readText:'我们来读一读。',
+};
+// What the bubble shows for a question (乐乐 says the matching line in T)
+const SHOW = {
+  noScribble:'不要乱画，像写字一样描。✏️', popBalloon:'听一听，戳破对的气球！🎈',
+  startsWith:'它是哪个声母开头的？🤔', whichFinal:'它的韵母是哪一个？🤔', picChar:'哪个字和图片一样？🖼️', pyChar:'这个拼音是哪个字？🔍',
+  whichTone:'听一听，是第几声？👂', picSyl:'哪个拼音和图片一样？🖼️', missingPart:'缺了哪一部分？🧩', picWord:'哪个词和图片一样？🖼️',
+  missingChar:'缺了哪个字？🧩', buildWord:'听一听，按顺序点字。👂', compose:'合起来是什么字？🤔', blendBuild:'听一听，拼出这个音！👂',
+  readSentence:'跟我一起读句子！点一点词语，可以听一听。💬', order:'把词语按顺序排好！🧩', missingWord:'读一读，缺了哪个词？🤔',
+  drawIntro:'画一幅画，再选一个词！🎨', tapWordPic:'再给你的画选一个词！🏷️', drawFirst:'先画一幅画吧！🖍️',
+  watchStrokes:'先看一看笔顺。👀', writeNow:'该你写了！一笔一笔写。✍️', tapEachCard:'点一点每张卡片，跟我一起读！👆',
+  soundOut:'点一点卡片，拼一拼，读一读！📖', wordsIntro:'点一点词语，跟我一起读！📖', traceLetter:'用手指描一描！✏️',
+  useFinger:'用手指描一描灰色的字母。☝️', stayOn:'要描在灰色的字母上哦！🙂', keepGoing:'继续描，把灰色的字母都描满。🖍️',
+};
+const CN_DIGIT = '零一二三四五六七八九';
+// 1 → 一, 12 → 十二, 32 → 三十二
+const cn = n => n <= 10 ? (n === 10 ? '十' : CN_DIGIT[n]) : n < 20 ? '十' + CN_DIGIT[n - 10] : CN_DIGIT[Math.floor(n / 10)] + '十' + (n % 10 ? CN_DIGIT[n % 10] : '');
+const cnCount = n => n === 2 ? '两' : cn(n);   // 两张贴纸, not 二张
+const P = {
+  lesson: n => `第${cn(n)}课！`,
+  playLesson: n => `我们来学第${cn(n)}课吧！`,
+  finished: n => `你学完了第${cn(n)}课！`,
+  playAct: name => `我们来玩${name}吧！`,
+  gotSticker: name => `你得到了一张${name}贴纸！`,
+  aSticker: name => `是${name}！`,
+  finishFor: n => `学完第${cn(n)}课，就能得到这张贴纸！`,
+  haveStickers: c => `你有${cnCount(c)}张贴纸了！`,
+};
+
+/* ---------- small helpers ---------- */
+if (!Element.prototype.replaceChildren){ // iOS < 14
+  Element.prototype.replaceChildren = function(...nodes){ while (this.firstChild) this.removeChild(this.firstChild); this.append(...nodes); };
+}
+const $ = s => document.querySelector(s);
+function h(tag, attrs, ...kids){
+  const el = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)){
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'style' && typeof v === 'object'){
+      for (const [sk, sv] of Object.entries(v)){ if (sk.startsWith('--')) el.style.setProperty(sk, sv); else el.style[sk] = sv; }
+    }
+    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'hidden') el.hidden = true;
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat(Infinity)){
+    if (kid == null || kid === false) continue;
+    el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+  return el;
+}
+const shuffle = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const uniq = arr => [...new Set(arr)];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const HAN_RE = /[㐀-鿿]/;
+const isHan = c => HAN_RE.test(c);
+const PUNCT_RE = /[，。！？、：；“”‘’（）《》…,.!?:;]/g;
+const isPunct = c => /[，。！？、：；“”‘’（）《》…,.!?:;]/.test(c);
+const cleanText = t => t.replace(/\//g, '');
+const cleanWord = t => t.replace(PUNCT_RE, '');
+
+/* ---------- pinyin ---------- */
+const TONED = {a:'āáǎà', o:'ōóǒò', e:'ēéěè', i:'īíǐì', u:'ūúǔù', 'ü':'ǖǘǚǜ'};
+const UNTONE = {};
+for (const [v, marks] of Object.entries(TONED)) [...marks].forEach((m, k) => { UNTONE[m] = [v, k + 1]; });
+// tone of a syllable (5 = neutral) and the syllable without its mark
+const toneOf = s => { for (const c of s) if (UNTONE[c]) return UNTONE[c][1]; return 5; };
+const plain = s => [...s].map(c => UNTONE[c] ? UNTONE[c][0] : c).join('');
+// put tone t on a plain syllable: on a or e, on the o of ou, otherwise on the last vowel (liù, guǐ)
+function withTone(base, t){
+  if (t < 1 || t > 4) return base;
+  const chars = [...base];
+  let i = chars.indexOf('a');
+  if (i < 0) i = chars.indexOf('e');
+  if (i < 0 && base.includes('ou')) i = chars.indexOf('o');
+  if (i < 0) for (let k = chars.length - 1; k >= 0; k--) if (TONED[chars[k]]){ i = k; break; }
+  if (i < 0) return base;
+  chars[i] = TONED[chars[i]][t - 1];
+  return chars.join('');
+}
+// finals taught as one unit; a three-part syllable is initial + i/u/ü + one of these (g-u-ā)
+const FINALS = new Set(['a','o','e','i','u','ü','ai','ei','ui','ao','ou','iu','ie','üe','er','an','en','in','un','ün','ang','eng','ing','ong']);
+// read as a whole, not blended
+const WHOLE = new Set(['zhi','chi','shi','ri','zi','ci','si','yi','wu','yu','ye','yue','yuan','yin','yun','ying']);
+const INI_SORTED = [...INITIALS].sort((a, b) => b.length - a.length);
+// bā → {ini:'b', med:'', fin:'ā', finKey:'ā'} · xué → {ini:'x', fin:'üé'} (ü written u after j q x y) · guā → {ini:'g', med:'u', fin:'ā'}
+function splitSyl(s){
+  const p = plain(s), t = toneOf(s);
+  const ini = INI_SORTED.find(x => p.startsWith(x) && p.length > x.length) || '';
+  let rest = p.slice(ini.length);
+  if ('jqxy'.includes(ini) && ini && rest[0] === 'u') rest = 'ü' + rest.slice(1);
+  let med = '', fin = rest;
+  if (!FINALS.has(rest) && 'iuü'.includes(rest[0]) && FINALS.has(rest.slice(1))){ med = rest[0]; fin = rest.slice(1); }
+  return {ini, med, fin:withTone(fin, t), finBase:fin, tone:t, whole:WHOLE.has(p)};
+}
+const SND = s => SOUND[s].say;   // what 乐乐 says for a sound
+// pinyin units of a syllable for highlighting: the written letters split into initial / medial / final
+function sylParts(s){
+  const {ini, med, whole} = splitSyl(s);
+  if (whole || (!ini && !med)) return [['w', s]];
+  const out = [];
+  if (ini) out.push(['i', ini]);
+  let rest = s.slice(ini.length);
+  if (med){ out.push(['m', rest.slice(0, 1)]); rest = rest.slice(1); }
+  out.push(['f', rest]);
+  return out;
+}
+const sylSpeech = s => {   // b · ā · bā (for a whole syllable just the syllable)
+  const {ini, med, fin, whole} = splitSyl(s);
+  if (whole || !ini) return [s];
+  return [SND(ini), ...(med ? [SOUND[med].say] : []), fin, s];
+};
+
+/* ---------- Chinese text with pinyin ---------- */
+// '你好！/我' + 'nǐ hǎo wǒ' → [{w:'你好！', word:'你好', chars:[['你','nǐ'],['好','hǎo'],['！','']]}, …]
+function parseText(text, py){
+  const syl = py.split(/\s+/).filter(Boolean);
+  let k = 0;
+  return text.split('/').map(w => ({w, word:cleanWord(w), chars:[...w].map(c => [c, isHan(c) ? (syl[k++] || '') : ''])}));
+}
+// the pinyin of a piece of a parsed text
+const tokPy = tok => tok.chars.filter(([c]) => isHan(c)).map(([, p]) => p).join(' ');
+// characters with pinyin over them
+function rubyEl(chars, cls){
+  return h('span', {class:'rt' + (cls ? ' ' + cls : '')}, chars.map(([c, p]) =>
+    isHan(c) ? h('span', {class:'rb'}, h('span', {class:'p'}, p), h('span', {class:'c'}, c))
+             : h('span', {class:'rb pun'}, h('span', {class:'p'}, ''), h('span', {class:'c'}, c))));
+}
+const ruby = (text, py, cls) => rubyEl(parseText(text, py).flatMap(t => t.chars), cls);
+
+/* ---------- lesson data helpers ---------- */
+const charOf = (l, c) => (l.chars || []).find(x => x[0] === c);
+// what 乐乐 says for a character: “天，天空的天”
+const charSay = x => x[5] || `${x[0]}，${x[2]}的${x[0]}`;
+const charSayPy = x => x[6] || `${x[1]} ${x[3]} de ${x[1]}`;
+// every character met up to lesson n (for wrong answers and reviews)
+const charsUpTo = n => LESSONS.filter(l => l.n <= n && l.chars).flatMap(l => l.chars);
+const sylsUpTo = n => LESSONS.filter(l => l.n <= n && l.syll).flatMap(l => l.syll);
+const soundsUpTo = n => uniq(LESSONS.filter(l => l.n <= n && l.sounds).flatMap(l => l.sounds));
+const wordsOf = l => l.kind === 'py' ? (l.syll || []).map(([s, c, pic]) => [c, s, pic]) : l.words;
+const PIC_OF = {};
+for (const l of LESSONS){
+  for (const [w, , pic] of (l.words || [])) if (pic) PIC_OF[w] = pic;
+  for (const x of (l.chars || [])) if (x[4]) PIC_OF[x[0]] = PIC_OF[x[0]] || x[4];
+}
+
+/* ---------- question variety and difficulty ---------- */
+// The first two rounds are easier (3 choices, clearly different); later rounds have 4 choices and look-alikes.
+const hard = r => r >= 2;
+// Question types take turns: the first round is the easiest type, then the type used least so far (never twice in a row).
+function typePlan(n, types){
+  const used = Object.fromEntries(types.map(t => [t, 0])), plan = [];
+  for (let r = 0; r < n; r++){
+    const free = types.filter(t => t !== plan[r - 1]);
+    const min = Math.min(...free.map(t => used[t]));
+    const t = r === 0 ? types[0] : (free.length ? pick(free.filter(x => used[x] === min)) : types[0]);
+    plan.push(t); used[t]++;
+  }
+  return plan;
+}
+// test hook: the current question's answer
+let quizN = 0;
+function quizHook(type, answer, taps){ markShown(); if (window.__quiz) window.__quiz = {n: ++quizN, type, answer, taps}; }
+// A new question ignores taps for a moment, and only counts a tap that started on the same button, so a quick
+// tap meant for the last question (the new answers appear under the finger) is never marked wrong.
+let shownAt = 0, downEl = null;
+const markShown = () => { shownAt = Date.now(); };
+['pointerdown', 'touchstart', 'mousedown'].forEach(t => document.addEventListener(t, e => { downEl = e.target; }, {capture:true, passive:true}));
+function tapOK(e){
+  if (!e || e.detail === 0) return true;   // keyboard
+  return Date.now() - shownAt > 350 && (!downEl || e.currentTarget.contains(downEl));
+}
+// once a question is answered, the other choices fade out
+const fadeOthers = (all, keep) => all.forEach(x => { if (x !== keep && !x.classList.contains('used')) x.classList.add('fade'); });
+// "Game length: Short" (parents page): about 3 questions per game, for younger children
+const isShort = () => !!state.settings.short;
+// A shuffled list of length clamp(items, min, max) with no back-to-back repeats.
+function roundList(items, min, max){
+  const n = Math.max(min, Math.min(max, items.length));
+  let list = [];
+  while (list.length < n) list.push(...shuffle(items));
+  list = list.slice(0, n);
+  for (let i = 1; i < list.length; i++){
+    if (list[i] === list[i - 1] && items.length > 1){
+      const j = list.findIndex((x, k) => k > i && x !== list[i] && list[k - 1] !== list[i]);
+      if (j > 0) [list[i], list[j]] = [list[j], list[i]];
+    }
+  }
+  return list;
+}
+
+/* ---------- saved progress (this device only) ---------- */
+const STORE_KEY = 'zhongwen-leyuan-v1';
+const state = (() => {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) {}
+  if (!s || typeof s !== 'object') s = {};
+  if (!s.done || typeof s.done !== 'object') s.done = {};
+  if (!s.check || typeof s.check !== 'object') s.check = {};   // ticks a parent set by hand: {lesson: {认读: true, ...}}
+  s.settings = Object.assign({rate:1, sfx:true, music:true, leo:null, captions:false, short:false, pinyin:true}, s.settings || {});
+  return s;
+})();
+function saveState(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+const applyPinyin = () => document.documentElement.classList.toggle('nopy', !state.settings.pinyin);
+applyPinyin();
+
+/* ---------- speech ---------- */
+let audioUnlocked = false;
+// 乐乐's voice: pre-recorded clips (audio/*.mp3, listed in audio/manifest.js) play through one <audio>
+// element, so they work in WeChat, on phones without a Chinese speech engine, and with the iPhone
+// silent switch on. The browser's own speech (Web Speech API) is only a fallback for a missing clip.
+const EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2190}-\u{21FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+const norm = t => String(t).replace(EMOJI_RE, '').replace(/\//g, '').replace(/\s+/g, ' ').trim();
+const CLIPS = window.ZH_CLIPS || {};
+const Speech = {
+  tts: 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
+  voice: null, gen: 0, current: null, audio: null, halt: null, blobs: new Map(), queue: [], loading: 0,
+  init(){
+    this.audio = new Audio();
+    this.audio.preload = 'auto';
+    this.audio.setAttribute('playsinline', '');
+    if (!this.tts) return;
+    const load = () => {
+      const vs = speechSynthesis.getVoices().filter(v => /^(zh|cmn)([-_]|$)/i.test(v.lang));
+      const score = v => (/(zh|cmn)[-_](CN|Hans)/i.test(v.lang) ? 4 : 0) + (/xiaoxiao|tingting|ting-ting|huihui|yaoyao|meijia|google/i.test(v.name) ? 3 : 0)
+        - (/(HK|TW|yue)/i.test(v.lang) ? 5 : 0);
+      this.voice = vs.sort((a, b) => score(b) - score(a))[0] || null;
+    };
+    load();
+    try { speechSynthesis.addEventListener('voiceschanged', load); } catch (e) { speechSynthesis.onvoiceschanged = load; }
+  },
+  // Must run inside a tap: lets later clips play without a tap (iOS / Chrome autoplay rules).
+  unlock(){
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    const a = this.audio;
+    try { a.src = SILENT_WAV; a.volume = 1; const pr = a.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (e) {}
+  },
+  file: phrase => CLIPS[norm(phrase)] || null,
+  url(phrase){ const f = this.file(phrase); return f ? (this.blobs.get(f) || 'audio/' + f) : null; },
+  // Fetch clips in the background so they play instantly later (first = jump the queue).
+  preload(phrases, first){
+    const add = [];
+    for (const ph of phrases){ const f = this.file(ph); if (f && !this.blobs.has(f) && !add.includes(f)) add.push(f); }
+    this.queue = first ? [...add, ...this.queue.filter(f => !add.includes(f))] : [...this.queue, ...add.filter(f => !this.queue.includes(f))];
+    const pump = () => {
+      while (this.loading < 6 && this.queue.length){
+        const f = this.queue.shift();
+        if (this.blobs.has(f)) continue;
+        this.loading++;
+        fetch('audio/' + f).then(r => r.ok ? r.blob() : Promise.reject(r.status))
+          .then(b => { this.blobs.set(f, URL.createObjectURL(new Blob([b], {type:'audio/mpeg'}))); })
+          .catch(() => {})
+          .finally(() => { this.loading--; pump(); });
+      }
+    };
+    pump();
+  },
+  stopNow(){
+    const a = this.audio;
+    if (a){ a.onended = a.onerror = null; try { a.pause(); } catch (e) {} }
+    if (this.tts) try { speechSynthesis.cancel(); } catch (e) {}
+    if (this.halt){ const f = this.halt; this.halt = null; f(); }
+  },
+  stop(){ this.gen++; this.stopNow(); Music.duck(false); },
+  // parts: a phrase or a list of phrases, spoken one after another
+  speak(parts, opts = {}){
+    const gen = ++this.gen;
+    this.stopNow();
+    const list = (Array.isArray(parts) ? parts : [parts]).map(norm).filter(Boolean);
+    if (window.__spoken && list.length && audioUnlocked) window.__spoken.push(list.join(' ')); // test hook
+    if (list.length && audioUnlocked) Music.duck(true);   // music goes quiet while 乐乐 talks
+    return (async () => {
+      try {
+        for (let i = 0; i < list.length; i++){
+          if (gen !== this.gen || !audioUnlocked) return;
+          if (i) await wait(170);
+          if (gen !== this.gen) return;
+          await this.one(list[i], opts, gen);
+        }
+      } finally { if (gen === this.gen) Music.duck(false); }
+    })();
+  },
+  async one(phrase, opts, gen){
+    if (window.__fastSpeech){ if (!this.file(phrase) && window.__clipMiss) window.__clipMiss.push(phrase); await wait(5); return; }   // test hook
+    const url = this.url(phrase);
+    if (url && await this.clip(url, opts, gen)) return;
+    if (gen !== this.gen) return;
+    if (!url && window.__clipMiss) window.__clipMiss.push(phrase);
+    await this.say(phrase, opts, gen);
+  },
+  rate: opts => Math.max(0.6, Math.min(1.5, (opts.rate || 1) * state.settings.rate)),
+  clip(url, opts, gen){
+    return new Promise(resolve => {
+      const a = this.audio;
+      let over = false, timer = null;
+      const end = ok => { if (over) return; over = true; clearTimeout(timer); a.onended = a.onerror = null; if (this.halt === stopFn) this.halt = null; resolve(ok); };
+      const stopFn = () => end(true);
+      if (gen !== this.gen){ resolve(true); return; }
+      this.halt = stopFn;
+      a.onended = () => end(true);
+      a.onerror = () => { this.last = 'error'; end(false); };
+      a.onplaying = () => { this.last = 'ok'; };
+      try {
+        a.src = url;
+        const r = this.rate(opts);
+        a.defaultPlaybackRate = r; a.playbackRate = r;
+        const pr = a.play();
+        // iOS can refuse audio again after a call or time in the background; the next tap unlocks it
+        if (pr && pr.catch) pr.catch(err => { if (err && err.name === 'NotAllowedError'){ this.blocked = true; this.last = 'blocked'; } end(false); });
+      } catch (e) { end(false); return; }
+      timer = setTimeout(() => end(true), 15000);
+    });
+  },
+  // fallback: the browser's built-in speech
+  say(text, opts, gen){
+    return new Promise(resolve => {
+      if (!this.tts){ resolve(); return; }
+      let over = false, timer = null;
+      const fin = () => { if (over) return; over = true; clearTimeout(timer); if (this.halt === fin) this.halt = null; resolve(); };
+      const start = () => {
+        if (gen !== this.gen){ fin(); return; }
+        const u = new SpeechSynthesisUtterance(text);
+        if (this.voice){ u.voice = this.voice; u.lang = this.voice.lang; } else u.lang = 'zh-CN';
+        u.volume = 1;
+        u.rate = Math.max(0.5, Math.min(1.4, (opts.rate || 1) * state.settings.rate * 0.9));
+        u.pitch = 1.08;
+        u.onend = fin; u.onerror = fin;
+        this.current = u; // keep a reference: some browsers drop events for collected utterances
+        this.halt = fin;
+        try { speechSynthesis.speak(u); if (speechSynthesis.paused) speechSynthesis.resume(); } catch (e) { fin(); return; }
+        timer = setTimeout(fin, 2500 + text.length * 300 / u.rate);
+      };
+      if (speechSynthesis.speaking || speechSynthesis.pending){ speechSynthesis.cancel(); setTimeout(start, 70); }
+      else start();
+    });
+  },
+};
+// a tiny silent WAV, played inside the first tap to unlock audio
+const SILENT_WAV = (() => {
+  const n = 800, buf = new ArrayBuffer(44 + n), v = new DataView(buf);
+  const str = (o, t) => [...t].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF'); v.setUint32(4, 36 + n, true); str(8, 'WAVE'); str(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 8000, true);
+  v.setUint32(28, 8000, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); str(36, 'data'); v.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
+  return URL.createObjectURL(new Blob([buf], {type:'audio/wav'}));
+})();
+
+/* ---------- sound effects (Web Audio, no files needed) ---------- */
+const Sfx = {
+  ctx: null,
+  ensure(){
+    if (!this.ctx){ const AC = window.AudioContext || window.webkitAudioContext; if (AC) try { this.ctx = new AC(); } catch (e) {} }
+    if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
+    return this.ctx;
+  },
+  tone(freq, dur, o = {}){
+    if (!state.settings.sfx || !audioUnlocked) return;
+    const c = this.ensure(); if (!c) return;
+    try {
+    const t = c.currentTime + (o.when || 0);
+    const osc = c.createOscillator(), g = c.createGain();
+    osc.type = o.type || 'sine';
+    osc.frequency.setValueAtTime(freq, t);
+    if (o.slide) osc.frequency.exponentialRampToValueAtTime(o.slide, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime((o.vol || 0.18) * 2, t + 0.015);   // phones play quietly
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(g); g.connect(c.destination);
+    osc.start(t); osc.stop(t + dur + 0.05);
+    } catch (e) {}
+  },
+  tap(){ this.tone(700, 0.06, {type:'triangle', vol:0.1}); },
+  tick(k){ this.tone(520 + k * 90, 0.08, {type:'triangle', vol:0.1}); },
+  // the pentatonic scale (do re mi sol la): a little Chinese tune for every right answer
+  good(){ [523, 587, 659, 784].forEach((f, i) => this.tone(f, 0.2, {type:'triangle', when:i * 0.08, vol:0.15})); },
+  bad(){ this.tone(300, 0.28, {type:'sine', slide:170, vol:0.16}); },
+  pop(){ this.tone(420, 0.1, {type:'square', slide:1400, vol:0.07}); },
+  stroke(){ this.tone(880, 0.07, {type:'triangle', vol:0.08}); },
+  win(){ [523, 587, 659, 784, 880, 1047].forEach((f, i) => this.tone(f, 0.28, {type:'triangle', when:i * 0.09, vol:0.14})); },
+};
+
+/* ---------- background music: audio/music.mp3, an original loop made by tools/make_music.py ---------- */
+const Music = {
+  buf: null, src: null, master: null, loading: null, ducked: false, undock: null,
+  level(){ return this.ducked ? 0.06 : 0.22; },
+  load(){
+    const c = Sfx.ensure();
+    if (!c || this.buf) return null;
+    if (!this.loading) this.loading = fetch('audio/music.mp3?v=' + AUDIO_VERSION.music).then(r => r.ok ? r.arrayBuffer() : Promise.reject(r.status))
+      .then(ab => new Promise((res, rej) => c.decodeAudioData(ab, res, rej)))
+      .then(b => { this.buf = b; }).catch(() => {}).then(() => { this.loading = null; });
+    return this.loading;
+  },
+  start(){
+    if (!state.settings.music || !audioUnlocked || document.hidden || this.src) return;
+    const c = Sfx.ensure(); if (!c) return;
+    if (!this.buf){ const p = this.load(); if (p) p.then(() => { if (this.buf) this.start(); }); return; }
+    try {
+      if (!this.master){ this.master = c.createGain(); this.master.gain.value = this.level(); this.master.connect(c.destination); }
+      const g = c.createGain(), s = c.createBufferSource();
+      s.buffer = this.buf; s.loop = true; s.connect(g); g.connect(this.master);
+      g.gain.setValueAtTime(0, c.currentTime); g.gain.linearRampToValueAtTime(1, c.currentTime + 1.5);
+      s.start();
+      this.src = {s, g};
+    } catch (e) {}
+  },
+  stop(){
+    const cur = this.src, c = Sfx.ctx;
+    if (!cur || !c) return;
+    this.src = null;
+    try {
+      cur.g.gain.cancelScheduledValues(c.currentTime); cur.g.gain.setValueAtTime(cur.g.gain.value, c.currentTime);
+      cur.g.gain.linearRampToValueAtTime(0, c.currentTime + 0.4);
+      cur.s.stop(c.currentTime + 0.45);
+    } catch (e) {}
+  },
+  duck(on){
+    clearTimeout(this.undock);
+    if (on){ if (!this.ducked){ this.ducked = true; this.fade(0.15); } }
+    else if (this.ducked) this.undock = setTimeout(() => { this.ducked = false; this.fade(0.9); }, 350);
+  },
+  fade(secs){
+    const c = Sfx.ctx; if (!c || !this.master) return;
+    try { const g = this.master.gain, t = c.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(this.level(), t + secs); } catch (e) {}
+  },
+};
+function setMusic(on){
+  state.settings.music = on; saveState();
+  if (on) Music.start(); else Music.stop();
+}
+
+/* ---------- visual effects ---------- */
+function confetti(n = 50){
+  const colors = ['#ff5fa2','#ffd23f','#22c07a','#3d8bfd','#7c5cff','#ff9f1c','#e8453c'];
+  for (let i = 0; i < n; i++){
+    const c = h('i', {class:'confetti', 'aria-hidden':'true', style:{
+      left: Math.random() * 100 + 'vw', background: colors[i % colors.length],
+      '--dx': (Math.random() * 240 - 120) + 'px', '--rot': (Math.random() * 900 - 450) + 'deg',
+      animationDuration: (1.6 + Math.random() * 1.5) + 's', animationDelay: (Math.random() * 0.35) + 's'}});
+    document.body.append(c);
+    setTimeout(() => c.remove(), 3800);
+  }
+}
+function burst(el){
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (let k = 0; k < 10; k++){
+    const ang = k / 10 * Math.PI * 2, dist = 60 + Math.random() * 60;
+    const s = h('span', {class:'spark', 'aria-hidden':'true', style:{left:cx + 'px', top:cy + 'px', '--tx':Math.cos(ang) * dist + 'px', '--ty':Math.sin(ang) * dist + 'px'}}, pick(['⭐','✨','🌟']));
+    document.body.append(s);
+    setTimeout(() => s.remove(), 900);
+  }
+}
+// Run fn once 乐乐 has finished talking (and at least minMs has passed), unless the child has left the screen.
+function afterSay(spoken, minMs, fn){
+  const id = navId;
+  Promise.all([spoken, wait(minMs)]).then(() => { if (id === navId) fn(); });
+}
+// Call fn when el changes size.
+function watchSize(el, fn){
+  if (window.ResizeObserver){ const ro = new ResizeObserver(fn); ro.observe(el); cleanups.push(() => ro.disconnect()); }
+  else { window.addEventListener('resize', fn); cleanups.push(() => window.removeEventListener('resize', fn)); }
+}
+// Finger or mouse strokes on a canvas. Only the first finger draws, so a resting palm or a second finger is ignored.
+// positions are relative to `rel` (the element itself unless given)
+function onStrokes(el, {down, move, up}, rel = el){
+  el.addEventListener('contextmenu', e => e.preventDefault());
+  const pos = e => { const r = rel.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+  if (window.PointerEvent){
+    let id = null;
+    el.addEventListener('pointerdown', e => {
+      if (id !== null || down(pos(e)) === false) return;
+      id = e.pointerId; e.preventDefault();
+      try { el.setPointerCapture(id); } catch (err) {}
+    });
+    el.addEventListener('pointermove', e => {
+      if (e.pointerId !== id) return;
+      const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+      for (const ev of (evs.length ? evs : [e])) move(pos(ev));
+    });
+    const stop = e => { if (e.pointerId !== id) return; id = null; up(); };
+    el.addEventListener('pointerup', stop);
+    el.addEventListener('pointercancel', stop);
+    return;
+  }
+  // older iPads (iOS < 13) have touch events only
+  let tid = null, mouse = false;
+  const find = e => { for (let i = 0; i < e.changedTouches.length; i++) if (e.changedTouches[i].identifier === tid) return e.changedTouches[i]; return null; };
+  el.addEventListener('touchstart', e => {
+    const t = e.changedTouches[0];
+    if (tid !== null || down(pos(t)) === false) return;
+    tid = t.identifier; e.preventDefault();
+  }, {passive:false});
+  el.addEventListener('touchmove', e => { const t = find(e); if (t){ e.preventDefault(); move(pos(t)); } }, {passive:false});
+  const tend = e => { if (find(e)){ tid = null; up(); } };
+  el.addEventListener('touchend', tend);
+  el.addEventListener('touchcancel', tend);
+  el.addEventListener('mousedown', e => { if (down(pos(e)) !== false) mouse = true; });
+  const mm = e => { if (mouse) move(pos(e)); }, mu = () => { if (mouse){ mouse = false; up(); } };
+  window.addEventListener('mousemove', mm); window.addEventListener('mouseup', mu);
+  cleanups.push(() => { window.removeEventListener('mousemove', mm); window.removeEventListener('mouseup', mu); });
+}
+function replayAnim(el, cls){
+  el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+  const off = e => { if (e.target !== el) return; el.classList.remove(cls); el.removeEventListener('animationend', off); };
+  el.addEventListener('animationend', off);
+}
+const wiggle = el => replayAnim(el, 'shake');
+function reveal(btn){ btn.hidden = false; requestAnimationFrame(() => { try { btn.scrollIntoView({behavior:'smooth', block:'nearest'}); } catch (e) {} }); }
+const bounce = el => replayAnim(el, 'bounce');
+
+/* ---------- mascot (乐乐 the lion) ---------- */
+let lastSay = null, sayCount = 0, bubbleTimer = null;
+const bubbleEl = h('div', {class:'bubble', 'aria-live':'polite'});
+let leoDragged = false;
+const lionEl = h('button', {class:'lion', 'aria-label':'乐乐：点一点再听一遍，按住可以拖动', onclick:() => {
+  if (leoDragged) return;   // that was a drag, not a tap
+  if (lastSay) say(lastSay.text, lastSay.speech);
+}}, '🦁');
+const mascotEl = h('aside', {class:'mascot', 'aria-label':'小狮子乐乐'}, lionEl, bubbleEl);
+document.body.append(mascotEl);
+
+// Put 乐乐 at (x, y) = his top-left corner; his bubble opens towards the side with more room.
+let leoAt = null;   // where he was last put (measuring him mid-move can lag a frame behind)
+function placeLeo(x, y, save){
+  const lw = lionEl.offsetWidth || 64, lh = lionEl.offsetHeight || 64, vw = innerWidth, vh = innerHeight;
+  x = Math.max(4, Math.min(vw - lw - 4, x));
+  y = Math.max(4, Math.min(vh - lh - 4, y));
+  const right = x + lw / 2 > vw / 2, low = y + lh / 2 > vh / 2;
+  const st = mascotEl.style;
+  mascotEl.classList.add('moved');
+  mascotEl.classList.toggle('flip', right);
+  mascotEl.classList.toggle('top', !low);
+  if (right){ st.left = 'auto'; st.right = (vw - x - lw) + 'px'; } else { st.right = 'auto'; st.left = x + 'px'; }
+  if (low){ st.top = 'auto'; st.bottom = (vh - y - lh) + 'px'; } else { st.bottom = 'auto'; st.top = y + 'px'; }
+  leoAt = {x, y};
+  if (save){ state.settings.leo = {fx:(x + lw / 2) / vw, fy:(y + lh / 2) / vh}; saveState(); }
+}
+function restoreLeo(){
+  const p = state.settings.leo;
+  if (p && isFinite(p.fx) && isFinite(p.fy)) placeLeo(p.fx * innerWidth - (lionEl.offsetWidth || 64) / 2, p.fy * innerHeight - (lionEl.offsetHeight || 64) / 2, false);
+}
+function putLeoBack(){
+  state.settings.leo = null; saveState();
+  mascotEl.classList.remove('moved', 'flip', 'top');
+  ['left', 'right', 'top', 'bottom'].forEach(k => { mascotEl.style[k] = ''; });
+  bounce(lionEl);
+}
+(() => {
+  let drag = null;
+  const begin = (id, cx, cy) => { const r = lionEl.getBoundingClientRect(); drag = {id, cx, cy, x:r.left, y:r.top, moved:false}; };
+  const moveTo = (cx, cy) => {
+    if (!drag) return false;
+    const dx = cx - drag.cx, dy = cy - drag.cy;
+    if (!drag.moved && Math.hypot(dx, dy) < 8) return false;   // small wobble = still a tap
+    if (!drag.moved){ drag.moved = true; mascotEl.classList.add('dragging'); }
+    placeLeo(drag.x + dx, drag.y + dy, false);
+    return true;
+  };
+  const finish = () => {
+    if (!drag) return;
+    if (drag.moved){
+      leoDragged = true; setTimeout(() => { leoDragged = false; }, 60);
+      mascotEl.classList.remove('dragging');
+      if (leoAt) placeLeo(leoAt.x, leoAt.y, true);
+      Sfx.pop(); bounce(lionEl);
+    }
+    drag = null;
+  };
+  if (window.PointerEvent){
+    lionEl.addEventListener('pointerdown', e => { begin(e.pointerId, e.clientX, e.clientY); try { lionEl.setPointerCapture(e.pointerId); } catch (err) {} });
+    lionEl.addEventListener('pointermove', e => { if (drag && e.pointerId === drag.id && moveTo(e.clientX, e.clientY)) e.preventDefault(); });
+    lionEl.addEventListener('pointerup', e => { if (drag && e.pointerId === drag.id) finish(); });
+    lionEl.addEventListener('pointercancel', e => { if (drag && e.pointerId === drag.id) finish(); });
+  } else {   // older iPads
+    lionEl.addEventListener('touchstart', e => { const t = e.changedTouches[0]; begin(t.identifier, t.clientX, t.clientY); }, {passive:true});
+    lionEl.addEventListener('touchmove', e => { const t = e.changedTouches[0]; if (moveTo(t.clientX, t.clientY)) e.preventDefault(); }, {passive:false});
+    lionEl.addEventListener('touchend', finish);
+    lionEl.addEventListener('touchcancel', finish);
+  }
+  window.addEventListener('resize', restoreLeo);
+  restoreLeo();
+})();
+// text = what the bubble shows, speech = what 乐乐 says (so answers are never shown as text)
+// With “显示乐乐说的话” on, the bubble shows exactly what 乐乐 says, so the game can be played with the sound off.
+const caption = speech => (Array.isArray(speech) ? speech : [speech]).map(norm).filter(Boolean).join(' ');
+function say(text, speech){
+  lastSay = {text, speech};
+  const my = ++sayCount;
+  bubbleEl.textContent = state.settings.captions && speech != null ? caption(speech) : text;
+  bubbleEl.classList.add('show');
+  mascotEl.classList.add('talking');
+  clearTimeout(bubbleTimer);
+  return Speech.speak(speech == null ? text : speech)
+    .then(() => {
+      if (my !== sayCount) return;
+      mascotEl.classList.remove('talking');
+      if (!state.settings.captions) bubbleTimer = setTimeout(() => { if (my === sayCount) bubbleEl.classList.remove('show'); }, 6000);
+    });
+}
+
+/* ---------- navigation ---------- */
+let navId = 0, timers = [], cleanups = [], overlayEl = null;
+function later(fn, ms){ const id = navId; const t = setTimeout(() => { if (id === navId) fn(); }, ms); timers.push(t); return t; }
+function resetScope(){
+  navId++;
+  timers.forEach(clearTimeout); timers = [];
+  cleanups.forEach(f => { try { f(); } catch (e) {} }); cleanups = [];
+  Speech.stop(); closeOverlay();
+  mascotEl.classList.remove('talking');
+}
+function go(hash){ if (location.hash === hash || (hash === '#/' && !location.hash)) route(); else location.hash = hash; }
+function mount(...nodes){ $('#app').replaceChildren(...nodes.flat(Infinity).filter(Boolean)); window.scrollTo(0, 0); }
+function overlay(content, cls = ''){
+  closeOverlay();
+  const panel = h('div', {class:'panel', role:'dialog', 'aria-modal':'true'}, content);
+  const title = panel.querySelector('h1');
+  if (title){ title.id = 'dlg-title'; panel.setAttribute('aria-labelledby', 'dlg-title'); }
+  overlayEl = h('div', {class:'overlay ' + cls}, panel);
+  document.body.append(overlayEl);
+  return overlayEl;
+}
+function closeOverlay(){ if (overlayEl){ overlayEl.remove(); overlayEl = null; } }
+
+function route(){
+  resetScope();
+  const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  if (parts[0] === 'lesson' && LESSON_BY_N[+parts[1]]){
+    const l = LESSON_BY_N[+parts[1]];
+    const a = parts[2] && actsOf(l).find(x => x.key === parts[2]);
+    return a ? showActivity(l, a) : showLesson(l);
+  }
+  if (parts[0] === 'stickers') return showStickers();
+  if (parts[0] === 'start') return showStart();
+  if (parts[0] === 'parents') return showParents();
+  showHome();
+}
+
+/* ---------- progress helpers ---------- */
+const ACTS = [
+  {key:'cards',    run:(...a) => actCards(...a),    when:() => true},
+  {key:'tones',    run:(...a) => actTones(...a),    when:l => l.n >= 5},
+  {key:'trace',    run:(...a) => actTrace(...a),    when:l => l.kind === 'py'},
+  {key:'write',    run:(...a) => actWrite(...a),    when:l => l.kind !== 'py'},
+  {key:'blend',    run:(...a) => actBlend(...a),    when:l => l.kind === 'py' && l.n >= 7},
+  {key:'read',     run:(...a) => actRead(...a),     when:l => l.kind === 'py' && l.n >= 7},
+  {key:'words',    run:(...a) => actWords(...a),    when:l => l.kind !== 'py'},
+  {key:'sentence', run:(...a) => actSentence(...a), when:() => true},
+  {key:'draw',     run:(...a) => actDraw(...a),     when:() => true},
+];
+const ACT_INFO = {
+  cards:    l => l.kind === 'py' ? ['认拼音','🔤','var(--purple)'] : ['认汉字','👀','var(--purple)'],
+  tones:    () => ['四声','🎵','var(--orange)'],
+  trace:    () => ['描一描','✏️','var(--teal)'],
+  write:    () => ['写汉字','🖌️','var(--teal)'],
+  blend:    () => ['拼一拼','🧩','var(--green)'],
+  read:     () => ['读一读','📖','var(--blue)'],
+  words:    () => ['读词语','📖','var(--blue)'],
+  sentence: () => ['读句子','💬','var(--pink)'],
+  draw:     () => ['画一画','🎨','var(--yellow)'],
+};
+const actName = (l, a) => ACT_INFO[a.key](l)[0];
+const actIcon = (l, a) => ACT_INFO[a.key](l)[1];
+const actsOf = l => ACTS.filter(a => a.when(l));
+const isDone = (n, k) => !!(state.done[n] && state.done[n][k]);
+const doneCount = l => actsOf(l).filter(a => isDone(l.n, a.key)).length;
+const lessonComplete = l => doneCount(l) === actsOf(l).length;
+const totalStars = () => LESSONS.reduce((t, l) => t + doneCount(l), 0);
+const PARENT_CHECK = [['认读',['cards','tones']],['书写',['trace','write']],['拼读·词语',['blend','read','words']],['句子',['sentence']]];
+
+const LIGHT_BG = new Set(['var(--pink)', 'var(--green)', 'var(--orange)', 'var(--teal)', 'var(--gold)', 'var(--yellow)']);
+const UNIT_COLORS = {1:['var(--red)','var(--red-d)'], 2:['var(--purple)','var(--purple-d)'], 3:['var(--blue)','var(--blue-d)'], 4:['var(--teal)','var(--teal-d)'],
+  5:['var(--green)','var(--green-d)'], 6:['var(--orange)','var(--orange-d)'], 7:['var(--pink)','var(--pink-d)'], 8:['var(--gold)','var(--gold-d)']};
+const lessonColor = l => UNIT_COLORS[l.unit];
+const lessonLabel = l => l.label || l.title;
+const isPinyinText = t => /^[a-zü… ]+$/.test(t);
+
+const starPill = () => h('div', {class:'pill', 'aria-label':'星星'}, '⭐ ', totalStars());
+const backBtn = hash => h('button', {class:'icon-btn', 'aria-label':'返回', onclick:() => { Sfx.tap(); go(hash); }}, '⬅️');
+const listenBtn = fn => h('button', {class:'listen', 'aria-label':'听一听', onclick:() => { Sfx.tap(); fn(); }}, '🔊');
+
+/* =====================================================================
+   SCREENS
+   ===================================================================== */
+function showHome(quiet){
+  const next = LESSONS.find(l => !lessonComplete(l));
+  mount(
+    h('header', {class:'topbar'},
+      h('h1', {class:'brand'}, h('button', {class:'brand-btn', 'aria-label':'中文乐园：回到开始页面', title:'开始页面',
+        onclick:() => { Sfx.tap(); go('#/start'); }}, h('span', {class:'logo', 'aria-hidden':'true'}, '🦁'), h('span', {class:'name'}, '中文乐园'))),
+      starPill(),
+      h('button', {class:'icon-btn', 'aria-label':'我的贴纸', onclick:() => { Sfx.tap(); go('#/stickers'); }}, '🏆'),
+      h('button', {class:'icon-btn', 'aria-label':'家长', onclick:() => { Sfx.tap(); go('#/parents'); }}, '👪'),
+      h('button', {class:'icon-btn', 'aria-label':'更新到最新版本', title:'更新', onclick:() => forceRefresh()}, '🔄')),
+    updateSlot,
+    UNITS.map(([u, name, icon]) => [
+      h('h2', {class:'section-title'}, `${icon} 第${cn(u)}单元 · ${name}`),
+      h('div', {class:'lesson-grid'}, LESSONS.filter(l => l.unit === u).map(l => lessonBtn(l, l === next))),
+    ]),
+    h('div', {class:'row', style:{marginTop:'28px'}},
+      h('button', {class:'btn white', onclick:() => { Sfx.tap(); go('#/start'); }}, '🏁 开始页面'),
+      musicButton()),
+    h('p', {class:'version'}, versionText())
+  );
+  if (quiet) return;
+  const line = next && next.n > 1 ? P.playLesson(next.n) : T.pickLesson;
+  say(line + ' 👆', line);
+}
+
+function musicButton(){
+  const label = () => state.settings.music ? '🎵 音乐：开' : '🔇 音乐：关';
+  const b = h('button', {class:'btn white', 'aria-pressed':String(!!state.settings.music), onclick:() => {
+    Sfx.tap(); setMusic(!state.settings.music);
+    b.textContent = label(); b.setAttribute('aria-pressed', String(!!state.settings.music));
+  }}, label());
+  return b;
+}
+
+// The first screen (“中文乐园 ▶ 开始”). Shown when the game opens, and at #/start.
+function showStart(){
+  if (/^#\/start/.test(location.hash)) showHome(true);   // the home screen waits underneath
+  overlay([
+    h('div', {class:'hero-lion'}, '🦁'),
+    h('h1', {}, '中文乐园'),
+    h('p', {}, '跟小狮子乐乐学拼音、认汉字 · 一年级上册 32 课'),
+    h('p', {style:{fontSize:'1.05rem', margin:'-8px 0 16px'}}, '🔊 请打开声音！'),
+    h('div', {class:'row'}, h('button', {class:'btn green big', style:{fontSize:'2rem', minHeight:'84px'}, onclick:() => {
+      audioUnlocked = true; Speech.unlock(); Sfx.ensure(); Sfx.win(); Music.start();
+      closeOverlay();
+      Speech.preload([...Object.values(T), ...PRAISE, ...TRY]);
+      // from the start screen, 开始 leads to the home screen
+      if (/^#\/start/.test(location.hash)) try { history.replaceState(null, '', location.pathname + location.search + '#/'); } catch (e) { location.hash = '#/'; }
+      const greet = location.hash.length > 2 ? null : T.greet;
+      if (greet) say(T.greetShow, greet).then(() => { if (lastSay && lastSay.speech === greet) route(); });
+      else route();
+    }}, '▶ 开始')),
+    h('p', {class:'version'}, versionText()),
+  ], 'splash');
+}
+
+function lessonBtn(l, isNext){
+  const [c, d] = lessonColor(l);
+  const acts = actsOf(l), cnt = doneCount(l), label = lessonLabel(l);
+  const status = cnt === acts.length ? '，已完成' : cnt ? `，完成了${cnt}个，共${acts.length}个` : '';
+  const py = isPinyinText(label);
+  return h('button', {class:'lesson-btn' + (isNext ? ' next' : '') + (LIGHT_BG.has(c) ? ' ink' : ''), style:{'--c':c, '--d':d}, 'aria-label':`第${l.n}课：${l.book} ${l.title}${status}`,
+      onclick:() => { Sfx.tap(); go('#/lesson/' + l.n); }},
+    h('span', {class:'num'}, l.n),
+    h('span', {class:'letters ' + (py ? 'pyf' : 'han') + (label.length > 4 && !py ? ' small' : '')}, label),
+    h('span', {class:'dots'}, acts.map(a => h('i', {class:isDone(l.n, a.key) ? 'on' : null}))),
+    lessonComplete(l) ? h('span', {class:'sticker'}, STICKERS[l.n - 1][0]) : null);
+}
+
+// read the lesson's texts aloud, one after another
+function readLessonText(l){
+  const texts = l.sentences.map(s => cleanText(s[0]));
+  say(texts.join(''), [T.readText, ...texts]);
+}
+
+function showLesson(l){
+  const acts = actsOf(l), next = acts.find(a => !isDone(l.n, a.key));
+  const chips = l.kind === 'py'
+    ? l.sounds.map(s => h('button', {class:'hero-chip', 'aria-label':'听 ' + s, onclick:e => { Sfx.tap(); bounce(e.currentTarget); say(`${s}  ${SOUND[s].pic}`, [SND(s), SOUND[s].ph]); }}, s))
+    : l.chars.map(x => h('button', {class:'hero-chip han', 'aria-label':'听 ' + x[0], onclick:e => { Sfx.tap(); bounce(e.currentTarget); say(`${x[0]} ${x[1]}`, charSay(x)); }}, x[0]));
+  mount(
+    h('header', {class:'topbar'}, backBtn('#/'), h('h1', {class:'title'}, `第${l.n}课 · `, h('span', {class:isPinyinText(l.title) ? 'pyf' : 'han'}, l.title)), starPill()),
+    h('section', {class:'lesson-hero'},
+      h('div', {class:'hero-sounds'}, chips),
+      h('div', {class:'hero-focus'}, `${l.book} · 第${cn(l.unit)}单元`),
+      h('div', {class:'hero-row'},
+        h('button', {class:'btn white', onclick:() => { Sfx.tap(); readLessonText(l); }}, '📖 听一听'))),
+    h('div', {class:'act-grid'}, acts.map((a, i) => {
+      const done = isDone(l.n, a.key);
+      return h('button', {class:'act-card' + (done ? ' done' : '') + (a === next ? ' next' : ''), style:{'--c':ACT_INFO[a.key](l)[2]}, 'aria-label':`${i + 1}. ${actName(l, a)}${done ? '，已完成' : ''}`,
+          onclick:() => { Sfx.tap(); go(`#/lesson/${l.n}/${a.key}`); }},
+        h('span', {class:'step'}, i + 1),
+        done ? h('span', {class:'check'}, '✅') : null,
+        h('span', {class:'ic'}, actIcon(l, a)),
+        h('span', {class:'nm'}, actName(l, a)));
+    }))
+  );
+  Speech.preload(lessonPhrases(l), true);
+  if (next) say(`第${cn(l.n)}课！点 ${actIcon(l, next)} ${actName(l, next)}。`, [P.lesson(l.n), P.playAct(actName(l, next))]);
+  else say(`你学完了第${cn(l.n)}课！🎉 再玩一次吗？`, [P.finished(l.n), T.playAgain]);
+}
+
+function showActivity(l, a){
+  const bar = h('i');
+  const stage = h('div', {class:'stage'});
+  const id = navId;
+  const ctx = {
+    lesson:l, stage, replay:null,
+    alive: () => id === navId,
+    progress: f => { bar.style.width = Math.round(Math.max(0, Math.min(1, f)) * 100) + '%'; },
+    done: () => { if (id === navId) finishActivity(l, a); },
+  };
+  Speech.preload(lessonPhrases(l), true);
+  mount(
+    h('header', {class:'topbar act-head'},
+      backBtn('#/lesson/' + l.n),
+      h('h1', {class:'act-title', 'aria-label':`第${l.n}课：${actName(l, a)}`}, actIcon(l, a), ' ', h('span', {class:'nm'}, actName(l, a))),
+      h('div', {class:'progress', role:'progressbar', 'aria-label':'进度'}, bar),
+      h('button', {class:'icon-btn', 'aria-label':'再听一遍', onclick:() => { Sfx.tap(); if (ctx.replay) ctx.replay(); }}, '🔊')),
+    stage);
+  a.run(ctx);
+}
+
+function finishActivity(l, a){
+  const first = !isDone(l.n, a.key);
+  (state.done[l.n] = state.done[l.n] || {})[a.key] = true;
+  saveState();
+  Sfx.win(); confetti(60);
+  const acts = actsOf(l), idx = acts.indexOf(a);
+  const nextAct = acts.slice(idx + 1).find(x => !isDone(l.n, x.key)) || acts.slice(0, idx).find(x => !isDone(l.n, x.key));
+  const nextLesson = LESSON_BY_N[l.n + 1];
+  if (first && lessonComplete(l)){
+    const [emo, name] = STICKERS[l.n - 1];
+    overlay([
+      h('div', {class:'big-star'}, emo),
+      h('h1', {}, '这一课学完啦！'),
+      h('p', {}, P.gotSticker(name)),
+      h('div', {class:'row'},
+        nextLesson ? h('button', {class:'btn green big', onclick:() => go('#/lesson/' + nextLesson.n)}, `第${nextLesson.n}课 ➜`) : null,
+        h('button', {class:'btn pink', onclick:() => go('#/stickers')}, '🏆 我的贴纸'),
+        h('button', {class:'btn white', onclick:() => go('#/')}, '🏠 首页')),
+    ]);
+    say(`太棒了！你学完了第${cn(l.n)}课！🎉`, [T.hooray, P.finished(l.n), P.gotSticker(name)]);
+    confetti(80);
+    return;
+  }
+  overlay([
+    h('div', {class:'big-star'}, '⭐'),
+    h('h1', {}, pick(PRAISE)),
+    h('p', {}, first ? '你得到了一颗星星！' : '你又完成了一次！'),
+    h('div', {class:'row'},
+      nextAct ? h('button', {class:'btn green big', onclick:() => go(`#/lesson/${l.n}/${nextAct.key}`)}, actIcon(l, nextAct), ' ', actName(l, nextAct), ' ➜')
+              : (nextLesson ? h('button', {class:'btn green big', onclick:() => go('#/lesson/' + nextLesson.n)}, `第${nextLesson.n}课 ➜`) : null),
+      h('button', {class:'btn white', onclick:() => go('#/lesson/' + l.n)}, `📚 第${l.n}课`)),
+  ]);
+  say(first ? T.earnedStar + ' ⭐' : T.greatJob, first ? [T.greatJob, T.earnedStar] : T.greatJob);
+}
+
+function showStickers(){
+  const count = LESSONS.filter(lessonComplete).length;
+  mount(
+    h('header', {class:'topbar'}, backBtn('#/'), h('h1', {class:'title'}, `🏆 我的贴纸  ${count}/${LESSONS.length}`), starPill()),
+    h('div', {class:'sticker-grid'}, LESSONS.map(l => {
+      const got = lessonComplete(l);
+      const [emo, name] = STICKERS[l.n - 1];
+      return h('button', {class:'sticker-slot' + (got ? ' got' : ''), 'aria-label':`第${l.n}课的贴纸：${got ? name : '还没有得到'}`, onclick:e => {
+          Sfx.tap(); bounce(e.currentTarget);
+          if (got) say(P.aSticker(name) + ' 🎉', P.aSticker(name)); else say(P.finishFor(l.n));
+        }},
+        h('span', {class:'st'}, got ? emo : '❔'), h('span', {class:'lb'}, `第${l.n}课`));
+    })));
+  say(count ? P.haveStickers(count) + ' 🎉' : T.finishALesson, count ? P.haveStickers(count) : T.finishALesson);
+}
+
+const soundStatus = h('span', {class:'note', role:'status'});
+// Play a test line and report what happened, so a parent can tell why there is no sound.
+function soundCheck(){
+  Sfx.good();
+  soundStatus.textContent = '正在检查……';
+  Speech.last = null;
+  const clips = Object.keys(CLIPS).length;
+  Speech.speak(T.readingVoice);
+  setTimeout(() => {
+    const r = Speech.last;
+    soundStatus.textContent =
+      !clips ? '⚠️ 语音文件没有加载。请点首页右上角的 🔄 更新。'
+      : r === 'ok' ? '✅ 乐乐的声音正在播放。如果听不到，请把音量调大，并检查是否连接了蓝牙耳机或音箱。'
+      : r === 'blocked' ? '⚠️ 浏览器暂时不让播放声音。请先点一下页面，再试一次。'
+      : r === 'error' ? '⚠️ 有一个语音文件没有加载。请检查网络，再点 🔄 更新。'
+      : '⚠️ 声音没有开始播放。如果是在微信里打开的，请点右上角“…”，选“在浏览器打开”。';
+  }, 2200);
+}
+
+function showParents(){
+  soundStatus.textContent = '';
+  const seg = (name, options, cur, onPick) => {
+    const wrap = h('div', {class:'seg', role:'radiogroup', 'aria-label':name});
+    options.forEach(([label, val]) => wrap.append(h('button', {class:val === cur ? 'on' : null, role:'radio', 'aria-checked':String(val === cur), onclick:e => {
+      [...wrap.children].forEach(b => { b.classList.toggle('on', b === e.currentTarget); b.setAttribute('aria-checked', String(b === e.currentTarget)); });
+      onPick(val);
+    }}, label)));
+    return wrap;
+  };
+  // A box is ticked automatically when the child finishes the activities; a tap sets it by hand.
+  const checkBtn = (l, name, keys) => {
+    const own = keys.filter(k => actsOf(l).some(a => a.key === k));
+    if (!own.length) return h('span', {class:'na', title:'这一课没有这一项'}, '—');
+    const auto = own.every(k => isDone(l.n, k));
+    const mine = state.check[l.n] || {};
+    const hand = Object.prototype.hasOwnProperty.call(mine, name);
+    const on = hand ? !!mine[name] : auto;
+    const b = h('button', {class:'check-btn' + (hand ? ' hand' : ''), 'aria-pressed':String(on), 'aria-label':`第${l.n}课 ${name}：${on ? '已勾选' : '未勾选'}`,
+      title: hand ? '这是您勾的，点一下可以改。' : (auto ? '孩子在游戏里完成了，点一下可以改。' : '点一下打勾'),
+      onclick:() => {
+        Sfx.tap();
+        (state.check[l.n] = state.check[l.n] || {})[name] = !on;
+        saveState();
+        b.replaceWith(checkBtn(l, name, keys));
+      }}, on ? '✅' : '⬜');
+    return b;
+  };
+  const focusOf = l => l.kind === 'py' ? l.sounds.join(' ') : l.chars.map(x => x[0]).join(' ');
+  mount(
+    h('header', {class:'topbar'}, backBtn('#/'), h('h1', {class:'title'}, '👪 家长页面')),
+    h('section', {class:'panel-card'},
+      h('h2', {}, '使用说明'),
+      h('p', {}, '课程顺序参照统编版（2024）一年级上册语文：识字、汉语拼音、阅读，共 32 课。每次玩 10–15 分钟就好。请孩子跟着乐乐大声读，读对了再点。'),
+      h('ul', {},
+        h('li', {}, '🔤 认拼音：点卡片听声母、韵母，再戳破对的气球（听音找字母、看图找声母或韵母）。'),
+        h('li', {}, '👀 认汉字：点字卡听“天，天空的天”，再戳破对的气球（听音找字、看图找字、看拼音找字）。'),
+        h('li', {}, '🎵 四声：听四个声调，再听一听是第几声。口诀：一声平，二声扬，三声拐弯，四声降。'),
+        h('li', {}, '✏️ 描一描：在四线格里用手指描拼音字母。🖌️ 写汉字：先看笔顺动画，再在田字格里一笔一笔写，笔顺不对会提示。'),
+        h('li', {}, '🧩 拼一拼：声母和韵母拼成音节（b-ā→bā），再听音拼出音节。📖 读一读 / 读词语：听一听、看图选一选、补全缺的部分。'),
+        h('li', {}, '💬 读句子：跟读句子，把词语排好顺序，再找出缺的词。🎨 画一画：画一幅画，再给它选一个词，还可以保存图片。')),
+      h('p', {class:'note'}, '小提示：请打开声音，平板电脑最好用。学习进度只保存在这台设备的这个浏览器里。点左下角的乐乐，可以再听一遍。')),
+    h('section', {class:'panel-card'},
+      h('h2', {}, '设置'),
+      h('div', {class:'setting'}, h('label', {}, '语速'),
+        seg('语速', [['🐢 慢', 0.8], ['🙂 正常', 1], ['🐇 快', 1.15]], state.settings.rate, v => { state.settings.rate = v; saveState(); Speech.speak(T.readingVoice); })),
+      h('div', {class:'setting'}, h('label', {}, '拼音'),
+        seg('拼音', [['显示', true], ['隐藏', false]], !!state.settings.pinyin, v => { state.settings.pinyin = v; saveState(); applyPinyin(); Sfx.tap(); })),
+      h('p', {class:'note'}, '隐藏拼音后，词语和句子只显示汉字，适合已经认识这些字的孩子。'),
+      h('div', {class:'setting'}, h('label', {}, '音效'),
+        seg('音效', [['🔔 开', true], ['🔕 关', false]], state.settings.sfx, v => { state.settings.sfx = v; saveState(); Sfx.good(); })),
+      h('div', {class:'setting'}, h('label', {}, '背景音乐'),
+        seg('背景音乐', [['🎵 开', true], ['🔇 关', false]], state.settings.music, v => setMusic(v))),
+      h('div', {class:'setting'}, h('label', {}, '显示乐乐说的话'),
+        seg('显示乐乐说的话', [['💬 开', true], ['关', false]], !!state.settings.captions, v => { state.settings.captions = v; saveState(); Sfx.tap(); })),
+      h('p', {class:'note'}, '关掉声音玩的时候可以打开：乐乐的气泡会显示他说的每一句话，包括要找的字。'),
+      h('div', {class:'setting'}, h('label', {}, '游戏长度'),
+        seg('游戏长度', [['🐣 短', true], ['🦁 正常', false]], !!state.settings.short, v => { state.settings.short = v; saveState(); Sfx.tap(); })),
+      h('p', {class:'note'}, '短：每个游戏大约 3 题，适合年龄小的孩子。每玩完一个游戏就会保存星星，一课可以分几天学完。'),
+      h('div', {class:'setting'}, h('label', {}, '小狮子乐乐'),
+        h('button', {class:'btn white', onclick:() => { Sfx.tap(); putLeoBack(); }}, '🦁 把乐乐放回角落')),
+      h('div', {class:'setting'}, h('label', {}, '声音测试'),
+        h('button', {class:'btn blue', onclick:() => soundCheck()}, '🔊 测试声音'), soundStatus),
+      h('p', {class:'note'}, '没有声音？请把音量调大。如果是在微信等 App 里打开的，请点右上角“…”，选“在浏览器打开”。连接了蓝牙耳机或音箱时，声音会从那里播放。关掉声音也能玩：打开“显示乐乐说的话”。'),
+      h('div', {class:'setting'}, h('label', {}, '更新'),
+        h('button', {class:'btn teal', onclick:() => forceRefresh()}, '🔄 更新到最新版本'),
+        h('span', {class:'note'}, '当前：' + versionText())),
+      updateSlot),
+    h('section', {class:'panel-card'},
+      h('h2', {}, '家长 / 老师检查表'),
+      h('div', {class:'table-wrap'}, h('table', {class:'prog'},
+        h('thead', {}, h('tr', {}, h('th', {}, '课'), PARENT_CHECK.map(([name]) => h('th', {}, name)))),
+        h('tbody', {}, LESSONS.map(l => h('tr', {},
+          h('td', {class:'l'}, h('b', {}, `${l.n}. ${l.book} ${l.title}`), h('br'), h('small', {}, focusOf(l))),
+          PARENT_CHECK.map(([name, keys]) => h('td', {}, checkBtn(l, name, keys)))))))),
+      h('p', {class:'note'}, '孩子玩完对应的游戏，格子会自动打勾。您也可以点任何一个格子，自己打勾或取消。'),
+      h('div', {class:'row', style:{marginTop:'14px', justifyContent:'flex-start'}},
+        h('button', {class:'btn red', onclick:() => { Sfx.tap(); confirmReset(); }}, '🗑️ 清除学习记录'))),
+    h('section', {class:'panel-card'},
+      h('p', {class:'note'}, '课程顺序参照统编版（2024）一年级上册语文。游戏里的练习和短句是为这个游戏编写的，不是课本原文；《咏鹅》《江南》《两件宝》和对韵、会意字儿歌是传统或公有领域的作品。'),
+      h('p', {class:'note'}, '乐乐的声音由开源模型 Kokoro-82M（Apache-2.0）生成。汉字字体和笔顺数据来自文鼎 AR PL KaitiM GB 与 Make Me a Hanzi（Arphic Public License），写字游戏使用 Hanzi Writer（MIT）。'))
+  );
+  say(T.hiGrownUps + ' 👋', T.hiGrownUps);
+}
+
+// Clear all progress, after a simple sum only a grown-up can answer.
+function confirmReset(){
+  const a = 3 + Math.floor(Math.random() * 7), b = 3 + Math.floor(Math.random() * 7);
+  const input = h('input', {type:'text', inputmode:'numeric', pattern:'[0-9]*', autocomplete:'off', 'aria-label':`${a} 加 ${b} 等于几？`});
+  const err = h('div', {class:'err', role:'alert'});
+  const doReset = () => {
+    if (input.value.trim() !== String(a + b)){
+      Sfx.bad(); err.textContent = input.value.trim() ? '不对哦，再试一次。' : '请先填写答案。';
+      wiggle(input); input.select(); return;
+    }
+    state.done = {}; state.check = {}; saveState();
+    route();   // redraw the parents page with everything cleared
+    overlay([
+      h('div', {class:'big-star'}, '🧹'),
+      h('h1', {}, '记录已清除'),
+      h('p', {}, '这台设备上的星星、贴纸和勾选都已经清除了。'),
+      h('div', {class:'row'}, h('button', {class:'btn green', onclick:closeOverlay}, '好的')),
+    ]);
+  };
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') doReset(); if (e.key === 'Escape') closeOverlay(); });
+  overlay([
+    h('div', {class:'big-star'}, '🗑️'),
+    h('h1', {}, '清除全部学习记录？'),
+    h('p', {}, '这会清除这台设备上所有的星星、贴纸和勾选，不能恢复。'),
+    h('div', {class:'gate'}, h('label', {}, `请家长回答：${a} + ${b} = ?`), input, err),
+    h('div', {class:'row'},
+      h('button', {class:'btn red', onclick:doReset}, '🗑️ 清除'),
+      h('button', {class:'btn white', onclick:() => { Sfx.tap(); closeOverlay(); }}, '取消')),
+  ]);
+  setTimeout(() => { try { input.focus(); } catch (e) {} }, 50);
+}
+
+/* =====================================================================
+   ACTIVITIES
+   ===================================================================== */
+// every character the game knows, with its card data (pinyin, word, picture)
+const CHAR_INFO = {};
+for (const l of LESSONS) for (const x of (l.chars || [])) if (!CHAR_INFO[x[0]]) CHAR_INFO[x[0]] = x;
+// a word or a character as 乐乐 says it: one character is read as its syllable (tone exactly right)
+const tokSay = tok => tok.chars.filter(([c]) => isHan(c)).length === 1 ? tokPy(tok) : tok.word;
+const wordSay = (w, py) => [...w].filter(isHan).length === 1 ? py : w;
+
+// colourful balloons for a round of choices
+const BALLOON_COLORS = ['var(--pink)','var(--blue)','var(--orange)','var(--green)','var(--purple)','var(--teal)'];
+function balloonRound(ctx, {opts, answer, label, cls, top, prompt, right, wrong, r, total, next}){
+  let solved = false, misses = 0;
+  const balloons = opts.map((o, i) => {
+    const bc = BALLOON_COLORS[(i + r) % BALLOON_COLORS.length];
+    const text = label ? label(o) : o;
+    const b = h('button', {class:'balloon' + (cls ? ' ' + cls : '') + (String(text).length > 3 ? ' long' : '') + (LIGHT_BG.has(bc) ? ' ink' : ''),
+      'aria-label':'气球 ' + text, 'data-v':o, style:{'--c':bc, animationDelay:(i * 0.4) + 's'}, onclick:e => {
+      if (solved || !tapOK(e)) return;
+      if (o === answer){
+        solved = true; Sfx.pop(); Sfx.good(); b.classList.add('pop'); burst(b); fadeOthers(balloons, b);
+        ctx.progress((r + 2) / total);
+        const pr = pick(PRAISE);
+        afterSay(say(pr, right(pr)), 1200, next);
+      } else {
+        misses++; Sfx.bad(); wiggle(b);
+        say(pick(TRY), wrong(o));
+        if (misses >= 2) balloons[opts.indexOf(answer)].classList.add('hint');
+      }
+    }}, text);
+    return b;
+  });
+  ctx.stage.replaceChildren(h('div', {class:'row'}, listenBtn(prompt), top), h('div', {class:'balloons'}, balloons));
+  ctx.replay = prompt; prompt();
+}
+
+// 1 · 认拼音 / 认汉字: tap the cards, then pop the balloon
+function actCards(ctx){ return ctx.lesson.kind === 'py' ? soundCards(ctx) : charCards(ctx); }
+
+// Sound choices: the answer, look-alikes (later rounds), then the lesson's other sounds and other sounds of the same kind.
+function soundChoices(target, l, r){
+  const n = hard(r) ? 4 : 3, kind = isInitial(target);
+  const same = s => isInitial(s) === kind && s !== target;
+  const look = hard(r) ? shuffle((LOOK_PY[target] || '').split(' ').filter(s => s && SOUND[s] && same(s))).slice(0, 2) : [];
+  const rest = uniq([...shuffle(l.sounds), ...shuffle(soundsUpTo(l.n)), ...shuffle(Object.keys(SOUND))]).filter(s => same(s) && !look.includes(s)
+    && (hard(r) || !(LOOK_PY[target] || '').split(' ').includes(s) || l.sounds.includes(s)));
+  return shuffle([target, ...look, ...rest].slice(0, n));
+}
+function soundCards(ctx){
+  const l = ctx.lesson, targets = l.sounds;
+  const order = isShort() ? roundList(targets, 3, 3) : roundList(targets, targets.length <= 2 ? 4 : 6, 6);
+  const plan = typePlan(order.length, ['hear', 'pic']);
+  const total = order.length + 1, seen = new Set();
+  const playBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); round(0); }}, '🎈 开始 ➜');
+  const cards = targets.map(s => {
+    const S = SOUND[s];
+    const card = h('button', {class:'sound-card', 'aria-label':s, onclick:() => {
+        Sfx.tap(); bounce(card); card.classList.add('seen'); seen.add(s);
+        say(T.sayWithMe + ' 🗣️', [S.say, S.ph]);
+        if (seen.size === targets.length) reveal(playBtn);
+      }},
+      h('span', {class:'glyph' + (isInitial(s) ? ' init' : '')}, s), h('span', {class:'pic'}, S.pic), h('span', {class:'kw'}, ruby(S.w, S.wp)));
+    return card;
+  });
+  ctx.stage.replaceChildren(h('div', {class:'cards' + (targets.length > 4 ? ' many' : '')}, cards), playBtn);
+  ctx.progress(0);
+  const intro = () => say(SHOW.tapEachCard, T.tapEachCard);
+  ctx.replay = intro; intro();
+
+  function round(r){
+    if (r >= order.length){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((r + 1) / total);
+    const target = order[r], type = plan[r], S = SOUND[target];
+    const opts = soundChoices(target, l, r);
+    const q = isInitial(target) ? 'startsWith' : 'whichFinal';
+    const ask = type === 'pic' ? [S.ph, T[q]] : [T.find, S.say];
+    const top = type === 'pic' ? h('div', {class:'quiz-pic show', 'aria-label':S.w}, S.pic, ' ', h('span', {class:'han', style:{fontSize:'.62em'}}, S.w)) : null;
+    quizHook(type, target);
+    balloonRound(ctx, {opts, answer:target, r, total,
+      top, prompt: () => type === 'pic' ? say(SHOW[q], ask) : say(SHOW.popBalloon, ask),
+      right: pr => [pr, S.say],
+      wrong: x => [T.thatIs, SND(x), ...ask],
+      next: () => round(r + 1)});
+  }
+}
+
+// Character choices: the answer, look-alikes (later rounds), the lesson's other characters, then earlier ones.
+function charChoices(target, l, r, ok = () => true){
+  const n = hard(r) ? 4 : 3;
+  const bad = c => c === target || !ok(c);
+  const look = hard(r) ? shuffle([...(LOOK_ZI[target] || '')]).filter(c => !bad(c)).slice(0, 1) : [];
+  const rest = uniq([...shuffle(l.chars.map(x => x[0])), ...shuffle(charsUpTo(l.n).map(x => x[0])), ...shuffle(Object.keys(CHAR_INFO))]).filter(c => !bad(c) && !look.includes(c));
+  return shuffle([target, ...look, ...rest].slice(0, n));
+}
+function charCards(ctx){
+  const l = ctx.lesson, chars = l.chars;
+  const order = isShort() ? roundList(chars, 3, 3) : roundList(chars, 6, 6);
+  const plan = typePlan(order.length, l.n >= 19 ? ['hear', 'pic', 'py'] : ['hear', 'pic']);
+  const total = order.length + 1, seen = new Set();
+  const playBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); round(0); }}, '🎈 开始 ➜');
+  const cards = chars.map(x => {
+    const card = h('button', {class:'char-card', 'aria-label':x[0], onclick:() => {
+        Sfx.tap(); bounce(card); card.classList.add('seen'); seen.add(x[0]);
+        say(T.sayWithMe + ' 🗣️', charSay(x));
+        if (seen.size === chars.length) reveal(playBtn);
+      }},
+      h('span', {class:'py'}, x[1]), h('span', {class:'zi'}, x[0]), h('span', {class:'pic'}, x[4] || ''), h('span', {class:'wd'}, x[2]));
+    return card;
+  });
+  ctx.stage.replaceChildren(h('div', {class:'cards' + (chars.length > 4 ? ' many' : '')}, cards), playBtn);
+  ctx.progress(0);
+  const intro = () => say(SHOW.tapEachCard, T.tapEachCard);
+  ctx.replay = intro; intro();
+
+  function round(r){
+    if (r >= order.length){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((r + 1) / total);
+    const x = order[r], target = x[0];
+    let type = plan[r];
+    if (type === 'pic' && !x[4]) type = l.n >= 19 ? 'py' : 'hear';
+    const picOK = c => !PIC_OF[c] || PIC_OF[c] !== x[4];   // never two characters with the same picture
+    const opts = charChoices(target, l, r, type === 'pic' ? picOK : undefined);
+    const ask = type === 'pic' ? [T.picChar] : type === 'py' ? [T.pyChar] : [T.find, charSay(x)];
+    const top = type === 'pic' ? h('div', {class:'quiz-pic show'}, x[4]) : type === 'py' ? h('div', {class:'quiz-py'}, x[1]) : null;
+    quizHook(type, target);
+    balloonRound(ctx, {opts, answer:target, cls:'han', r, total, top,
+      prompt: () => type === 'pic' ? say(SHOW.picChar, ask) : type === 'py' ? say(SHOW.pyChar, ask) : say(SHOW.popBalloon, ask),
+      right: pr => [pr, charSay(x)],
+      wrong: c => CHAR_INFO[c] ? [T.thatIs, charSay(CHAR_INFO[c]), ...ask] : ask,
+      next: () => round(r + 1)});
+  }
+}
+
+// 2 · 四声: hear the four tones, then tell which tone a syllable has
+const TONE_PATH = {1:'M8 11 L52 11', 2:'M8 27 L52 8', 3:'M8 17 Q20 35 31 33 Q43 31 52 11', 4:'M8 8 L52 32'};
+const toneSvg = t => {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 60 40'); svg.setAttribute('aria-hidden', 'true');
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.setAttribute('d', TONE_PATH[t]); p.setAttribute('fill', 'none'); p.setAttribute('stroke-width', '5'); p.setAttribute('stroke-linecap', 'round');
+  svg.append(p);
+  return svg;
+};
+const TONE_NAME = t => T['tone' + t];
+// what the tones game practises: the lesson's vowels (ā á ǎ à), syllables (bā bá bǎ bà) or characters (天 tiān)
+function toneItems(l){
+  if (l.kind !== 'py') return l.chars.filter(x => toneOf(x[1]) <= 4 && !x[1].includes(' ')).map(x => ({base:plain(x[1]), tone:toneOf(x[1]), char:x}));
+  if (l.n <= 6 || l.n >= 14) return l.sounds.map(s => ({base:plain(SND(s))}));
+  return uniq(l.syll.map(([s]) => plain(s))).filter(b => !WHOLE.has(b)).map(base => ({base}));
+}
+function actTones(ctx){
+  const l = ctx.lesson, items = toneItems(l);
+  const rounds = isShort() ? 3 : 6;
+  const total = rounds + 1;
+  const first = items[0];
+  const seen = new Set();
+  const playBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); round(0, 0); }}, '🎵 开始 ➜');
+  const cards = [1, 2, 3, 4].map(t => {
+    const syl = withTone(first.base, t);
+    const card = h('button', {class:'tone-card t' + t, 'aria-label':syl, onclick:() => {
+      Sfx.tap(); bounce(card); card.classList.add('seen'); seen.add(t);
+      say(`${syl}  ${TONE_NAME(t)}`, [syl, TONE_NAME(t)]);
+      if (seen.size === 4) reveal(playBtn);
+    }}, h('span', {class:'ts'}, syl), toneSvg(t), h('span', {class:'tn'}, TONE_NAME(t)));
+    return card;
+  });
+  ctx.stage.replaceChildren(...[
+    first.char ? h('div', {class:'quiz-han'}, first.char[0]) : null,
+    h('div', {class:'rhyme'}, T.tonesRhyme.split('，').map((part, k, all) => h('span', {}, part + (k < all.length - 1 ? '，' : '')))),
+    h('div', {class:'tone-cards'}, cards), playBtn].filter(Boolean));
+  ctx.progress(0);
+  const intro = () => say(T.tonesRhyme + ' 👆', [T.tonesRhyme, T.tonesTap]);
+  ctx.replay = intro; intro();
+
+  let lastTone = 0;
+  function round(r){
+    if (r >= rounds){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((r + 1) / total);
+    const it = items[(r + (items.length > 1 ? 1 : 0)) % items.length];
+    let tone = it.tone;
+    if (!tone){ const ts = [1, 2, 3, 4].filter(t => t !== lastTone); tone = pick(ts); }
+    lastTone = tone;
+    const answer = withTone(it.base, tone);
+    const n = hard(r) ? 4 : 3;
+    const tones = shuffle([tone, ...shuffle([1, 2, 3, 4].filter(t => t !== tone)).slice(0, n - 1)]);
+    const opts = tones.map(t => withTone(it.base, t));
+    const top = it.char ? h('div', {class:'quiz-han'}, it.char[0]) : null;
+    quizHook('tone', answer);
+    balloonRound(ctx, {opts, answer, r, total, top,
+      prompt: () => say(SHOW.whichTone, [T.whichTone, answer]),
+      right: pr => [pr, answer, TONE_NAME(tone), ...(it.char ? [charSay(it.char)] : [])],
+      wrong: x => [x, TONE_NAME(toneOf(x)), T.whichTone, answer],
+      next: () => round(r + 1)});
+  }
+}
+
+// 3 · 描一描: trace the pinyin letters with a finger, on four lines like a pinyin exercise book
+// Length of a letter's strokes: thin the letter's shape to 1-pixel lines (Zhang-Suen) and count the pixels.
+function skeletonLength(alpha, w, x0, x1, y0, y1){
+  const bw = x1 - x0 + 3, bh = y1 - y0 + 3, m = new Uint8Array(bw * bh);
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (alpha[(y * w + x) * 4 + 3] > 128) m[(y - y0 + 1) * bw + (x - x0 + 1)] = 1;
+  const del = [];
+  for (let changed = true, guard = 0; changed && guard < 200; guard++){
+    changed = false;
+    for (let step = 0; step < 2; step++){
+      del.length = 0;
+      for (let y = 1; y < bh - 1; y++) for (let x = 1; x < bw - 1; x++){
+        const i = y * bw + x;
+        if (!m[i]) continue;
+        const p = [m[i - bw], m[i - bw + 1], m[i + 1], m[i + bw + 1], m[i + bw], m[i + bw - 1], m[i - 1], m[i - bw - 1]];
+        const b = p[0] + p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7];
+        if (b < 2 || b > 6) continue;
+        let a = 0; for (let k = 0; k < 8; k++) if (!p[k] && p[(k + 1) % 8]) a++;
+        if (a !== 1) continue;
+        if (step === 0 ? (p[0] && p[2] && p[4]) || (p[2] && p[4] && p[6]) : (p[0] && p[2] && p[6]) || (p[0] && p[4] && p[6])) continue;
+        del.push(i);
+      }
+      if (del.length){ changed = true; for (const i of del) m[i] = 0; }
+    }
+  }
+  let n = 0; for (let i = 0; i < m.length; i++) n += m[i];
+  return n * 1.1;   // diagonal steps are a little longer than one pixel
+}
+
+function actTrace(ctx){
+  const l = ctx.lesson, items = shuffle(l.sounds).slice(0, isShort() ? 3 : 6);
+  let i = 0, fails = 0, won = false, drawing = false, last = null, hue = 0, travel = 0, skelLen = 1;
+  const wrap = h('div', {class:'trace-wrap'});
+  const guide = h('canvas', {'aria-hidden':'true'}), ink = h('canvas', {'aria-label':'描字的地方'});
+  wrap.append(guide, ink);
+  const topPic = h('span', {class:'tp'}), topLabel = h('span', {class:'tl'}), topWord = h('span'), counter = h('span', {class:'count'});
+  const clearBtn = h('button', {class:'btn orange', onclick:() => { Sfx.tap(); clearInk(); }}, '🧽 擦掉');
+  const doneBtn = h('button', {class:'btn green', onclick:() => check(true)}, '✔ 描好了');
+  ctx.stage.replaceChildren(h('div', {class:'trace-top'}, topPic, topLabel, topWord, counter), wrap, h('div', {class:'row'}, clearBtn, doneBtn));
+
+  let W = 0, H = 0, dpr = 1, gctx, ictx, brush = 20, size = 100, mask = [], tol = null, mw = 0, mh = 0, cellOf = null, cells = [];
+  const small = document.createElement('canvas');
+  const font = px => `700 ${px}px Andika, 'Trebuchet MS', sans-serif`;
+
+  function layout(){
+    const r = wrap.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.round(r.width); H = Math.round(r.height);
+    for (const c of [guide, ink]){ c.width = W * dpr; c.height = H * dpr; }
+    gctx = guide.getContext('2d');
+    ictx = ink.getContext('2d');
+    gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ictx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawGuide();
+  }
+  function drawGuide(done){
+    const text = items[i];
+    gctx.font = font(100);
+    // the four lines are fixed by the letter shapes (h above, x in the middle, g below), so every letter sits the same way
+    const asc = gctx.measureText('h').actualBoundingBoxAscent || 75;
+    const desc = gctx.measureText('g').actualBoundingBoxDescent || 25;
+    const xh = gctx.measureText('x').actualBoundingBoxAscent || 50;
+    const wid = gctx.measureText(text).width || 60;
+    size = Math.min(H * 0.8 / ((asc + desc) / 100), W * 0.84 / (wid / 100));
+    const A = asc * size / 100, D = desc * size / 100, X = xh * size / 100;
+    const base = (H - (A + D)) / 2 + A, cx = W / 2;
+    gctx.clearRect(0, 0, W, H);
+    // the middle band of the four lines
+    gctx.fillStyle = '#fff6f3'; gctx.fillRect(16, base - X, W - 32, X);
+    gctx.lineWidth = 3; gctx.lineCap = 'round';
+    gctx.strokeStyle = '#9fc4ff'; hline(base - A); hline(base - X);
+    gctx.strokeStyle = '#ff9aa8'; hline(base);
+    gctx.strokeStyle = '#9fc4ff'; hline(base + D);
+    // the letters to trace
+    gctx.font = font(size); gctx.textAlign = 'center'; gctx.textBaseline = 'alphabetic';
+    gctx.fillStyle = done ? '#bff3d8' : '#f4e6ff';
+    gctx.fillText(text, cx, base);
+    gctx.setLineDash([2, Math.max(6, size * 0.05)]);
+    gctx.lineWidth = Math.max(3, size * 0.014); gctx.strokeStyle = done ? '#22c07a' : '#b597ee';
+    gctx.strokeText(text, cx, base);
+    gctx.setLineDash([]);
+    // masks for checking (half resolution)
+    brush = Math.max(14, size * 0.12);
+    mw = Math.ceil(W / 2); mh = Math.ceil(H / 2);
+    const mc = document.createElement('canvas'); mc.width = mw; mc.height = mh;
+    const m = mc.getContext('2d', {willReadFrequently:true});
+    m.setTransform(0.5, 0, 0, 0.5, 0, 0);
+    m.font = font(size); m.textAlign = 'center'; m.textBaseline = 'alphabetic'; m.fillStyle = '#000';
+    m.fillText(text, cx, base);
+    const md = m.getImageData(0, 0, mw, mh).data;
+    m.lineJoin = 'round'; m.lineWidth = brush + size * 0.03; m.strokeStyle = '#000';   // how far off the letter still counts
+    m.strokeText(text, cx, base);
+    const td = m.getImageData(0, 0, mw, mh).data;
+    mask = []; tol = new Uint8Array(mw * mh);
+    for (let p = 0; p < mw * mh; p++){ if (md[p * 4 + 3] > 128) mask.push(p); if (td[p * 4 + 3] > 30) tol[p] = 1; }
+    // split the letters into small parts, so every part has to be traced (not just half of it)
+    let x0 = mw, x1 = 0, y0 = mh, y1 = 0;
+    for (const p of mask){ const x = p % mw, y = (p / mw) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    const cellPx = Math.max(4, brush * 0.75);   // in mask pixels (half size), about 1.5 brush widths
+    const cols = Math.max(1, Math.ceil((x1 - x0 + 1) / cellPx)), rows = Math.max(1, Math.ceil((y1 - y0 + 1) / cellPx));
+    cellOf = new Int32Array(mask.length);
+    const counts = new Array(cols * rows).fill(0);
+    mask.forEach((p, k) => {
+      const cx = Math.min(cols - 1, Math.floor((p % mw - x0) / cellPx)), cy = Math.min(rows - 1, Math.floor((Math.floor(p / mw) - y0) / cellPx));
+      cellOf[k] = cx + cols * cy; counts[cellOf[k]]++;
+    });
+    const minPx = cellPx * cellPx * 0.08;   // ignore cells that only touch the letter's edge
+    cells = counts.map(n => n >= minPx ? n : 0);
+    skelLen = Math.max(1, skeletonLength(md, mw, x0, x1, y0, y1) * 2);   // in page pixels (the mask is half size)
+    small.width = mw; small.height = mh;
+  }
+  function hline(y){ gctx.beginPath(); gctx.moveTo(16, y); gctx.lineTo(W - 16, y); gctx.stroke(); }
+  function clearInk(){ travel = 0; if (ictx){ ictx.clearRect(0, 0, W, H); } }
+  function measure(){
+    const sc = small.getContext('2d', {willReadFrequently:true});
+    sc.clearRect(0, 0, mw, mh); sc.drawImage(ink, 0, 0, mw, mh);
+    const d = sc.getImageData(0, 0, mw, mh).data;
+    let cov = 0, inkN = 0, out = 0;
+    const hit = new Array(cells.length).fill(0);
+    mask.forEach((p, k) => { if (d[p * 4 + 3] > 30){ cov++; hit[cellOf[k]]++; } });
+    for (let p = 0; p < mw * mh; p++) if (d[p * 4 + 3] > 30){ inkN++; if (!tol[p]) out++; }
+    let partsN = 0, partsHit = 0;
+    cells.forEach((n, c) => { if (n){ partsN++; if (hit[c] >= n / 3) partsHit++; } });
+    return {coverage: mask.length ? cov / mask.length : 0, outside: inkN ? out / inkN : 0, inkN,
+      spread: mask.length ? inkN / mask.length : 0, parts: partsN ? partsHit / partsN : 0, pen: travel / skelLen};
+  }
+  // Only a real trace passes: most of the letters covered, little ink off them, and no scribbling.
+  // After two tries that were not quite enough, it is a little kinder, but never lets a scribble through.
+  function check(pressed){
+    if (won || !mask.length) return;
+    const {coverage, outside, inkN, spread, parts, pen} = measure();
+    if (window.__traceStats) window.__traceStats.push({coverage, outside, spread, parts, pen});   // test hook
+    const kind = fails >= 2;
+    const messy = kind ? outside > 0.25 || spread > 2.6 || (spread > 2 && outside > 0.1)
+                       : outside > 0.2 || spread > 2.4 || (spread > 1.8 && outside > 0.08);
+    const scribble = pen > (kind ? 2.8 : 2.2);   // tracing once is 0.8-1.4; going over a part again is fine
+    const pass = !messy && !scribble && (kind ? coverage >= 0.5 && parts >= 0.72 : coverage >= 0.6 && parts >= 0.8);
+    if (pass){ success(); return; }
+    if (!pressed && !scribble) return;
+    fails++; Sfx.bad(); wiggle(wrap);
+    if (inkN === 0) say(SHOW.useFinger, T.useFinger);
+    else if (scribble){ say(SHOW.noScribble, T.noScribble); clearInk(); }   // start that one again
+    else if (messy){ say(SHOW.stayOn, T.stayOn); clearInk(); }
+    else say(SHOW.keepGoing, T.keepGoing);
+  }
+  function success(){
+    won = true; Sfx.good(); wrap.classList.add('win'); burst(wrap); drawGuide(true);
+    const s = items[i];
+    ctx.progress((i + 1) / items.length);
+    const pr = pick(PRAISE);
+    afterSay(say(pr, [pr, SND(s)]), 1300, () => { i++; if (i >= items.length) ctx.done(); else startItem(); });
+  }
+  function startItem(){
+    won = false; fails = 0; wrap.classList.remove('win');
+    const s = items[i], S = SOUND[s];
+    topPic.textContent = S.pic; topLabel.textContent = s; topWord.replaceChildren(ruby(S.w, S.wp));
+    counter.textContent = `${i + 1} / ${items.length}`;
+    clearInk(); if (W) drawGuide();
+    ctx.progress(i / items.length);
+    const prompt = () => say(SHOW.traceLetter, [T.traceThis, S.say]);
+    ctx.replay = prompt; prompt();
+    quizHook('trace', s);
+    if (window.__quiz) window.__pass = () => { if (!won) success(); };   // test hook
+  }
+
+  function seg(a, b){
+    hue = (hue + 3) % 360;
+    ictx.strokeStyle = `hsl(${hue}, 85%, 55%)`; ictx.lineWidth = brush; ictx.lineCap = 'round'; ictx.lineJoin = 'round';
+    ictx.beginPath(); ictx.moveTo(a.x, a.y); ictx.lineTo(b.x, b.y); ictx.stroke();
+  }
+  onStrokes(ink, {
+    down: p => { if (won || !ictx) return false; drawing = true; last = p; seg(p, {x:p.x + 0.1, y:p.y}); },
+    move: p => { if (!drawing) return; travel += Math.hypot(p.x - last.x, p.y - last.y); seg(last, p); last = p; },
+    up: () => { if (!drawing) return; drawing = false; check(false); },
+  });
+  const resized = () => { const r = wrap.getBoundingClientRect(); if (Math.round(r.width) !== W || Math.round(r.height) !== H) layout(); };
+  const fontReady = document.fonts && document.fonts.load ? Promise.race([document.fonts.load(font(100)), wait(2500)]) : Promise.resolve();
+  fontReady.catch(() => {}).then(() => { if (!ctx.alive()) return; watchSize(wrap, resized); layout(); });
+  startItem();
+}
+
+// 3 · 写汉字: watch the stroke order, then write the character stroke by stroke in a 田 grid (Hanzi Writer)
+let hwLoading = null;
+function loadHanziWriter(){
+  if (window.HanziWriter) return Promise.resolve();
+  if (!hwLoading) hwLoading = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'js/hanzi-writer.min.js?v=3.7.3';
+    s.onload = () => res(); s.onerror = () => { hwLoading = null; rej(new Error('load')); };
+    document.head.append(s);
+  });
+  return hwLoading;
+}
+const hanziFile = c => 'hanzi/' + c.codePointAt(0).toString(16) + '.json';
+function gridSvg(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('class', 'grid'); svg.setAttribute('aria-hidden', 'true');
+  const line = (x1, y1, x2, y2, dash, w = 0.6) => {
+    const ln = document.createElementNS(NS, 'line');
+    Object.entries({x1, y1, x2, y2, stroke:'#f2b8ae', 'stroke-width':w, 'stroke-dasharray':dash || ''}).forEach(([k, v]) => ln.setAttribute(k, v));
+    svg.append(ln);
+  };
+  line(2, 2, 98, 2, '', 1.4); line(98, 2, 98, 98, '', 1.4); line(98, 98, 2, 98, '', 1.4); line(2, 98, 2, 2, '', 1.4);
+  line(50, 2, 50, 98, '2.5 2'); line(2, 50, 98, 50, '2.5 2');
+  line(2, 2, 98, 98, '1.5 2.5', 0.4); line(98, 2, 2, 98, '1.5 2.5', 0.4);
+  return svg;
+}
+function actWrite(ctx){
+  const l = ctx.lesson, items = l.write.slice(0, isShort() ? 2 : 4);
+  let i = 0, writer = null, size = 0, quizzing = false, said = false;
+  const box = h('div', {class:'grid-box'}), target = h('div', {class:'hw'});
+  box.append(gridSvg(), target);
+  const topRuby = h('span'), topWord = h('span', {class:'han'}), counter = h('span', {class:'count'});
+  const dots = h('div', {class:'stroke-dots', 'aria-hidden':'true'});
+  const watchBtn = h('button', {class:'btn blue', onclick:() => { Sfx.tap(); demo(); }}, '👀 看笔顺');
+  const againBtn = h('button', {class:'btn orange', onclick:() => { Sfx.tap(); startQuiz(); }}, '🧽 重写');
+  const skipBtn = h('button', {class:'btn white', hidden:true, onclick:() => { Sfx.tap(); next(); }}, '下一个 ➜');
+  ctx.stage.replaceChildren(h('div', {class:'write-top'}, topRuby, topWord, counter), box, dots, h('div', {class:'row'}, watchBtn, againBtn, skipBtn));
+  ctx.progress(0);
+  const loading = h('div', {class:'loading'}, '……');
+  box.append(loading);
+
+  const info = c => charOf(l, c) || CHAR_INFO[c] || [c, '', '', '', ''];
+  const sz = () => Math.round(box.getBoundingClientRect().width) || 300;
+  function make(c){
+    size = sz();
+    target.replaceChildren();
+    writer = window.HanziWriter.create(target, c, {
+      width:size, height:size, padding:Math.round(size * 0.08),
+      showOutline:true, showCharacter:false,
+      strokeColor:'#3a2440', outlineColor:'#eedfdb', drawingColor:'#e8453c', highlightColor:'#ffb84d', radicalColor:null,
+      drawingWidth:Math.max(10, Math.round(size * 0.045)), strokeAnimationSpeed:1, delayBetweenStrokes:250,
+      charDataLoader:(ch, onLoad, onError) => { fetch(hanziFile(ch)).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(onLoad, onError); },
+      onLoadCharDataSuccess:d => { loading.hidden = true; dots.replaceChildren(...d.strokes.map(() => h('i'))); },
+      onLoadCharDataError:() => { loading.hidden = false; loading.textContent = '⚠️ 笔顺数据没有加载'; skipBtn.hidden = false; },
+    });
+  }
+  function demo(){
+    if (!writer) return;
+    quizzing = false;
+    try { writer.cancelQuiz(); } catch (e) {}
+    const x = info(items[i]);
+    say(SHOW.watchStrokes, [T.watchStrokes, charSay(x)]);
+    writer.hideCharacter();
+    writer.animateCharacter({onComplete:res => { if (!res || !res.canceled) later(startQuiz, 500); }});
+  }
+  function startQuiz(){
+    if (!writer || !ctx.alive()) return;
+    quizzing = true; said = false;
+    box.classList.remove('win');
+    [...dots.children].forEach(d => d.classList.remove('on'));
+    writer.hideCharacter();
+    say(SHOW.writeNow, T.writeNow);
+    quizHook('write', items[i]);
+    if (window.__quiz) window.__pass = () => { if (quizzing){ quizzing = false; try { writer.cancelQuiz(); } catch (e) {} success(); } };   // test hook
+    writer.quiz({
+      leniency:1.4, showHintAfterMisses:2, markStrokeCorrectAfterMisses:4, acceptBackwardsStrokes:false,
+      onCorrectStroke:d => { Sfx.stroke(); const dot = dots.children[d.strokeNum]; if (dot) dot.classList.add('on'); },
+      onMistake:d => { Sfx.bad(); if (!said && d.mistakesOnStroke === 1){ said = true; say(T.strokeTry); } },
+      onComplete:() => { quizzing = false; success(); },
+    });
+  }
+  function success(){
+    Sfx.good(); box.classList.add('win'); burst(box);
+    ctx.progress((i + 1) / items.length);
+    const x = info(items[i]), pr = pick(PRAISE);
+    afterSay(say(pr, [pr, charSay(x)]), 1300, next);
+  }
+  function next(){ i++; if (i >= items.length) ctx.done(); else startItem(); }
+  function startItem(){
+    const c = items[i], x = info(c);
+    box.classList.remove('win'); skipBtn.hidden = true; loading.hidden = false; loading.textContent = '……';
+    topRuby.replaceChildren(rubyEl([[c, x[1]]]));
+    topWord.textContent = x[2] ? `${x[2]}` : '';
+    counter.textContent = `${i + 1} / ${items.length}`;
+    ctx.progress(i / items.length);
+    make(c);
+    ctx.replay = demo;
+    later(demo, 350);
+  }
+  watchSize(box, () => { if (writer && Math.abs(sz() - size) > 4){ size = sz(); writer.updateDimensions({width:size, height:size, padding:Math.round(size * 0.08)}); } });
+  cleanups.push(() => { try { if (writer) writer.cancelQuiz(); } catch (e) {} });
+  loadHanziWriter().then(() => { if (ctx.alive()) startItem(); }).catch(() => {
+    loading.textContent = '⚠️ 写字工具没有加载，请检查网络后再试。'; skipBtn.hidden = false;
+    skipBtn.onclick = () => { Sfx.tap(); ctx.done(); };
+  });
+}
+
+// 4 · 拼一拼: put the initial and the final together (b + ā → bā), then build syllables you hear
+// syllables a lesson can blend: not read as a whole (zhi, yi), and with an initial
+const blendSyls = l => uniq((l.syll || []).map(x => x[0])).filter(s => { const p = splitSyl(s); return p.ini && !p.whole; });
+const sylInfo = (l, s) => (l.syll || []).find(x => x[0] === s) || sylsUpTo(l.n).find(x => x[0] === s) || [s, '', ''];
+// the coloured parts of a syllable as tiles: [kind, text shown, what 乐乐 says]
+function blendParts(s){
+  const {ini, med, fin} = splitSyl(s);
+  return [['i', ini, SND(ini)], ...(med ? [['m', med, SOUND[med].say]] : []), ['f', fin, fin]];
+}
+function actBlend(ctx){
+  const l = ctx.lesson, syls = blendSyls(l);
+  const learn = shuffle(syls).slice(0, isShort() ? 2 : 3);
+  const quiz = roundList(syls, isShort() ? 3 : 5, isShort() ? 3 : 5);
+  const total = learn.length + quiz.length;
+  let i = 0;
+  const step = () => {
+    if (i >= learn.length){ build(0); return; }
+    ctx.progress(i / total);
+    const s = learn[i], [, ch, pic] = sylInfo(l, s), parts = blendParts(s);
+    const tiles = parts.map(([k, txt, sound]) => h('button', {class:'bpart ' + k, onclick:e => { Sfx.tap(); bounce(e.currentTarget); Speech.speak(sound); }}, txt));
+    const res = h('div', {class:'bres'}, s);
+    const picEl = h('div', {class:'blend-pic'});
+    const nextBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); i++; step(); }}, '下一个 ➜');
+    let busy = false, joined = false;
+    const join = async () => {
+      if (busy) return; busy = true;
+      const id = navId;
+      for (let k = 0; k < tiles.length; k++){
+        if (id !== navId) return;
+        tiles[k].classList.add('hint'); Sfx.tick(k);
+        await Speech.speak(parts[k][2]);
+        tiles[k].classList.remove('hint');
+        await wait(120);
+      }
+      if (id !== navId) return;
+      res.classList.add('full'); Sfx.good();
+      picEl.replaceChildren(pic || '', ch ? h('span', {class:'han'}, ch) : '');
+      await Speech.speak(s);
+      busy = false;
+      if (!joined){ joined = true; reveal(nextBtn); }
+    };
+    const joinBtn = h('button', {class:'btn pink big', onclick:() => { Sfx.tap(); join(); }}, '🧩 拼！');
+    const eq = [];
+    tiles.forEach((t, k) => { if (k) eq.push(h('span', {class:'op'}, '+')); eq.push(t); });
+    eq.push(h('span', {class:'op'}, '→'), res);
+    ctx.stage.replaceChildren(h('div', {class:'blend-box'}, h('div', {class:'blend-eq'}, eq), picEl, h('div', {class:'row'}, joinBtn)), nextBtn);
+    const intro = () => say(T.blendTap + ' 🧩', i === 0 ? [T.blendRhyme, T.blendTap] : [T.blendTap]);
+    ctx.replay = join; intro();
+  };
+  // build: hear a syllable, tap its parts in order; later rounds add the same final with another tone
+  const build = r => {
+    if (r >= quiz.length){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((learn.length + r) / total);
+    const s = quiz[r], [, ch, pic] = sylInfo(l, s), parts = blendParts(s);
+    const {ini, med, fin, finBase, tone} = splitSyl(s);
+    const iniOpts = uniq([ini, ...shuffle((LOOK_PY[ini] || '').split(' ').filter(x => x && SOUND[x])), ...shuffle(l.sounds.filter(isInitial)), ...shuffle(INITIALS)])
+      .filter(x => x === ini || x !== 'y' && x !== 'w' || 'yw'.includes(ini)).slice(0, hard(r) ? 3 : 2);
+    const finOpts = uniq([fin,
+      ...(hard(r) ? [withTone(finBase, pick([1, 2, 3, 4].filter(t => t !== tone)))] : []),
+      ...shuffle(uniq(blendSyls(l).map(x => splitSyl(x).fin)).filter(f => plain(f) !== finBase))]).slice(0, hard(r) ? 3 : 2);
+    const medOpts = med ? uniq([med, ...shuffle(['i', 'u', 'ü'].filter(x => x !== med))]).slice(0, 2) : [];
+    const want = parts.map(p => p[1]);
+    let pos = 0, misses = 0, solved = false;
+    const slots = parts.map(([k]) => h('div', {class:'slot'}));
+    const slotRow = h('div', {class:'slots'}, slots.flatMap((sl, k) => k ? [h('span', {class:'op'}, '+'), sl] : [sl]));
+    const picEl = h('div', {class:'spell-pic'}, '👂');
+    const prompt = () => say(SHOW.blendBuild, [T.blendBuild, s]);
+    quizHook('blend', s, want);
+    const tileOf = (txt, kind) => {
+      const t = h('button', {class:'tile ' + kind, 'data-v':txt, onclick:e => {
+        if (solved || t.classList.contains('used') || !tapOK(e)) return;
+        if (txt === want[pos]){
+          t.classList.add('used'); slots[pos].textContent = txt; slots[pos].classList.add('filled');
+          Speech.speak(parts[pos][2]);
+          pos++; misses = 0; Sfx.tick(pos);
+          tiles.forEach(x => x.classList.remove('hint'));
+          if (pos === want.length){
+            solved = true; Sfx.good(); burst(slotRow); fadeOthers(tiles, null);
+            picEl.replaceChildren(pic || '⭐', ch ? h('span', {class:'han', style:{fontSize:'.8em'}}, ' ' + ch) : '');
+            ctx.progress((learn.length + r + 1) / total);
+            const pr = pick(PRAISE);
+            afterSay(say(pr, [pr, ...sylSpeech(s)]), 1400, () => build(r + 1));
+          }
+        } else {
+          misses++; Sfx.bad(); wiggle(t);
+          if (misses === 1) Speech.speak(s);
+          if (misses >= 2){ const hint = tiles.find(x => !x.classList.contains('used') && x.textContent === want[pos]); if (hint) hint.classList.add('hint'); }
+        }
+      }}, txt);
+      return t;
+    };
+    const tiles = [...shuffle(iniOpts).map(x => tileOf(x, 'init')), ...shuffle(medOpts).map(x => tileOf(x, 'fin')), ...shuffle(finOpts).map(x => tileOf(x, 'fin'))];
+    ctx.stage.replaceChildren(h('div', {class:'row'}, listenBtn(prompt), picEl), slotRow, h('div', {class:'tiles'}, tiles));
+    ctx.replay = prompt; prompt();
+  };
+  step();
+}
+
+// 5 · 读一读 (pinyin lessons): sound out syllable cards, then listen & choose
+function sylEl(s){
+  return h('span', {class:'syl'}, sylParts(s).map(([k, txt]) => h('span', {class:'pt ' + k}, txt)));
+}
+async function soundOutSyl(el, s){
+  const id = navId;
+  const pts = [...el.querySelectorAll('.pt')], sp = sylSpeech(s);
+  if (pts.length > 1){
+    for (let k = 0; k < pts.length; k++){
+      if (id !== navId) return;
+      pts[k].classList.add('lit'); Sfx.tick(k);
+      await Speech.speak(sp[k]);
+      pts[k].classList.remove('lit');
+    }
+  }
+  if (id !== navId) return;
+  el.classList.add('whole');
+  await Speech.speak(s);
+  el.classList.remove('whole');
+}
+// wrong syllables: the same letters with another tone (later rounds), the lesson's other syllables, then earlier ones
+function sylChoices(target, l, r, ok = () => true){
+  const n = hard(r) ? 4 : 3, base = plain(target), t = toneOf(target);
+  const bad = s => s === target || !ok(s);
+  const look = hard(r) ? [withTone(base, pick([1, 2, 3, 4].filter(x => x !== t)))].filter(s => !bad(s)) : [];
+  const rest = uniq([...shuffle(l.syll.map(x => x[0])), ...shuffle(sylsUpTo(l.n).map(x => x[0]))]).filter(s => !bad(s) && !look.includes(s) && plain(s) !== base);
+  return shuffle([target, ...look, ...rest].slice(0, n));
+}
+function actRead(ctx){
+  const l = ctx.lesson, items = l.syll;
+  const quiz = isShort() ? roundList(items, 3, 3) : roundList(items, 5, 6);
+  const total = quiz.length + 1, seen = new Set();
+  const playBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); round(0); }}, '🎮 开始 ➜');
+  const cards = items.map(([s, ch, pic]) => {
+    const se = sylEl(s);
+    let busy = false;
+    const card = h('button', {class:'word-card', 'aria-label':s, onclick:async () => {
+        if (busy) return; busy = true; Sfx.tap();
+        await soundOutSyl(se, s);
+        // zhi, zi, yi …: say that it is read as a whole
+        if (splitSyl(s).whole && plain(s).length > 1 && ctx.alive()) await say(`${s}：整体认读音节`, T.wholeRead);
+        busy = false;
+        if (!ctx.alive()) return;
+        card.classList.add('seen'); seen.add(s);
+        if (seen.size === uniq(items.map(x => x[0])).length) reveal(playBtn);
+      }},
+      se, h('span', {class:'wpic'}, pic), h('span', {class:'wz'}, ch));
+    return card;
+  });
+  ctx.stage.replaceChildren(h('div', {class:'cards'}, cards), playBtn);
+  ctx.progress(0);
+  const intro = () => say(SHOW.soundOut, T.soundOut);
+  ctx.replay = intro; intro();
+
+  const plan = typePlan(quiz.length, ['hear', 'pic', 'missing']);
+  function round(r){
+    if (r >= quiz.length){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((r + 1) / total);
+    const [s, ch, pic] = quiz[r];
+    let type = plan[r];
+    const parts = sylParts(s);
+    if (type === 'missing' && parts.length < 2) type = pic ? 'pic' : 'hear';
+    const picShow = h('div', {class:'quiz-pic' + (type === 'hear' ? '' : ' show')}, pic || '⭐');
+    let solved = false, misses = 0, prompt, body;
+    const win = (el, all, then) => {
+      solved = true; el.classList.add('right'); Sfx.good(); burst(el); picShow.classList.add('show'); fadeOthers(all, el);
+      if (then) then();
+      ctx.progress((r + 2) / total);
+      const pr = pick(PRAISE);
+      afterSay(say(pr, [pr, s]), 1200, () => round(r + 1));
+    };
+    if (type === 'missing'){
+      // one part is missing (the initial or the final); the choices are parts
+      const k = Math.random() < 0.5 ? 0 : parts.length - 1, want = parts[k][1];
+      const gap = h('span', {class:'gap-box'}, want);
+      const shown = h('span', {class:'syl'}, parts.map(([kind, txt], j) => j === k ? gap : h('span', {class:'pt ' + kind}, txt)));
+      const pool = parts[k][0] === 'i'
+        ? uniq([...shuffle((LOOK_PY[want] || '').split(' ').filter(Boolean)), ...shuffle(l.sounds.filter(isInitial)), ...shuffle(INITIALS)])
+        : uniq([...shuffle(items.map(x => sylParts(x[0]).slice(-1)[0][1])), withTone(plain(want), pick([1, 2, 3, 4].filter(t => t !== toneOf(want))))]);
+      const opts = shuffle([want, ...pool.filter(x => x !== want && x).slice(0, hard(r) ? 2 : 1)]);
+      prompt = () => say(SHOW.missingPart, [T.missingPart, s]);
+      const btns = opts.map(x => {
+        const b = h('button', {class:'tile ' + (parts[k][0] === 'i' ? 'init' : 'fin'), 'data-v':x, onclick:e => {
+          if (solved || !tapOK(e)) return;
+          if (x === want) win(b, btns, () => { gap.classList.add('found'); });
+          else {
+            misses++; Sfx.bad(); wiggle(b);
+            say(pick(TRY), [T.missingPart, s]);
+            if (misses >= 2) btns[opts.indexOf(want)].classList.add('hint');
+          }
+        }}, x);
+        return b;
+      });
+      quizHook(type, want);
+      body = [h('div', {class:'miss-word'}, shown), h('div', {class:'tiles'}, btns)];
+    } else {
+      if (type === 'pic' && !pic) type = 'hear';
+      const picOK = x => { const it = sylsUpTo(l.n).find(y => y[0] === x); return !it || it[2] !== pic; };
+      const opts = sylChoices(s, l, r, type === 'pic' ? picOK : undefined);
+      prompt = type === 'pic' ? () => say(SHOW.picSyl, T.picSyl) : () => say(SHOW.popBalloon, [T.find, s]);
+      const btns = opts.map(x => {
+        const b = h('button', {class:'choice', 'data-v':x, onclick:e => {
+          if (solved || !tapOK(e)) return;
+          if (x === s) win(b, btns);
+          else {
+            misses++; Sfx.bad(); wiggle(b);
+            say(pick(TRY), type === 'pic' ? [x, T.picSyl] : [x, T.find, s]);
+            if (misses >= 2) btns[opts.indexOf(s)].classList.add('hint');
+          }
+        }}, x);
+        return b;
+      });
+      quizHook(type, s);
+      body = [h('div', {class:'choices'}, btns)];
+    }
+    ctx.stage.replaceChildren(listenBtn(prompt), picShow, ...body);
+    ctx.replay = prompt; prompt();
+  }
+}
+
+// 5 · 读词语 (character lessons): read the word cards, then listen & choose
+function wordEl(w, py){ return ruby(w, py); }
+async function readWordOut(el, w, py){
+  const id = navId;
+  const rbs = [...el.querySelectorAll('.rb')];
+  const syl = py.split(' ');
+  if (rbs.length > 1){
+    for (let k = 0; k < rbs.length; k++){
+      if (id !== navId) return;
+      rbs[k].classList.add('lit'); Sfx.tick(k);
+      await Speech.speak(syl[k]);
+      rbs[k].classList.remove('lit');
+    }
+  }
+  if (id !== navId) return;
+  el.classList.add('whole');
+  await Speech.speak(wordSay(w, py));
+  el.classList.remove('whole');
+}
+// wrong words: words sharing a character (later rounds), the lesson's other words, then earlier ones
+function wordChoices(target, l, r, ok = () => true){
+  const n = hard(r) ? 4 : 3;
+  const pool = uniq([...l.words, ...LESSONS.filter(x => x.n < l.n && x.words).flatMap(x => x.words)].map(x => x[0]));
+  const bad = w => w === target || !ok(w);
+  const look = hard(r) ? shuffle(pool.filter(w => [...w].some(c => target.includes(c)))).filter(w => !bad(w)).slice(0, 1) : [];
+  const rest = uniq([...shuffle(l.words.map(x => x[0])), ...shuffle(pool)]).filter(w => !bad(w) && !look.includes(w));
+  return shuffle([target, ...look, ...rest].slice(0, n));
+}
+const WORD_PY = {};
+for (const l of LESSONS) for (const [w, py] of (l.words || [])) WORD_PY[w] = WORD_PY[w] || py;
+function actWords(ctx){
+  const l = ctx.lesson, words = l.words;
+  const quiz = isShort() ? roundList(words, 3, 3) : roundList(words, 6, 6);
+  const total = quiz.length + 1, seen = new Set();
+  const playBtn = h('button', {class:'btn green big', hidden:true, onclick:() => { Sfx.tap(); round(0); }}, '🎮 开始 ➜');
+  const cards = words.map(([w, py, pic]) => {
+    const we = wordEl(w, py);
+    let busy = false;
+    const card = h('button', {class:'word-card', 'aria-label':w, onclick:async () => {
+        if (busy) return; busy = true; Sfx.tap();
+        await readWordOut(we, w, py);
+        busy = false;
+        if (!ctx.alive()) return;
+        card.classList.add('seen'); seen.add(w);
+        if (seen.size === words.length) reveal(playBtn);
+      }},
+      we, h('span', {class:'wpic'}, pic));
+    return card;
+  });
+  ctx.stage.replaceChildren(h('div', {class:'cards'}, cards), playBtn);
+  ctx.progress(0);
+  const intro = () => say(SHOW.wordsIntro, T.wordsIntro);
+  ctx.replay = intro; intro();
+
+  const types = ['hear', 'pic', 'missing', 'build', ...(l.compose ? ['compose'] : [])];
+  const plan = typePlan(quiz.length, types);
+  const lessonChars = new Set(l.chars.map(x => x[0]));
+  function round(r){
+    if (r >= quiz.length){ ctx.progress(1); later(ctx.done, 300); return; }
+    ctx.progress((r + 1) / total);
+    const [w, py, pic] = quiz[r];
+    let type = plan[r];
+    const inLesson = [...w].map((c, k) => lessonChars.has(c) ? k : -1).filter(k => k >= 0);
+    if (type === 'missing' && !inLesson.length) type = 'build';
+    if (type === 'pic' && !pic) type = 'hear';
+    if (type === 'build' && [...w].length < 2) type = 'hear';
+    const picShow = h('div', {class:'quiz-pic' + (type === 'hear' || type === 'build' ? '' : ' show')}, pic || '⭐');
+    let solved = false, misses = 0, prompt, body;
+    const done = (el, all) => {
+      solved = true; if (el) el.classList.add('right'); Sfx.good(); burst(el || picShow); picShow.classList.add('show'); if (all) fadeOthers(all, el);
+      ctx.progress((r + 2) / total);
+      const pr = pick(PRAISE);
+      afterSay(say(pr, [pr, w]), 1200, () => round(r + 1));
+    };
+    if (type === 'compose'){
+      // 日 + 月 = ? (明): the choices are characters
+      const cp = pick(l.compose), want = cp[cp.length - 1], partsC = cp.slice(0, -1);
+      const box = h('div', {class:'compose'}, partsC.flatMap((c, k) => k ? [h('span', {class:'op'}, '+'), c] : [c]), h('span', {class:'op'}, '='), h('span', {class:'gap-box'}, want));
+      const opts = shuffle(uniq([want, ...shuffle(l.compose.map(x => x[x.length - 1]).filter(x => x !== want))]).slice(0, hard(r) ? 4 : 3));
+      prompt = () => say(SHOW.compose, T.compose);
+      const btns = opts.map(c => {
+        const b = h('button', {class:'tile han', 'data-v':c, onclick:e => {
+          if (solved || !tapOK(e)) return;
+          if (c === want){
+            box.querySelector('.gap-box').classList.add('found');
+            solved = true; b.classList.add('right'); Sfx.good(); burst(b); fadeOthers(btns, b);
+            ctx.progress((r + 2) / total);
+            const x = CHAR_INFO[want], pr = pick(PRAISE);
+            afterSay(say(pr, [pr, x ? charSay(x) : want]), 1200, () => round(r + 1));
+          } else {
+            misses++; Sfx.bad(); wiggle(b); say(pick(TRY), T.compose);
+            if (misses >= 2) btns[opts.indexOf(want)].classList.add('hint');
+          }
+        }}, c);
+        return b;
+      });
+      quizHook(type, want);
+      ctx.stage.replaceChildren(listenBtn(prompt), box, h('div', {class:'tiles'}, btns));
+      ctx.replay = prompt; prompt();
+      return;
+    }
+    if (type === 'missing'){
+      // the word with a lesson character missing; the choices are characters
+      const k = pick(inLesson), want = w[k], syl = py.split(' ');
+      const gap = h('span', {class:'gap-box'}, want);
+      const chars = [...w].map((c, j) => j === k ? h('span', {class:'rb'}, h('span', {class:'p'}, syl[j]), h('span', {class:'c'}, gap)) : h('span', {class:'rb'}, h('span', {class:'p'}, syl[j]), h('span', {class:'c'}, c)));
+      const opts = charChoices(want, l, r);
+      prompt = () => say(SHOW.missingChar, [T.missingChar, w]);
+      const btns = opts.map(c => {
+        const b = h('button', {class:'tile han', 'data-v':c, onclick:e => {
+          if (solved || !tapOK(e)) return;
+          if (c === want){ gap.classList.add('found'); done(b, btns); }
+          else {
+            misses++; Sfx.bad(); wiggle(b);
+            say(pick(TRY), [T.missingChar, w]);
+            if (misses >= 2) btns[opts.indexOf(want)].classList.add('hint');
+          }
+        }}, c);
+        return b;
+      });
+      quizHook(type, want);
+      body = [h('div', {class:'miss-word'}, h('span', {class:'rt', style:{fontSize:'clamp(2.8rem,10vw,4.4rem)'}}, chars)), h('div', {class:'tiles'}, btns)];
+    } else if (type === 'build'){
+      // hear the word, tap its characters in order
+      const want = [...w];
+      let pos = 0;
+      const slots = want.map(() => h('div', {class:'slot han'}));
+      const extra = charChoices(want[0], l, r).filter(c => !want.includes(c)).slice(0, hard(r) ? 2 : 1);
+      prompt = () => say(SHOW.buildWord, [T.buildWord, w]);
+      const tiles = shuffle([...want, ...extra]).map(c => {
+        const t = h('button', {class:'tile han', 'data-v':c, onclick:e => {
+          if (solved || t.classList.contains('used') || !tapOK(e)) return;
+          if (c === want[pos]){
+            t.classList.add('used'); slots[pos].textContent = c; slots[pos].classList.add('filled');
+            pos++; misses = 0; Sfx.tick(pos); tiles.forEach(x => x.classList.remove('hint'));
+            if (pos === want.length) done(null, null);
+          } else {
+            misses++; Sfx.bad(); wiggle(t);
+            if (misses === 1) Speech.speak(w);
+            if (misses >= 2){ const hint = tiles.find(x => !x.classList.contains('used') && x.textContent === want[pos]); if (hint) hint.classList.add('hint'); }
+          }
+        }}, c);
+        return t;
+      });
+      quizHook(type, w, want);
+      body = [h('div', {class:'slots'}, slots), h('div', {class:'tiles'}, tiles)];
+    } else {
+      const picOK = x => !PIC_OF[x] || PIC_OF[x] !== pic;   // never two words with the same picture
+      const opts = wordChoices(w, l, r, type === 'pic' ? picOK : undefined);
+      prompt = type === 'pic' ? () => say(SHOW.picWord, T.picWord) : () => say(SHOW.popBalloon, [T.find, w]);
+      const btns = opts.map(x => {
+        const b = h('button', {class:'choice han', 'data-v':x, onclick:e => {
+          if (solved || !tapOK(e)) return;
+          if (x === w) done(b, btns);
+          else {
+            misses++; Sfx.bad(); wiggle(b);
+            say(pick(TRY), type === 'pic' ? [x, T.picWord] : [x, T.find, w]);
+            if (misses >= 2) btns[opts.indexOf(w)].classList.add('hint');
+          }
+        }}, wordEl(x, WORD_PY[x] || ''));
+        return b;
+      });
+      quizHook(type, w);
+      body = [h('div', {class:'choices'}, btns)];
+    }
+    ctx.stage.replaceChildren(listenBtn(prompt), picShow, ...body);
+    ctx.replay = prompt; prompt();
+  }
+}
+
+// 6 · 读句子: read along, put the words in order, then find the missing word
+// a word chip: the word with its pinyin; punctuation after it stays outside the chip
+const punctOf = tok => tok.chars.filter(([c]) => isPunct(c)).map(([c]) => c).join('');
+const wordChip = (tok, cls) => rubyEl(tok.chars.filter(([c]) => isHan(c)), cls);
+function sentencePool(l){
+  // the lesson's words and characters, for wrong answers
+  const out = [];
+  for (const [w, py] of (l.words || [])) out.push({word:w, py});
+  for (const x of (l.chars || [])) out.push({word:x[0], py:x[1]});
+  for (const [s, c] of (l.syll || [])) out.push({word:c, py:s});
+  return out;
+}
+function actSentence(ctx){
+  const l = ctx.lesson, sents = shuffle(l.sentences).slice(0, isShort() ? 1 : 2), total = sents.length * 3;
+  let readTok = 0;
+  const readPhase = k => {
+    ctx.progress((k * 3) / total);
+    const [text, py, picture] = sents[k];
+    const toks = parseText(text, py);
+    const chips = toks.map(tok => h('button', {class:'wchip', onclick:e => {
+      readTok++; chips.forEach(c => c.classList.remove('hl'));
+      Sfx.tap(); bounce(e.currentTarget); Speech.speak(tokSay(tok));
+    }}, wordChip(tok)));
+    const shown = toks.map((tok, j) => { const p = punctOf(tok); return p ? h('span', {class:'wtext'}, chips[j], h('span', {class:'pun'}, p)) : chips[j]; });
+    const readAlong = async () => {
+      const my = ++readTok, id = navId;
+      for (let j = 0; j < chips.length; j++){
+        if (my !== readTok || id !== navId) return;
+        chips[j].classList.add('hl');
+        await Speech.speak(tokSay(toks[j]));
+        chips[j].classList.remove('hl');
+        await wait(90);
+      }
+      if (my !== readTok || id !== navId) return;
+      await wait(250);
+      if (my === readTok && id === navId) Speech.speak(cleanText(text));
+    };
+    ctx.stage.replaceChildren(
+      h('div', {class:'sent-pic'}, picture),
+      h('div', {class:'sentence'}, shown),
+      h('div', {class:'row'},
+        h('button', {class:'btn blue', onclick:() => { Sfx.tap(); readAlong(); }}, '🔊 读给我听'),
+        h('button', {class:'btn green big', onclick:() => { readTok++; Sfx.good(); buildPhase(k); }}, '✅ 我读好了！')));
+    ctx.replay = readAlong;
+    const tok0 = readTok;
+    say(SHOW.readSentence, T.readSentence).then(() => { if (ctx.alive() && readTok === tok0) readAlong(); });
+  };
+  const buildPhase = k => {
+    ctx.progress((k * 3 + 1) / total);
+    const [text, py, picture] = sents[k];
+    const toks = parseText(text, py);
+    let order = shuffle(toks.map((t, idx) => idx));
+    for (let tries = 0; tries < 5 && toks.length > 1 && order.every((v, idx) => v === idx); tries++) order = shuffle(order);
+    let pos = 0, misses = 0, solved = false;
+    const slots = toks.map(tok => h('span', {class:'wslot', style:{minWidth:(tok.word.length * 1.05 + 0.5) + 'em'}}));
+    const slotRow = toks.map((tok, j) => { const p = punctOf(tok); return p ? h('span', {class:'wtext'}, slots[j], h('span', {class:'pun'}, p)) : slots[j]; });
+    const prompt = () => say(SHOW.order, [T.order, cleanText(text)]);
+    const same = (a, b) => a.word === b.word;
+    const chips = order.map(idx => {
+      const tok = toks[idx];
+      const c = h('button', {class:'wchip', 'data-v':tok.word, onclick:e => {
+        if (solved || c.classList.contains('used') || !tapOK(e)) return;
+        if (same(tok, toks[pos])){
+          c.classList.add('used'); slots[pos].replaceChildren(wordChip(toks[pos])); slots[pos].classList.add('filled');
+          pos++; misses = 0; Sfx.tick(pos); chips.forEach(x => x.classList.remove('hint'));
+          if (pos === toks.length){
+            solved = true; Sfx.good(); confetti(25);
+            ctx.progress((k * 3 + 2) / total);
+            const pr = pick(PRAISE);
+            say(pr, [pr, cleanText(text)]).then(() => later(() => missPhase(k), 500));
+          } else Speech.speak(tokSay(tok));
+        } else {
+          misses++; Sfx.bad(); wiggle(c);
+          if (misses >= 2){ const hint = chips.find((x, j) => !x.classList.contains('used') && same(toks[order[j]], toks[pos])); if (hint) hint.classList.add('hint'); }
+        }
+      }}, wordChip(tok));
+      return c;
+    });
+    ctx.stage.replaceChildren(h('div', {class:'row'}, listenBtn(prompt), h('div', {class:'sent-pic small'}, picture)),
+      h('div', {class:'sentence'}, slotRow), h('div', {class:'sentence'}, chips));
+    quizHook('order', cleanText(text), toks.map(t => t.word));
+    ctx.replay = prompt; prompt();
+  };
+  // one word is missing; the child reads the sentence and picks it from the lesson's words
+  const missPhase = k => {
+    ctx.progress((k * 3 + 2) / total);
+    const [text, py, picture] = sents[k];
+    const toks = parseText(text, py);
+    const idx = missingIndex(l, toks), target = toks[idx];
+    const inSentence = new Set(toks.map(t => t.word));
+    const pool = uniq(sentencePool(l).filter(x => !inSentence.has(x.word) && x.word).map(x => x.word + '|' + x.py))
+      .map(s => { const [word, p] = s.split('|'); return {word, py:p}; });
+    // wrong words: the same length if possible
+    const len = [...target.word].length;
+    const wrong = shuffle(pool).sort((a, b) => (Math.abs([...a.word].length - len)) - (Math.abs([...b.word].length - len))).slice(0, 2);
+    const opts = shuffle([{word:target.word, py:tokPy(target), right:true}, ...wrong]);
+    const gap = h('span', {class:'wslot', style:{minWidth:(len * 1.05 + 0.5) + 'em'}});
+    const shown = toks.map((tok, i) => {
+      const p = punctOf(tok);
+      return h('span', {class:'wtext'}, i === idx ? gap : wordChip(tok), p ? h('span', {class:'pun'}, p) : null);
+    });
+    const prompt = () => say(SHOW.missingWord, T.missingWord);
+    quizHook('missing-word', target.word);
+    let solved = false, misses = 0;
+    const chips = opts.map(o => {
+      const c = h('button', {class:'wchip', 'data-v':o.word, onclick:e => {
+        if (solved || !tapOK(e)) return;
+        if (o.right){
+          solved = true; gap.replaceChildren(wordChip(target)); gap.classList.add('filled'); c.classList.add('used'); Sfx.good(); confetti(20); fadeOthers(chips, c);
+          ctx.progress((k * 3 + 3) / total);
+          const pr = pick(PRAISE);
+          say(pr, [pr, cleanText(text)]).then(() => later(() => { if (k + 1 < sents.length) readPhase(k + 1); else ctx.done(); }, 500));
+        } else {
+          misses++; Sfx.bad(); wiggle(c);
+          say(pick(TRY), [wordSay(o.word, o.py), T.missingWord]);
+          if (misses >= 2) chips[opts.findIndex(x => x.right)].classList.add('hint');
+        }
+      }}, ruby(o.word, o.py));
+      return c;
+    });
+    ctx.stage.replaceChildren(h('div', {class:'row'}, listenBtn(prompt), h('div', {class:'sent-pic small'}, picture)),
+      h('div', {class:'sentence'}, shown), h('div', {class:'sentence'}, chips));
+    ctx.replay = prompt; prompt();
+  };
+  readPhase(0);
+}
+// The word to leave out: one with a lesson character or word in it (not the first word if possible)
+function missingIndex(l, toks){
+  const lw = new Set(sentencePool(l).map(x => x.word));
+  const lc = new Set([...(l.chars || []).map(x => x[0]), ...(l.syll || []).map(x => x[1])]);
+  const score = i => { const w = toks[i].word; return (lw.has(w) ? 6 : [...w].some(c => lc.has(c)) ? 4 : 0) + (i > 0 ? 2 : 0) + Math.min([...w].length, 3) * 0.3; };
+  return toks.map((t, i) => i).filter(i => toks[i].word).sort((a, b) => score(b) - score(a))[0] || 0;
+}
+
+// 7 · 画一画: draw a picture and label it with a word from the lesson
+function actDraw(ctx){
+  const l = ctx.lesson;
+  const words = l.kind === 'py' ? l.syll.map(([s, c, pic]) => ({w:c, py:s, pic})) : l.words.map(([w, py, pic]) => ({w, py, pic}));
+  const colors = DRAW_COLORS.map(c => c[1]);
+  let color = colors[1], size = 12, erasing = false, label = null, hasInk = false, drawing = false, last = null;
+  const history = [];
+  const wrap = h('div', {class:'draw-wrap'});
+  const cv = h('canvas', {'aria-label':'画画的地方'});
+  wrap.append(cv);
+  // the word label sits on the picture: drag it to move it, tap it to take it off
+  const labelText = h('span', {}), labelEl = h('button', {class:'draw-label', hidden:true, title:'拖动可以移动，点一下可以拿掉',
+    onclick:e => { if (e.detail === 0){ Sfx.tap(); setLabel(null); } }},   // keyboard; taps are handled below
+    labelText, h('span', {class:'x', 'aria-hidden':'true'}, '✕'));
+  let lpos = null;   // label centre as a share of the picture's width and height; null = bottom middle
+  const pick1 = (list, el) => list.forEach(x => { x.classList.toggle('on', x === el); x.setAttribute('aria-pressed', String(x === el)); });
+  const swatches = DRAW_COLORS.map(([name, c, light]) => h('button', {class:'swatch' + (light ? ' light' : '') + (c === color ? ' on' : ''), style:{background:c},
+    'aria-label':name, title:name, 'aria-pressed':String(c === color), onclick:e => {
+      Sfx.tap(); color = c; erasing = false; eraser.classList.remove('on'); eraser.setAttribute('aria-pressed', 'false');
+      pick1(swatches, e.currentTarget);
+      Speech.speak(name);
+    }}));
+  const sizes = [['细笔', 6, 8], ['中笔', 12, 14], ['粗笔', 24, 22]].map(([name, s, dot]) => h('button', {class:'tool' + (s === size ? ' on' : ''),
+    'aria-label':name, title:name, 'aria-pressed':String(s === size), onclick:e => {
+      Sfx.tap(); size = s; pick1(sizes, e.currentTarget);
+    }}, h('span', {class:'dot', style:{width:dot + 'px', height:dot + 'px'}})));
+  const eraser = h('button', {class:'tool', 'aria-label':'橡皮', title:'橡皮', 'aria-pressed':'false', onclick:() => {
+    Sfx.tap(); erasing = !erasing; eraser.classList.toggle('on', erasing); eraser.setAttribute('aria-pressed', String(erasing)); }}, '🧽');
+  // undo brings back the picture, whether it had ink, and its word
+  const undoBtn = h('button', {class:'tool', 'aria-label':'撤销', title:'撤销', onclick:() => {
+    Sfx.tap(); const snap = history.pop();
+    if (snap){ c2d.putImageData(snap.img, 0, 0); hasInk = snap.ink; setLabel(snap.label, snap.lpos); }
+  }}, '↩️');
+  // clear removes the drawing and its word
+  const clearBtn = h('button', {class:'tool', 'aria-label':'清空', title:'清空', onclick:() => {
+    Sfx.tap(); pushHistory(); paintWhite(); hasInk = false; setLabel(null, null);
+  }}, '🗑️');
+  // tap a word to label the picture; tap it again to take the label off
+  const bankBtns = words.map(o => h('button', {class:'wchip', 'aria-pressed':'false', onclick:() => {
+    Sfx.tap();
+    if (label === o){ setLabel(null); return; }
+    setLabel(o); Speech.speak(wordSay(o.w, o.py));
+  }}, ruby(o.w, o.py)));
+  const bank = h('div', {class:'word-bank', role:'group', 'aria-label':'给你的画选一个词'}, bankBtns);
+  function setLabel(o, pos){
+    label = o || null;
+    if (pos !== undefined) lpos = pos;
+    labelText.textContent = label ? (label.pic ? label.pic + ' ' : '') + label.w : '';
+    labelEl.hidden = !label;
+    labelEl.setAttribute('aria-label', label ? `标签：${label.w}，点一下可以拿掉` : '标签');
+    bankBtns.forEach((c, k) => { const on = words[k] === label; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    placeLabel();
+  }
+  // keep the whole label inside the picture
+  function placeLabel(){
+    if (!label) return;
+    const r = wrap.getBoundingClientRect(), lw = labelEl.offsetWidth, lh = labelEl.offsetHeight;
+    if (!r.width || !r.height) return;
+    let x = lpos ? lpos.fx * r.width : r.width / 2, y = lpos ? lpos.fy * r.height : r.height - 8 - lh / 2;
+    // room for the ✕ badge at the top right
+    x = lw + 14 >= r.width ? r.width / 2 : Math.max(lw / 2 + 4, Math.min(r.width - lw / 2 - 10, x));
+    y = lh + 14 >= r.height ? r.height / 2 : Math.max(lh / 2 + 10, Math.min(r.height - lh / 2 - 4, y));
+    labelEl.style.left = x + 'px'; labelEl.style.top = y + 'px';
+    return {x, y};
+  }
+  let drag = null;
+  onStrokes(labelEl, {
+    down: p => { const c = placeLabel(); if (!c) return false; drag = {p, c, moved:false}; },
+    move: p => {
+      if (!drag) return;
+      const dx = p.x - drag.p.x, dy = p.y - drag.p.y;
+      if (!drag.moved && Math.hypot(dx, dy) < 8) return;   // a small wobble is still a tap
+      if (!drag.moved){ drag.moved = true; labelEl.classList.add('dragging'); }
+      const r = wrap.getBoundingClientRect();
+      lpos = {fx:(drag.c.x + dx) / r.width, fy:(drag.c.y + dy) / r.height};
+      const c = placeLabel();
+      lpos = {fx:c.x / r.width, fy:c.y / r.height};
+    },
+    up: () => {
+      if (!drag) return;
+      const moved = drag.moved; drag = null; labelEl.classList.remove('dragging');
+      Sfx.tap();
+      if (!moved) setLabel(null);
+    },
+  }, wrap);
+  const saveBtn = h('button', {class:'tool', 'aria-label':'保存图片', title:'保存图片', onclick:() => { Sfx.tap(); savePicture(); }}, '💾');
+  const doneBtn = h('button', {class:'btn green big', onclick:() => {
+    if (!hasInk){ Sfx.bad(); wiggle(wrap); say(SHOW.drawFirst, T.drawFirst); return; }
+    if (!label){ Sfx.bad(); replayAnim(bank, 'nudge'); say(SHOW.tapWordPic, T.tapWordPic); return; }
+    say('我画的是：' + label.w + '！🎨', [T.yourPicture, wordSay(label.w, label.py), T.greatDrawing]).then(() => later(ctx.done, 200));
+  }}, '✅ 画好了');
+  wrap.append(labelEl);
+  ctx.stage.classList.add('compact');
+  ctx.stage.replaceChildren(
+    h('div', {class:'draw-tools'}, swatches, sizes, eraser, undoBtn, clearBtn, saveBtn),
+    wrap, h('div', {class:'row'}, bank, doneBtn));
+  ctx.progress(0);
+  const intro = () => say(SHOW.drawIntro, T.drawIntro);
+  ctx.replay = intro; intro();
+
+  let c2d = null, W = 0, H = 0, dpr = 1;
+  function paintWhite(){ c2d.save(); c2d.setTransform(1, 0, 0, 1, 0, 0); c2d.fillStyle = '#fff'; c2d.fillRect(0, 0, cv.width, cv.height); c2d.restore(); }
+  function pushHistory(){ try { history.push({img:c2d.getImageData(0, 0, cv.width, cv.height), ink:hasInk, label, lpos}); if (history.length > 8) history.shift(); } catch (e) {} }
+  function layout(){
+    const r = wrap.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const old = c2d && cv.width ? (() => { const t = document.createElement('canvas'); t.width = cv.width; t.height = cv.height; t.getContext('2d').drawImage(cv, 0, 0); return t; })() : null;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.round(r.width); H = Math.round(r.height);
+    cv.width = W * dpr; cv.height = H * dpr;
+    c2d = cv.getContext('2d');
+    paintWhite();
+    if (old) c2d.drawImage(old, 0, 0, cv.width, cv.height);
+    c2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+    history.length = 0;
+    placeLabel();
+  }
+  function seg(a, b){
+    c2d.strokeStyle = erasing ? '#fff' : color; c2d.lineWidth = erasing ? size * 2 : size;
+    c2d.lineCap = 'round'; c2d.lineJoin = 'round';
+    c2d.beginPath(); c2d.moveTo(a.x, a.y); c2d.lineTo(b.x, b.y); c2d.stroke();
+  }
+  onStrokes(cv, {
+    down: p => { if (!c2d) return false; pushHistory(); drawing = true; last = p; seg(p, {x:p.x + 0.1, y:p.y}); if (!erasing) hasInk = true; },
+    move: p => { if (!drawing) return; seg(last, p); last = p; },
+    up: () => { drawing = false; },
+  });
+  function roundRect(o, x, y, w, ht, r){
+    o.beginPath(); o.moveTo(x + r, y);
+    o.arcTo(x + w, y, x + w, y + ht, r); o.arcTo(x + w, y + ht, x, y + ht, r);
+    o.arcTo(x, y + ht, x, y, r); o.arcTo(x, y, x + w, y, r); o.closePath();
+  }
+  function savePicture(){
+    // the word label is saved where it sits on the picture
+    const out = document.createElement('canvas');
+    out.width = cv.width; out.height = cv.height;
+    const o = out.getContext('2d');
+    o.fillStyle = '#fff'; o.fillRect(0, 0, out.width, out.height);
+    o.drawImage(cv, 0, 0);
+    const c = placeLabel();
+    if (c){
+      const r = wrap.getBoundingClientRect(), sx = cv.width / r.width, sy = cv.height / r.height;
+      const lw = labelEl.offsetWidth * sx, lh = labelEl.offsetHeight * sy, x = c.x * sx, y = c.y * sy;
+      o.fillStyle = 'rgba(255,255,255,.85)'; roundRect(o, x - lw / 2, y - lh / 2, lw, lh, 14 * sy); o.fill();
+      const fs = parseFloat(getComputedStyle(labelText).fontSize) || 32;
+      o.fillStyle = '#b72a23'; o.textAlign = 'center'; o.textBaseline = 'middle';
+      o.font = `${Math.round(fs * sy)}px ZhKai, 'Kaiti SC', KaiTi, serif`;
+      o.fillText(labelText.textContent, x, y);
+    }
+    out.toBlob(blob => {
+      if (!blob) return;
+      const a = h('a', {href:URL.createObjectURL(blob), download:`zhongwen-${l.n}-${label ? label.w : 'picture'}.png`});
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    }, 'image/png');
+  }
+  watchSize(wrap, () => { const r = wrap.getBoundingClientRect(); if (Math.round(r.width) !== W || Math.round(r.height) !== H) layout(); });
+  layout();
+}
+
+/* ---------- version ---------- */
+const versionText = () => `版本 ${APP_VERSION.n} · ${APP_VERSION.date}`;
+// Shown on the home and parents screens when the server has a newer version than this page.
+const updateSlot = h('div', {class:'update-slot', role:'status'});
+let lastCheck = 0;
+function checkUpdate(){
+  if (!window.fetch || Date.now() - lastCheck < 10 * 60 * 1000) return;   // at most every 10 minutes
+  lastCheck = Date.now();
+  fetch('index.html?check=' + Date.now(), {cache:'no-store'}).then(r => r.ok ? r.text() : '').then(t => {
+    const m = /var APP_VERSION = \{n:(\d+), date:'([^']*)'\}/.exec(t);
+    if (m && +m[1] > APP_VERSION.n) updateSlot.replaceChildren(
+      h('button', {class:'btn orange', onclick:() => forceRefresh()}, `🔄 新版本 ${m[1]} 来啦，点这里更新！`));
+  }).catch(() => {});
+}
+
+/* ---------- force refresh ---------- */
+async function forceRefresh(){
+  Speech.stop();
+  overlay([h('div', {class:'big-star'}, '🔄'), h('h1', {}, '正在更新……'), h('p', {}, '正在获取最新版本')]);
+  const base = location.pathname.replace(/[^/]*$/, '');
+  const urls = [location.pathname, base + 'index.html', base + 'audio/manifest.js', base + 'fonts/kai.woff2', base + 'fonts/andika-700.woff2'];
+  try {
+    if (window.caches) for (const k of await caches.keys()) await caches.delete(k);
+    await Promise.race([Promise.all(urls.map(u => fetch(u, {cache:'reload'}).catch(() => {}))), wait(6000)]);
+  } catch (e) {}
+  location.replace(location.pathname + '?v=' + Date.now() + location.hash);
+}
+
+/* =====================================================================
+   PHRASES — every line 乐乐 can say (tools/build_audio.py records these)
+   A phrase in pinyin (bā) is one syllable, recorded with exactly that tone.
+   phrasePinyin() gives the reading of every lesson text, so polyphones (长, 了, 地) are read right.
+   ===================================================================== */
+const ACT_NAMES = uniq(LESSONS.flatMap(l => actsOf(l).map(a => actName(l, a))));
+function globalPhrases(){
+  return uniq([
+    ...Object.values(T), ...PRAISE, ...TRY,
+    ...Object.values(SOUND).flatMap(S => [S.say, S.ph]),
+    ...DRAW_COLORS.map(c => c[0]),
+    ...ACT_NAMES.map(P.playAct),
+    ...LESSONS.map((l, k) => P.haveStickers(k + 1)),
+  ].map(norm).filter(Boolean));
+}
+// pinyin of every Han character in a phrase list item, as [phrase, pinyin]
+function lessonTexts(l){
+  const out = [];
+  const add = (t, py) => out.push([norm(t), py]);
+  for (const s of (l.sounds || [])) add(SOUND[s].ph, SOUND[s].php);
+  for (const x of (l.chars || [])) add(charSay(x), charSayPy(x));
+  for (const [w, py] of (l.words || [])) add(w, py);
+  for (const [text, py] of l.sentences){
+    add(cleanText(text), py);
+    for (const tok of parseText(text, py)) if (tok.chars.filter(([c]) => isHan(c)).length > 1) add(tok.word, tokPy(tok));
+  }
+  return out;
+}
+function lessonSyllables(l){
+  const out = [];
+  for (const s of (l.sounds || [])) out.push(SND(s));
+  for (const [s] of (l.syll || [])){
+    out.push(...sylSpeech(s));
+    for (let t = 1; t <= 4; t++) out.push(withTone(plain(s), t));
+  }
+  for (const it of (l.n >= 5 ? toneItems(l) : [])) for (let t = 1; t <= 4; t++) out.push(withTone(it.base, t));
+  for (const x of (l.chars || [])) out.push(x[1]);
+  for (const [, py] of (l.words || [])) out.push(...py.split(' '));
+  for (const [text, py] of l.sentences) for (const tok of parseText(text, py)) if (tok.chars.filter(([c]) => isHan(c)).length === 1) out.push(tokPy(tok));
+  for (const [s] of (l.syll || [])) out.push(s);
+  return out;
+}
+function lessonPhrases(l){
+  const name = STICKERS[l.n - 1][1];
+  return uniq([
+    P.lesson(l.n), P.playLesson(l.n), P.finished(l.n), P.gotSticker(name), P.aSticker(name), P.finishFor(l.n),
+    ...actsOf(l).map(a => P.playAct(actName(l, a))),
+    ...lessonTexts(l).map(([t]) => t),
+    ...lessonSyllables(l),
+  ].map(norm).filter(Boolean));
+}
+const allPhrases = () => uniq([...globalPhrases(), ...LESSONS.flatMap(lessonPhrases)]);
+function phrasePinyin(){
+  const out = {};
+  for (const S of Object.values(SOUND)) out[norm(S.ph)] = S.php;
+  for (const l of LESSONS) for (const [t, py] of lessonTexts(l)){
+    if (out[t] && out[t] !== py) console.warn('two readings for', t, out[t], py);
+    out[t] = out[t] || py;
+  }
+  return out;
+}
+window.__zhPhrases = allPhrases;
+window.__zhPinyin = phrasePinyin;
+window.__zhHan = () => uniq([...document.documentElement.innerHTML].filter(isHan)).join('');
+window.__zhActs = n => actsOf(LESSON_BY_N[n]).map(a => a.key);
+
+/* =====================================================================
+   START
+   ===================================================================== */
+Speech.init();
+// Browsers only allow sound after a tap. The first tap turns it on (pages opened without the start
+// screen), and a tap after iOS blocked audio (a call, time in the background) turns it back on.
+// Only these events count as a tap for that: pointerdown does not for touch.
+const activateAudio = () => {
+  if (!audioUnlocked){
+    audioUnlocked = true; Speech.unlock(); Sfx.ensure();
+    Speech.preload([...Object.values(T), ...PRAISE, ...TRY]);
+  } else if (Speech.blocked){ Speech.blocked = false; Speech.unlock(); Sfx.ensure(); }
+  else Sfx.ensure();   // resumes the audio if the phone paused it
+  Music.start();       // no-op when it is already playing or switched off
+};
+['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, activateAudio, true));
+if (/[?&]v=\d+/.test(location.search)) try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+window.addEventListener('hashchange', route);
+document.addEventListener('visibilitychange', () => { if (document.hidden){ Speech.stop(); Music.stop(); } else { Music.start(); checkUpdate(); } });
+route();
+if (!/^#\/(parents|start)/.test(location.hash)) showStart();   // #/start shows it via route()
+checkUpdate();
+})();
+</script>
+</body>
+</html>

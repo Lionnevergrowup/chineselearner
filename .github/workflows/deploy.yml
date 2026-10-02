@@ -1,0 +1,46 @@
+# Publish the game on GitHub Pages every time main changes.
+# The site is static (index.html plus the audio/, fonts/, hanzi/, icons/ and js/ folders), so there is no build step:
+# the files are packed as they are and handed to Pages.
+# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# one deployment at a time; a newer push waits instead of cancelling one that is half done
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect the site files
+        run: |
+          mkdir -p _site
+          cp index.html favicon.ico manifest.webmanifest _site/
+          cp -r audio fonts hanzi icons js _site/
+          touch _site/.nojekyll
+          du -sh _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
