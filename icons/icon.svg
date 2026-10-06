@@ -1,21 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- 乐乐 the lion, with a red and gold lion-dance mane: a simple face that stays readable at 16 px -->
-  <circle cx="32" cy="33" r="24" fill="#e8453c"/>
-  <g fill="#e8453c">
-    <circle cx="32" cy="9.5" r="8"/><circle cx="52.3" cy="21.2" r="8"/><circle cx="52.3" cy="44.8" r="8"/>
-    <circle cx="32" cy="56.5" r="8"/><circle cx="11.7" cy="44.8" r="8"/><circle cx="11.7" cy="21.2" r="8"/>
-  </g>
-  <g fill="#f5b700">
-    <circle cx="43.8" cy="12.7" r="8"/><circle cx="55.5" cy="33" r="8"/><circle cx="43.8" cy="53.3" r="8"/>
-    <circle cx="20.2" cy="53.3" r="8"/><circle cx="8.5" cy="33" r="8"/><circle cx="20.2" cy="12.7" r="8"/>
-  </g>
-  <circle cx="20" cy="20.5" r="6" fill="#ffc94a"/><circle cx="20" cy="20.5" r="3" fill="#ec8a2f"/>
-  <circle cx="44" cy="20.5" r="6" fill="#ffc94a"/><circle cx="44" cy="20.5" r="3" fill="#ec8a2f"/>
-  <circle cx="32" cy="35" r="17.5" fill="#ffc94a"/>
-  <ellipse cx="32" cy="42.5" rx="9.5" ry="7" fill="#fff0c2"/>
-  <circle cx="22.5" cy="39.5" r="2.8" fill="#ff8f6b" opacity=".55"/><circle cx="41.5" cy="39.5" r="2.8" fill="#ff8f6b" opacity=".55"/>
-  <circle cx="25.5" cy="31" r="2.4" fill="#3a2440"/><circle cx="38.5" cy="31" r="2.4" fill="#3a2440"/>
-  <circle cx="26.3" cy="30.2" r=".8" fill="#fff"/><circle cx="39.3" cy="30.2" r=".8" fill="#fff"/>
-  <path d="M27.6 37.4h8.8c1.1 0 1.6 1.2.8 2l-3.8 3.6c-.8.7-2 .7-2.8 0l-3.8-3.6c-.8-.8-.3-2 .8-2z" fill="#5a3426"/>
-  <path d="M32 42.6v2.2m0 0c-1.6 2.2-4 2.4-5.4.8m5.4-.8c1.6 2.2 4 2.4 5.4.8" fill="none" stroke="#5a3426" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- 中文乐园: 中 written in a 田字格, the grid children practise characters in (Kai outline from hanzi/4e2d.json) -->
+  <rect x="3" y="3" width="58" height="58" rx="11.60" fill="#fffdf8" stroke="#e8453c" stroke-width="4"/>
+  <path d="M32.0 7V57M7 32.0H57" stroke="#f3a59c" stroke-width="1.62" stroke-dasharray="3.19 2.32" fill="none"/>
+  <path d="M9 9L55 55M55 9L9 55" stroke="#f8cdc7" stroke-width="1.04" stroke-dasharray="1.74 2.61" fill="none"/>
+  <g fill="#2f1f33" stroke="#2f1f33" stroke-width="26" stroke-linejoin="round" transform="matrix(0.04778 0 0 -0.04778 7.369 51.971)"><path d="M 254 596 Q 244 603 202 608 Q 189 611 185 605 Q 178 598 189 580 Q 228 507 254 384 Q 260 347 282 324 Q 303 300 307 318 Q 310 328 310 343 L 306 381 Q 305 390 303 399 Q 276 513 267 556 C 261 585 259 594 254 596 Z"/><path d="M 752 425 Q 765 462 777 498 Q 793 546 828 578 Q 853 603 821 624 Q 793 648 762 666 Q 743 679 717 668 Q 677 655 615 646 Q 575 642 535 636 L 476 628 Q 427 622 380 613 Q 307 603 254 596 C 224 592 237 551 267 556 Q 274 556 286 559 Q 400 587 476 593 L 534 600 Q 604 609 698 615 Q 717 616 724 607 Q 739 583 693 435 C 684 406 742 397 752 425 Z"/><path d="M 530 370 Q 630 380 764 386 Q 776 387 778 397 Q 779 406 752 425 C 730 441 723 440 693 435 Q 606 420 530 407 L 475 399 Q 385 389 306 381 C 276 378 280 341 310 343 Q 314 343 321 343 Q 382 356 475 365 L 530 370 Z"/><path d="M 475 365 Q 472 17 485 -11 Q 486 -12 488 -16 Q 503 -32 512 -10 Q 530 32 530 370 L 530 407 Q 531 519 534 600 L 535 636 Q 538 742 559 778 Q 566 794 545 811 Q 520 830 475 843 Q 454 847 441 833 Q 431 826 444 812 Q 472 787 475 753 Q 475 704 476 628 L 476 593 Q 476 517 476 419 Q 475 409 475 399 L 475 365 Z"/></g>
 </svg>

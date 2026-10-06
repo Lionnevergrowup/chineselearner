@@ -109,7 +109,7 @@ python3 tools/build_fonts.py 路径/gkai00mp.ttf         # 楷体字体只保留
 
 ## 图标和背景音乐
 
-图标是 `icons/icon.svg` 里红金色鬃毛的小狮子乐乐；`NODE_PATH=$(npm root -g) node tools/make_icons.js` 会画出其他尺寸（`favicon.ico`、iPhone 和安卓图标）。
+图标是写在田字格里的楷体“中”（`icons/icon.svg`，浏览器标签页用），字形取自写汉字游戏用的笔顺数据 `hanzi/4e2d.json`；手机主屏幕的图标在右下角多了探出头来的小狮子乐乐（`icons/app-icon.svg`）。`NODE_PATH=$(npm root -g) node tools/make_icons.js` 会画出其他尺寸（`favicon.ico`、iPhone 和安卓图标）。
 背景音乐 `audio/music.mp3` 由 `python3 tools/make_music.py` 合成（筝一样的拨弦旋律、和弦、低音、木鱼和小鼓，约 40 秒），没有任何版权限制。
 
 ## 致谢 / Credits

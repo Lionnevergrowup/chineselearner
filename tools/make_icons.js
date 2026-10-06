@@ -1,23 +1,25 @@
-// Draw the site icons from icons/icon.svg (乐乐 the lion):
-//   favicon.ico (16, 32 and 48 px, for browser tabs), icons/apple-touch-icon.png (180 px, iPhone home screen),
-//   icons/icon-192.png and icons/icon-512.png (Android, app install), icons/icon-maskable-512.png (Android round icons).
+// Draw the site icons:
+//   from icons/icon.svg (中 in a 田字格): favicon.ico (16, 32 and 48 px, for browser tabs);
+//   from icons/app-icon.svg (the same, with 乐乐 the lion peeking in): icons/apple-touch-icon.png (180 px, iPhone home
+//   screen), icons/icon-192.png and icons/icon-512.png (Android, app install, link previews), icons/icon-maskable-512.png
+//   (Android round icons).
 // Usage: NODE_PATH=$(npm root -g) node tools/make_icons.js   (needs the playwright package)
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const svg = fs.readFileSync(path.join(ROOT, 'icons', 'icon.svg'), 'utf8');
+const icon = fs.readFileSync(path.join(ROOT, 'icons', 'icon.svg'), 'utf8');
+const app = fs.readFileSync(path.join(ROOT, 'icons', 'app-icon.svg'), 'utf8');
 const SKY = 'linear-gradient(180deg,#ffe2cf,#fff8e6)';   // the start screen's sky
-// 16 px tab icon: bigger eyes, no small details (eye shine, cheeks, mouth), so the face still reads
-const small = svg.replace(/<circle[^>]*fill="#fff"\/>/g, '').replace(/<circle[^>]*fill="#ff8f6b"[^>]*\/>/g, '')
-  .replace(/<path[^>]*stroke="#5a3426"[^>]*\/>/, '').replace(/r="2\.4" fill="#3a2440"/g, 'r="3.6" fill="#3a2440"');
+// 16 px tab icon: without the dashed guide lines, which would only blur the character at that size
+const small = icon.replace(/\s*<path[^>]*stroke-dasharray[^>]*\/>/g, '');
 
-// lion: share of the icon the lion fills; bg: the sky behind it (none = transparent)
-async function render(page, size, {lion = 1, bg = false, art = svg} = {}){
+// share: how much of the icon the art fills; bg: the sky behind it (none = transparent)
+async function render(page, size, art, {share = 1, bg = false} = {}){
   await page.setViewportSize({width: size, height: size});
   await page.setContent(`<html><body style="margin:0;width:${size}px;height:${size}px;display:grid;place-items:center;background:${bg ? SKY : 'transparent'}">
-    <div style="width:${size * lion}px;height:${size * lion}px">${art.replace('<svg ', '<svg width="100%" height="100%" ')}</div></body></html>`);
+    <div style="width:${size * share}px;height:${size * share}px">${art.replace('<svg ', '<svg width="100%" height="100%" ')}</div></body></html>`);
   return page.screenshot({omitBackground: !bg, clip: {x: 0, y: 0, width: size, height: size}});
 }
 
@@ -41,11 +43,11 @@ function ico(pngs){
   const page = await browser.newPage({deviceScaleFactor: 1});
   const out = (name, buf) => { fs.writeFileSync(path.join(ROOT, name), buf); console.log(`${name}: ${buf.length} bytes`); };
   const tab = [];
-  for (const s of [16, 32, 48]) tab.push([s, await render(page, s, {art: s <= 16 ? small : svg})]);
+  for (const s of [16, 32, 48]) tab.push([s, await render(page, s, s <= 16 ? small : icon)]);
   out('favicon.ico', ico(tab));
-  out('icons/apple-touch-icon.png', await render(page, 180, {lion: 0.8, bg: true}));
-  out('icons/icon-192.png', await render(page, 192, {lion: 0.8, bg: true}));
-  out('icons/icon-512.png', await render(page, 512, {lion: 0.8, bg: true}));
-  out('icons/icon-maskable-512.png', await render(page, 512, {lion: 0.62, bg: true}));   // inside the round safe zone
+  out('icons/apple-touch-icon.png', await render(page, 180, app, {share: 0.86, bg: true}));
+  out('icons/icon-192.png', await render(page, 192, app, {share: 0.86, bg: true}));
+  out('icons/icon-512.png', await render(page, 512, app, {share: 0.86, bg: true}));
+  out('icons/icon-maskable-512.png', await render(page, 512, app, {share: 0.66, bg: true}));   // inside the round safe zone
   await browser.close();
 })();
