@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- the page does not zoom (iOS Safari ignores user-scalable=no: see touch-action in the CSS and the gesture handlers at the end) -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ffd9c2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -63,11 +64,14 @@ body{
     radial-gradient(ellipse 120px 46px at 80% 12%,rgba(255,255,255,.75) 60%,transparent 61%),
     linear-gradient(180deg,var(--bg1) 0%,#ffeedd 50%,var(--bg2) 100%);
   background-attachment:fixed;
-  -webkit-user-select:none;user-select:none;touch-action:manipulation;overflow-x:hidden;
+  -webkit-user-select:none;user-select:none;overflow-x:hidden;
   -webkit-touch-callout:none;   /* no "Copy / Look Up" pop-up when a child long-presses */
   overscroll-behavior-y:contain; /* a downward swipe must not reload the page (Android pull-to-refresh) */
 }
 html{overscroll-behavior-y:contain}
+/* no zooming: only scrolling, no pinch, no double-tap (manipulation, which stops double-taps, is the fallback for older
+   browsers); Safari starts afresh in boxes that scroll, so they are listed too */
+html,body,.table-wrap,.overlay{touch-action:manipulation;touch-action:pan-x pan-y}
 button{font-family:inherit;color:inherit}
 [hidden]{display:none!important}
 .han{font-family:var(--font-han);font-weight:400}
@@ -537,7 +541,7 @@ table.prog td.na{color:#ccb8b2}
 <script>
 // Version of this page (the number goes up with every update) and of the audio files (so a page never uses an
 // older clip list). tools/stamp.py writes both.
-var APP_VERSION = {n:4, date:'2026-10-06'};
+var APP_VERSION = {n:5, date:'2026-10-09'};
 var AUDIO_VERSION = {manifest:'3d290d7f13', music:'ac199bb93b'};
 document.write('<script src="audio/manifest.js?v=' + AUDIO_VERSION.manifest + '"><\/script>');
 </script>
@@ -3114,6 +3118,12 @@ const activateAudio = () => {
   Music.start();       // no-op when it is already playing or switched off
 };
 ['pointerup', 'touchend', 'click', 'keydown'].forEach(t => document.addEventListener(t, activateAudio, true));
+// No zooming (with the viewport tag and touch-action): iOS Safari ignores user-scalable=no, so its pinch is stopped
+// here (gesture events, moves with two fingers); a trackpad pinch on a computer is a wheel event with ctrlKey, like
+// Ctrl + mouse wheel. Ctrl/⌘ + and − on the keyboard still zoom, for grown-ups who need bigger text.
+['gesturestart', 'gesturechange'].forEach(t => document.addEventListener(t, e => e.preventDefault()));
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, {passive:false});
+window.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, {passive:false});
 if (/[?&]v=\d+/.test(location.search)) try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
 window.addEventListener('hashchange', route);
 document.addEventListener('visibilitychange', () => { if (document.hidden){ Speech.stop(); Music.stop(); } else { Music.start(); checkUpdate(); } });
