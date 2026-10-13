@@ -5,7 +5,8 @@ misaki[zh] (jieba + pypinyin + tone sandhi); lesson texts are read with the piny
 (tools/phrases.json carries it), so characters with two readings (长, 了, 地) are always read right.
 A phrase that is a single pinyin syllable (bā, ǚ, zhī) is one sound for the pinyin games. Said on its own the
 model gives every syllable the same rise and fall, so the textbook tone shape (一声平, 二声扬, 三声拐弯, 四声降)
-is put on it with Praat's PSOLA (parselmouth): the four tones always sound clearly different.
+is put on it with Praat's PSOLA (parselmouth): the four tones always sound clearly different. A final on its own
+(ā, īn, uǐ) is mostly cut out of a short phrase, where the model says it right (see bare_final()).
 
 Usage:
   pip install onnxruntime numpy scipy "misaki[zh]" lameenc praat-parselmouth
@@ -205,7 +206,9 @@ def trim(x, thr=0.01, pad=0.03):
     return x[max(0, idx[0] - int(pad * RATE)): min(len(x), idx[-1] + int(pad * RATE))]
 
 
-def impose_tone(x, tone):
+def impose_tone(x, tone, length=None):
+    """The tone shape put on a syllable; with length (seconds), it is also slowed down until its voiced part lasts
+    that long."""
     import parselmouth
     from parselmouth.praat import call
     x = trim(x)
@@ -222,6 +225,8 @@ def impose_tone(x, tone):
             call(pt, 'Add point', t0 + frac * (t1 - t0), LOW * (HIGH / LOW) ** ((lev - 1) / 4))
         call([pt, manip], 'Replace pitch tier')
         ds = DURATION[tone]
+        if length:
+            ds = min(4.0, max(ds, length / max(0.05, t1 - t0)))
         if abs(ds - 1) > 1e-3:
             dt = call(manip, 'Extract duration tier')
             call(dt, 'Add point', max(0, t0 - 0.001), 1.0)
@@ -253,7 +258,8 @@ def with_tone(base, t):
 
 
 def syllable(kokoro, s):
-    """One syllable on its own (the model says it most clearly that way), with the exact tone shape put on it."""
+    """One syllable on its own (the model says it most clearly that way), with the exact tone shape put on it.
+    A final on its own (ā, īn, uǐ) is made as bare_final() says."""
     tone, plain = 5, ''
     for c in s:
         if c in TONED:
@@ -261,11 +267,135 @@ def syllable(kokoro, s):
             plain += TONED[c][0]
         else:
             plain += c
-    if plain in SPEAK_AS:
-        s = with_tone(SPEAK_AS[plain], tone)
+    if plain in FINAL_METHOD:
+        x, slow = bare_final(kokoro, s, plain, tone)
+        return impose_tone(x, tone, FINAL_LENGTH[tone] if slow else None)
     ph = syllable_phonemes(s, 1 if tone == 5 else tone)
     x, dur = kokoro.run(ph, 1.0)
     return impose_tone(speech_only(x, ph, dur), tone)
+
+
+# ---------------------------------------------------------------- a final on its own (ā, īn, uǐ …)
+# Said on its own, at the very start of an utterance, the model stumbles on many finals: ī and ǖ start like wū
+# (ī sounds like wēi), ā is too closed and ōng too open, and the murmur after the last sound adds a glide (ā → āi,
+# āo → āoi). Inside a phrase it says them as well as it does in words. So most finals are cut out of a short phrase:
+#   rep: said three times ("ā，ā，ā"), the middle one is kept: it starts and ends inside the same sound, and no
+#        murmur follows it; then it is slowed to the length of a syllable said on its own (FINAL_LENGTH);
+#   hx:  said twice behind h, or behind x before i and ü ("hēi，hēi", "xiū，xiū"); the h or x keeps the sound
+#        before it out, and the last syllable is kept from where its voicing starts (the h or x is cut off);
+#   mv:  said after a syllable that ends in the vowel it starts with ("huō，ōu"), the last one kept;
+#   iso: on its own, for the finals the model already says right that way.
+# The method for each final was chosen by comparing all four, in every tone, with speech recognition (SenseVoice:
+# is the right final heard?) and with the vowel formants (Praat): see the README.
+FINAL_METHOD = {'a': 'rep', 'o': 'rep', 'e': 'rep', 'i': 'rep', 'u': 'rep', 'ü': 'rep', 'er': 'rep', 'ao': 'rep',
+                'an': 'rep', 'en': 'rep', 'in': 'rep', 'ün': 'rep', 'ang': 'rep', 'ong': 'rep',
+                'ei': 'hx', 'iu': 'hx', 'üe': 'hx', 'ou': 'mv',
+                'ai': 'iso', 'ui': 'iso', 'ie': 'iso', 'un': 'iso', 'eng': 'iso', 'ing': 'iso'}
+FINAL_METHOD_TONE = {'áo': 'iso'}   # one tone that came out better the other way
+FINAL_LENGTH = {1: 0.42, 2: 0.44, 3: 0.52, 4: 0.36, 5: 0.30}   # voiced seconds of a slowed final, by tone
+FINAL_ONSET = 0.10   # seconds a cut-out final takes to rise, linearly in dB from -36 dB (as the model's own onsets do)
+# the final as misaki names it, said after h (or after x, for the ones starting with i or ü)
+AFTER_HX = {'a': 'a', 'e': 'e', 'ai': 'ai', 'ei': 'ei', 'ao': 'ao', 'ou': 'ou', 'an': 'an', 'en': 'en', 'ang': 'ang',
+            'eng': 'eng', 'ong': 'ong', 'u': 'u', 'ui': 'uei', 'un': 'uen', 'i': 'i', 'ü': 'v', 'iu': 'iou',
+            'ie': 'ie', 'üe': 've', 'in': 'in', 'ün': 'vn', 'ing': 'ing'}
+
+
+def lead_in(sp):
+    """A syllable that ends in the vowel the final sp (as written on its own: yi, wei, ou …) starts with."""
+    if sp.startswith('yu'):
+        return 'xu'
+    if sp.startswith('y'):
+        return 'xi'
+    if sp.startswith('w'):
+        return 'hu'
+    if sp[0] == 'a':
+        return 'ha'
+    if sp[0] == 'o':
+        return 'huo' if sp in ('o', 'ou') else 'hu'
+    return 'he'
+
+
+def soft_edges(y, fade_out=0.08):
+    """A syllable cut out of running speech starts so abruptly that it sounds like a consonant: let it rise as the
+    model's own onsets do (about 120 ms from -30 to -6 dB), and fade it out."""
+    y = np.asarray(y, np.float32).copy()
+    fi, fo = min(len(y) // 2, int(FINAL_ONSET * RATE)), min(len(y) // 3, int(fade_out * RATE))
+    if fi:
+        y[:fi] *= 10 ** (np.linspace(-36, 0, fi) / 20)
+    if fo:
+        y[-fo:] *= 0.5 + 0.5 * np.cos(np.linspace(0, np.pi, fo))
+    return y
+
+
+def quietest(e, lo, hi):
+    """The quietest model step in [lo, hi): where one syllable gives way to the next."""
+    lo, hi = max(0, lo), min(len(e), max(hi, lo + 1))
+    return lo + int(np.argmin(e[lo:hi]))
+
+
+def faded(e, a, drop=12):
+    """The step where the sound that starts at step a has faded `drop` dB below its peak (the murmur after it is
+    left out)."""
+    peak = e[a:].max()
+    b = len(e)
+    while b > a + 4 and e[b - 1] < peak - drop:
+        b -= 1
+    return min(len(e), b + 1)
+
+
+def voicing_start(x, a, b):
+    """The first sample of the longest voiced, loud stretch between model steps a and b (5 ms resolution)."""
+    import parselmouth
+    seg = x[a * HOP:b * HOP]
+    p = parselmouth.Sound(seg.astype(np.float64), RATE).to_pitch(time_step=0.005, pitch_floor=90, pitch_ceiling=600)
+    peak = np.abs(seg).max() or 1
+    ok = []
+    for t, f0 in zip(p.xs(), p.selected_array['frequency']):
+        i = int(t * RATE)
+        rms = np.sqrt(np.mean(seg[max(0, i - 60):i + 60] ** 2))
+        ok.append(f0 > 0 and 20 * np.log10(rms / peak + 1e-9) > -26)
+    best, i = (0, 0), 0
+    while i < len(ok):
+        j = i
+        while j < len(ok) and ok[j]:
+            j += 1
+        if j - i > best[1] - best[0]:
+            best = (i, j)
+        i = j + 1
+    return a * HOP + max(0, int((p.xs()[best[0]] - 0.0025) * RATE))
+
+
+def bare_final(kokoro, s, plain, tone):
+    """The final s (plain: without its tone mark), before the tone shape is put on; and whether to slow it down."""
+    from misaki.zh_frontend import ZH_MAP
+    t = 1 if tone == 5 else tone
+    sp = SPEAK_AS.get(plain, plain)
+    syl = syllable_phonemes(with_tone(sp, t), t)
+    how = FINAL_METHOD_TONE.get(s, FINAL_METHOD[plain])
+    if how == 'rep':
+        n = len(syl)
+        x, dur = kokoro.run(syl + ',' + syl + ',' + syl + '.', 1.0)
+        e, cum = frame_db(x), np.concatenate([[0], np.cumsum(dur)]).astype(int)
+        start, nxt = cum[1 + n + 1], cum[1 + 2 * n + 1]   # predicted starts of the 2nd and 3rd syllables
+        a = quietest(e, start - 5, start + 3)
+        b = quietest(e, max(a + 4, nxt - 5), nxt + 3)
+        b = min(b, faded(e[:b], a, 10))   # before the murmur the model makes at the comma, too
+        return soft_edges(x[a * HOP:b * HOP]), True
+    if how == 'hx':
+        hs = ZH_MAP['x' if plain[0] in 'iü' else 'h'] + ZH_MAP[AFTER_HX[plain]] + str(t)
+        x, dur = kokoro.run(hs + ',' + hs + '.', 1.0)
+        e, cum = frame_db(x), np.concatenate([[0], np.cumsum(dur)]).astype(int)
+        a = voicing_start(x, max(0, cum[1 + len(hs) + 1] - 3), len(e)) + int(0.01 * RATE)   # 10 ms on: past the breathy start
+        return soft_edges(x[a:faded(e, a // HOP) * HOP]), False
+    if how == 'mv':
+        lead = syllable_phonemes(with_tone(lead_in(sp), t), t)
+        x, dur = kokoro.run(lead + ',' + syl + '.', 1.0)
+        e, cum = frame_db(x), np.concatenate([[0], np.cumsum(dur)]).astype(int)
+        start = cum[1 + len(lead) + 1]
+        a = quietest(e, start - 5, start + 3)
+        return soft_edges(x[a * HOP:faded(e, a) * HOP]), False
+    x, dur = kokoro.run(syl, 1.0)
+    return speech_only(x, syl, dur), False
 
 
 def frame_db(x):
