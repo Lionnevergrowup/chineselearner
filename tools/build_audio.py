@@ -180,11 +180,13 @@ class Kokoro:
 
 
 # ---------------------------------------------------------------- one syllable with an exact tone
-# Chao tone letters as (time fraction, level 1..5)
+# Chao tone letters as (time fraction, level 1..5). The third tone (214) falls clearly, stays low and turns up only
+# at the end, to a little above where it began: what tells it from the second tone is the deep, long low part and the
+# late turn. (Rising up to 3.8 from a shallow dip, as it once did, it sounded like a second tone: bǎ like bá.)
 CONTOUR = {
     1: [(0, 4.9), (0.5, 4.9), (1, 4.7)],
     2: [(0, 3.0), (0.3, 2.8), (1, 5.0)],
-    3: [(0, 2.3), (0.45, 1.0), (0.62, 1.0), (1, 3.8)],
+    3: [(0, 2.5), (0.3, 1.6), (0.55, 0.8), (0.75, 0.8), (1, 3.0)],
     4: [(0, 5.0), (0.15, 5.1), (1, 1.4)],
     5: [(0, 3.0), (1, 2.2)],
 }
