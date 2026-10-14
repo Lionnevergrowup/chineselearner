@@ -541,7 +541,7 @@ table.prog td.na{color:#ccb8b2}
 <script>
 // Version of this page (the number goes up with every update) and of the audio files (so a page never uses an
 // older clip list). tools/stamp.py writes both.
-var APP_VERSION = {n:7, date:'2026-10-14'};
+var APP_VERSION = {n:8, date:'2026-10-14'};
 var AUDIO_VERSION = {manifest:'b54c0233da', music:'ac199bb93b'};
 document.write('<script src="audio/manifest.js?v=' + AUDIO_VERSION.manifest + '"><\/script>');
 </script>
@@ -2034,8 +2034,8 @@ function actTones(ctx){
 }
 
 // 3 · 描一描: trace the pinyin letters with a finger, on four lines like a pinyin exercise book
-// Length of a letter's strokes: thin the letter's shape to 1-pixel lines (Zhang-Suen) and count the pixels.
-function skeletonLength(alpha, w, x0, x1, y0, y1){
+// A letter's shape thinned to 1-pixel lines (Zhang-Suen), in a box with a 1-pixel border from (x0 - 1, y0 - 1).
+function thinLetter(alpha, w, x0, x1, y0, y1){
   const bw = x1 - x0 + 3, bh = y1 - y0 + 3, m = new Uint8Array(bw * bh);
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (alpha[(y * w + x) * 4 + 3] > 128) m[(y - y0 + 1) * bw + (x - x0 + 1)] = 1;
   const del = [];
@@ -2057,8 +2057,22 @@ function skeletonLength(alpha, w, x0, x1, y0, y1){
       if (del.length){ changed = true; for (const i of del) m[i] = 0; }
     }
   }
+  return {m, bw, bh};
+}
+// Length of a letter's strokes: the pixels of its thinned shape.
+function skeletonLength({m}){
   let n = 0; for (let i = 0; i < m.length; i++) n += m[i];
   return n * 1.1;   // diagonal steps are a little longer than one pixel
+}
+// Where the strokes end: thinned pixels with at most one thinned neighbour, as [x, y].
+function strokeEnds({m, bw, bh}, x0, y0){
+  const out = [];
+  for (let y = 1; y < bh - 1; y++) for (let x = 1; x < bw - 1; x++){
+    const i = y * bw + x;
+    if (m[i] && m[i - bw - 1] + m[i - bw] + m[i - bw + 1] + m[i - 1] + m[i + 1] + m[i + bw - 1] + m[i + bw] + m[i + bw + 1] <= 1)
+      out.push([x + x0 - 1, y + y0 - 1]);
+  }
+  return out;
 }
 
 function actTrace(ctx){
@@ -2073,6 +2087,7 @@ function actTrace(ctx){
   ctx.stage.replaceChildren(h('div', {class:'trace-top'}, topPic, topLabel, topWord, counter), wrap, h('div', {class:'row'}, clearBtn, doneBtn));
 
   let W = 0, H = 0, dpr = 1, gctx, ictx, brush = 20, size = 100, mask = [], tol = null, mw = 0, mh = 0, cellOf = null, cells = [];
+  let partOf = null, partSize = [], endSpots = [];   // the letters' separate parts (i's dot), and the spots where strokes end
   const small = document.createElement('canvas');
   const font = px => `700 ${px}px Andika, 'Trebuchet MS', sans-serif`;
 
@@ -2141,7 +2156,40 @@ function actTrace(ctx){
     });
     const minPx = cellPx * cellPx * 0.08;   // ignore cells that only touch the letter's edge
     cells = counts.map(n => n >= minPx ? n : 0);
-    skelLen = Math.max(1, skeletonLength(md, mw, x0, x1, y0, y1) * 2);   // in page pixels (the mask is half size)
+    const thin = thinLetter(md, mw, x0, x1, y0, y1);
+    skelLen = Math.max(1, skeletonLength(thin) * 2);   // in page pixels (the mask is half size)
+    // Every stroke has to be traced, not just most of the letter: the spots where strokes end (both ends of t's
+    // crossbar, i's dot) must be reached, and every separate part (the dots of i, j, ü; each letter of zh) traced.
+    // A spot is the letter within a third of a brush width of where a stroke's centre line ends: small enough that
+    // the wide brush does not colour the ends of t's or f's short crossbar while it goes down the stem.
+    const index = new Int32Array(mw * mh).fill(-1);
+    mask.forEach((p, k) => { index[p] = k; });
+    const rad = Math.max(2, brush * 0.35 / 2);   // in mask pixels
+    endSpots = strokeEnds(thin, x0, y0).map(([ex, ey]) => {
+      const spot = [];
+      for (let y = Math.floor(ey - rad); y <= ey + rad; y++) for (let x = Math.floor(ex - rad); x <= ex + rad; x++){
+        if (x < 0 || y < 0 || x >= mw || y >= mh || (x - ex) ** 2 + (y - ey) ** 2 > rad * rad) continue;
+        const k = index[y * mw + x];
+        if (k >= 0) spot.push(k);
+      }
+      return spot;
+    }).filter(spot => spot.length >= 4);
+    partOf = new Int32Array(mask.length).fill(-1); partSize = [];
+    mask.forEach((p0, k0) => {
+      if (partOf[k0] >= 0) return;
+      const part = partSize.length, todo = [p0];
+      partOf[k0] = part; partSize.push(0);
+      while (todo.length){
+        const p = todo.pop(), x = p % mw, y = (p / mw) | 0;
+        partSize[part]++;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++){
+          const xx = x + dx, yy = y + dy;
+          if (xx < 0 || yy < 0 || xx >= mw || yy >= mh) continue;
+          const k = index[yy * mw + xx];
+          if (k >= 0 && partOf[k] < 0){ partOf[k] = part; todo.push(yy * mw + xx); }
+        }
+      }
+    });
     small.width = mw; small.height = mh;
   }
   function hline(y){ gctx.beginPath(); gctx.moveTo(16, y); gctx.lineTo(W - 16, y); gctx.stroke(); }
@@ -2151,25 +2199,33 @@ function actTrace(ctx){
     sc.clearRect(0, 0, mw, mh); sc.drawImage(ink, 0, 0, mw, mh);
     const d = sc.getImageData(0, 0, mw, mh).data;
     let cov = 0, inkN = 0, out = 0;
-    const hit = new Array(cells.length).fill(0);
-    mask.forEach((p, k) => { if (d[p * 4 + 3] > 30){ cov++; hit[cellOf[k]]++; } });
+    const hit = new Array(cells.length).fill(0), partHit = new Array(partSize.length).fill(0), inked = new Uint8Array(mask.length);
+    mask.forEach((p, k) => { if (d[p * 4 + 3] > 30){ cov++; hit[cellOf[k]]++; partHit[partOf[k]]++; inked[k] = 1; } });
     for (let p = 0; p < mw * mh; p++) if (d[p * 4 + 3] > 30){ inkN++; if (!tol[p]) out++; }
     let partsN = 0, partsHit = 0;
     cells.forEach((n, c) => { if (n){ partsN++; if (hit[c] >= n / 3) partsHit++; } });
+    // how much of its least-traced separate part is covered (specks of a few pixels do not count),
+    // and of its least-reached stroke end
+    const leastPart = Math.min(1, ...partSize.map((n, k) => n >= 6 ? partHit[k] / n : 1));
+    const leastEnd = Math.min(1, ...endSpots.map(spot => spot.reduce((s, k) => s + inked[k], 0) / spot.length));
     return {coverage: mask.length ? cov / mask.length : 0, outside: inkN ? out / inkN : 0, inkN,
-      spread: mask.length ? inkN / mask.length : 0, parts: partsN ? partsHit / partsN : 0, pen: travel / skelLen};
+      spread: mask.length ? inkN / mask.length : 0, parts: partsN ? partsHit / partsN : 0, pen: travel / skelLen,
+      leastEnd, leastPart};
   }
-  // Only a real trace passes: most of the letters covered, little ink off them, and no scribbling.
-  // After two tries that were not quite enough, it is a little kinder, but never lets a scribble through.
+  // Only a real trace passes: most of the letters covered, every stroke traced to its end (a letter with two
+  // strokes, like i or t, is not done after one), little ink off them, and no scribbling.
+  // After two tries that were not quite enough, it is a little kinder (a stroke may stop a little short of its end,
+  // but no stroke or dot may be left out), and never lets a scribble through.
   function check(pressed){
     if (won || !mask.length) return;
-    const {coverage, outside, inkN, spread, parts, pen} = measure();
-    if (window.__traceStats) window.__traceStats.push({coverage, outside, spread, parts, pen});   // test hook
+    const {coverage, outside, inkN, spread, parts, pen, leastEnd, leastPart} = measure();
+    if (window.__traceStats) window.__traceStats.push({coverage, outside, spread, parts, pen, leastEnd, leastPart});   // test hook
     const kind = fails >= 2;
     const messy = kind ? outside > 0.25 || spread > 2.6 || (spread > 2 && outside > 0.1)
                        : outside > 0.2 || spread > 2.4 || (spread > 1.8 && outside > 0.08);
     const scribble = pen > (kind ? 2.8 : 2.2);   // tracing once is 0.8-1.4; going over a part again is fine
-    const pass = !messy && !scribble && (kind ? coverage >= 0.5 && parts >= 0.72 : coverage >= 0.6 && parts >= 0.8);
+    const everyStroke = leastEnd >= (kind ? 0.25 : 0.5) && leastPart >= (kind ? 0.25 : 0.35);
+    const pass = !messy && !scribble && everyStroke && (kind ? coverage >= 0.5 && parts >= 0.72 : coverage >= 0.6 && parts >= 0.8);
     if (pass){ success(); return; }
     if (!pressed && !scribble) return;
     fails++; Sfx.bad(); wiggle(wrap);
